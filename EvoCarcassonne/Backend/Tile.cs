@@ -7,7 +7,6 @@ namespace EvoCarcassonne.Backend
         private List<IDirection> Directions { get; set; }
         private SpecialProperty SpecialProperty { get; set; }
 
-
         public void Rotate(IDirection direction)
         {
             return;
