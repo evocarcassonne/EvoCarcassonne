@@ -1,7 +1,7 @@
-namespace EvoCarcassonne.backend
+﻿namespace EvoCarcassonne.Backend
 {
     public interface ITile
     {
-        void rotate(IDirection direction);
+        void Rotate(IDirection direction);
     }
 }
