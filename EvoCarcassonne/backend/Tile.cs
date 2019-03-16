@@ -1,19 +1,19 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace EvoCarcassonne.backend
+namespace EvoCarcassonne.Backend
 {
     public class Tile : ITile
     {
-        private List<IDirection> directions { get; set; }
-        private SpecialProperty specialProperty { get; set; }
+        private List<IDirection> Directions { get; set; }
+        private SpecialProperty SpecialProperty { get; set; }
 
 
-        public void rotate(IDirection direction)
+        public void Rotate(IDirection direction)
         {
             return;
         }
 
-        public IDirection getPropertyByIndex(int index)
+        public IDirection GetPropertyByIndex(int index)
         {
             if (index > 3)
             {
@@ -21,7 +21,7 @@ namespace EvoCarcassonne.backend
             }
             else
             {
-                return this.directions[index];
+                return this.Directions[index];
             }
         }
     }
