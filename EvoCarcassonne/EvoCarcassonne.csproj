@@ -63,6 +63,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Backend\Direction.cs" />
+    <Compile Include="Backend\IDirection.cs" />
     <Compile Include="Backend\ITile.cs" />
     <Compile Include="Backend\Tile.cs" />
     <Compile Include="MainWindow.xaml.cs">
