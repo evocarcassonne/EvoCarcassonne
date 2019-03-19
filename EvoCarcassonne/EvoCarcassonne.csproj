@@ -64,6 +64,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Backend\ITile.cs" />
+    <Compile Include="Backend\Speciality.cs" />
     <Compile Include="Backend\Tile.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
