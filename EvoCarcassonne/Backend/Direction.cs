@@ -1,13 +1,13 @@
 ﻿namespace EvoCarcassonne.Backend
 {
-    class Direction : IDirection
+    public class Direction : IDirection
     {
-        public int Id { get; set; }
+        private int Id { get; set; }
 
-        public Landscape Landscape { get; set; }
+        private Landscape Landscape { get; set; }
 
-        public Figure Figure { get; set; }
+        private Figure Figure { get; set; }
 
-        public IDirection Neighbor { get; set; }
+        private IDirection Neighbor { get; set; }
     }
 }
