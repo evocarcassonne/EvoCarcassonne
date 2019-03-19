@@ -5,7 +5,7 @@ namespace EvoCarcassonne.Backend
     public class Tile : ITile
     {
         private List<IDirection> Directions { get; set; }
-        private SpecialProperty SpecialProperty { get; set; }
+        private Speciality Speciality { get; set; }
 
         public void Rotate(IDirection direction)
         {
