@@ -64,8 +64,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Backend\Direction.cs" />
+    <Compile Include="Backend\Figure.cs" />
     <Compile Include="Backend\IDirection.cs" />
     <Compile Include="Backend\ITile.cs" />
+    <Compile Include="Backend\Owner.cs" />
     <Compile Include="Backend\Speciality.cs" />
     <Compile Include="Backend\Landscape.cs" />
     <Compile Include="Backend\Tile.cs" />
