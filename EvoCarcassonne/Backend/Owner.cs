@@ -1,6 +1,6 @@
 ﻿namespace EvoCarcassonne.Backend
 {
-    public interface IDirection
+    public class Owner
     {
     }
 }
