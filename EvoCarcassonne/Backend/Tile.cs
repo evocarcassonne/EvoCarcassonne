@@ -1,26 +1,68 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Data;
 
 namespace EvoCarcassonne.Backend
 {
     public class Tile : ITile
     {
-        private List<IDirection> Directions { get; set; }
-        private Speciality Speciality { get; set; }
+        public int TileID { get; set; }
+        public List<IDirection> Directions { get; set; }
+        public Speciality Speciality { get; set; }
 
-        public void Rotate(IDirection direction)
+
+        public Tile(int tileId, List<IDirection> directions, Speciality speciality)
         {
-            return;
+            TileID = tileId;
+            Directions = directions;
+            Speciality = speciality;
         }
 
-        public IDirection GetPropertyByIndex(int index)
+        /**
+         * Rotate the tile depending on the given parameter.
+         */
+        public void Rotate(int direction)
         {
-            if (index > 3)
+            IDirection temp;
+            switch (direction)
             {
-                return null;
+                case -90:
+                    temp = Directions.First();
+                    for (int i = 0; i < Directions.Count - 1; i++)
+                    {
+                        Directions[i] = Directions[i+1];
+                    }
+
+                    Directions[Directions.Count] = temp;
+                    break;
+                case 90:
+                    temp = Directions.Last();
+                    for (int i = 0; i < Directions.Count - 1; i++)
+                    {
+                        Directions[i+1] = Directions[i];
+                    }
+
+                    Directions[0] = temp;
+                    break;
+                default:
+                    Console.WriteLine(@"[ERROR] You have given a wrong rotation value!");
+                    break;
             }
-            else
+        }
+
+        /**
+         * Returns the queried side of the tile. If wrong side is given, it returns with the North side of the tile.
+         */
+        public IDirection getTileSideByCardinalDirection(CardinalDirection side)
+        {
+            switch (side)
             {
-                return this.Directions[index];
+                case CardinalDirection.NORTH: return Directions[0];
+                case CardinalDirection.EAST: return Directions[1];
+                case CardinalDirection.SOUTH: return Directions[2];
+                case CardinalDirection.WEST: return Directions[3];
+                default: return Directions[0];
             }
         }
     }
