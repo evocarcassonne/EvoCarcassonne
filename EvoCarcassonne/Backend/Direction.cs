@@ -6,11 +6,11 @@
 
         public Landscape Landscape { get; set; }
 
-        public Figure Figure { get; set; }
+        public IFigure Figure { get; set; }
 
         public IDirection Neighbor { get; set; }
 
-        public Direction(int id, Landscape landscape, Figure figure, IDirection neighbor)
+        public Direction(int id, Landscape landscape, IFigure figure, IDirection neighbor)
         {
             Id = id;
             Landscape = landscape;

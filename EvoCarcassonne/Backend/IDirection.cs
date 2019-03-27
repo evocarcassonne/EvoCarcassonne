@@ -6,7 +6,7 @@
 
         Landscape Landscape { get; set; }
 
-        Figure Figure { get; set; }
+        IFigure Figure { get; set; }
 
         IDirection Neighbor { get; set; }
     }
