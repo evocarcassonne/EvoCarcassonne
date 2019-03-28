@@ -1,7 +1,14 @@
-﻿namespace EvoCarcassonne.Backend
+﻿using System.Collections.Generic;
+
+namespace EvoCarcassonne.Backend
 {
     public interface ITile
+
     {
-        void Rotate(IDirection direction);
+        int TileID { get; set; }
+        List<IDirection> Directions { get; set; }
+        Speciality Speciality { get; set; }
+        void Rotate(int direction);
+        IDirection getTileSideByCardinalDirection(CardinalDirection side);
     }
 }

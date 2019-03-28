@@ -2,12 +2,20 @@
 {
     public class Direction : IDirection
     {
-        private int Id { get; set; }
+        public int Id { get; set; }
 
-        private Landscape Landscape { get; set; }
+        public Landscape Landscape { get; set; }
 
-        private Figure Figure { get; set; }
+        public IFigure Figure { get; set; }
 
-        private IDirection Neighbor { get; set; }
+        public IDirection Neighbor { get; set; }
+
+        public Direction(int id, Landscape landscape, IFigure figure, IDirection neighbor)
+        {
+            Id = id;
+            Landscape = landscape;
+            Figure = figure;
+            Neighbor = neighbor;
+        }
     }
 }

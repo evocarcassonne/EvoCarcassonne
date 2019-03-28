@@ -63,9 +63,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Backend\CardinalDirection.cs" />
     <Compile Include="Backend\Direction.cs" />
     <Compile Include="Backend\Figure.cs" />
     <Compile Include="Backend\IDirection.cs" />
+    <Compile Include="Backend\IFigure.cs" />
+    <Compile Include="Backend\IOwner.cs" />
     <Compile Include="Backend\ITile.cs" />
     <Compile Include="Backend\Owner.cs" />
     <Compile Include="Backend\Speciality.cs" />

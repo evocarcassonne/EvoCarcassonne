@@ -1,8 +1,14 @@
 ﻿namespace EvoCarcassonne.Backend
 {
-    public class Figure
+    public class Figure : IFigure
     {
-        private Owner Owner { get; set; }
-        private int ID { get; set; }     
+        public int Id { get; set; }
+        public IOwner Owner { get; set; }
+
+        public Figure(int id, IOwner owner)
+        {
+            Id = id;
+            Owner = owner;
+        }
     }
 }
