@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Data;
 
@@ -46,7 +47,7 @@ namespace EvoCarcassonne.Backend
                     Directions[0] = temp;
                     break;
                 default:
-                    Console.WriteLine(@"[ERROR] You have given a wrong rotation value!");
+                    Debug.WriteLine(@"[ERROR] You have given a wrong rotation value!");
                     break;
             }
         }
