@@ -3,33 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:evoCarcassonne="clr-namespace:EvoCarcassonne"
+        xmlns:local="clr-namespace:EvoCarcassonne"
         mc:Ignorable="d"
-        Title="EvoCarcassonne" Height="450" Width="800">
-    <Grid Margin="10">
-        <!-- <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions> -->
-        <ItemsControl ItemsSource="{Binding Tiles}">
-            <ItemsControl.Resources>
-                <DataTemplate DataType="{x:Type evoCarcassonne:TileF}">
-                    <Grid Background="{Binding Background}">
-                        <TextBlock Text="{Binding Data}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.Resources>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="{Binding Rows}" Columns="{Binding Columns}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" MouseUp="UniformGrid_MouseUp" ></UniformGrid>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        
     </Grid>
 </Window>
