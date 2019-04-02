@@ -7,7 +7,6 @@
              xmlns:controller = "clr-namespace:EvoCarcassonne.Controller"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-
     <UserControl.DataContext>
         <controller:MainController/>
     </UserControl.DataContext>
