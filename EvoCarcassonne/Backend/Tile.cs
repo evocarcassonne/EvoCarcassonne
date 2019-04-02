@@ -59,10 +59,10 @@ namespace EvoCarcassonne.Backend
         {
             switch (side)
             {
-                case CardinalDirection.NORTH: return Directions[0];
-                case CardinalDirection.EAST: return Directions[1];
-                case CardinalDirection.SOUTH: return Directions[2];
-                case CardinalDirection.WEST: return Directions[3];
+                case CardinalDirection.North: return Directions[0];
+                case CardinalDirection.East: return Directions[1];
+                case CardinalDirection.South: return Directions[2];
+                case CardinalDirection.West: return Directions[3];
                 default: return Directions[0];
             }
         }
