@@ -4,10 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EvoCarcassonne.View"
+             xmlns:controller = "clr-namespace:EvoCarcassonne.Controller"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.DataContext>
+        <controller:MainController/>
+    </UserControl.DataContext>
+
     <Grid>
-        <ItemsControl Name="Board">
+        <ItemsControl ItemsSource="{Binding Path=Tiles}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="10" Rows="10" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
@@ -16,10 +22,30 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Tag="{Binding Tag, UpdateSourceTrigger=PropertyChanged}" Background="{Binding Background, UpdateSourceTrigger=PropertyChanged}"
-                            Content="{Binding Content, UpdateSourceTrigger=PropertyChanged}"
-                            Click="Button_Click" BorderBrush="{x:Null}"
-                            BorderThickness="0" IsTabStop="False" />
+                    <Button Tag="{Binding Tag}" Background="{Binding Background}"
+                            Click="Button_Click"
+                            IsTabStop="False" RenderOptions.EdgeMode="Aliased">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="OverridesDefaultStyle" Value="True" />
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Opacity" Value="0.5" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
