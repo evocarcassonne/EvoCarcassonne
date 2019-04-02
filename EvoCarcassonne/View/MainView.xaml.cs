@@ -23,6 +23,7 @@ namespace EvoCarcassonne.View
             }
         }
 
+        // for testing purposes
         private void ToggleCoordinates(ContentControl button)
         {
             if (button.Content == null)

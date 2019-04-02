@@ -26,8 +26,9 @@ namespace EvoCarcassonne.Controller
                     boardTiles.Add(new BoardTile
                     {
                         Tag = $"{x};{y}",
-                        Background = GenerateRandomBackground(random),
-                        Coordinates = new Coordinates(x, y)
+                        Coordinates = new Coordinates(x, y),
+                        Background = GenerateRandomBackground(random) // for testing purposes
+
                     });
                 }
             }
@@ -53,6 +54,7 @@ namespace EvoCarcassonne.Controller
             throw new IndexOutOfRangeException();
         }
 
+        // for testing purposes
         private SolidColorBrush GenerateRandomBackground(Random random)
         {
             return new SolidColorBrush(Color.FromArgb(255,
