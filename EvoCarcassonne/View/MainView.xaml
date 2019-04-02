@@ -13,7 +13,7 @@
     </UserControl.DataContext>
 
     <Grid>
-        <ItemsControl ItemsSource="{Binding Path=Tiles}">
+        <ItemsControl ItemsSource="{Binding Path=BoardTiles}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="10" Rows="10" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
@@ -22,7 +22,7 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Tag="{Binding Tag}" Background="{Binding Background}"
+                    <Button Tag="{Binding Tag}" Background="{Binding Background}" Content="{x:Null}"
                             Click="Button_Click"
                             IsTabStop="False" RenderOptions.EdgeMode="Aliased">
                         <Button.Style>

@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using EvoCarcassonne.Controller;
 
 namespace EvoCarcassonne.View
 {
@@ -17,8 +20,20 @@ namespace EvoCarcassonne.View
         {
             if (sender is Button b)
             {
-                b.Content = b.Tag.ToString();
-                // var coords = b.Tag.ToString().Split(';').Select(int.Parse).ToArray();
+                ToggleCoordinates(b);
+            }
+        }
+
+        private void ToggleCoordinates(ContentControl button)
+        {
+            if (button.Content == null)
+            {
+                var coords = button.Tag.ToString().Split(';').Select(int.Parse).ToArray();
+                button.Content = MainController.GetTile(coords).Coordinates;
+            }
+            else
+            {
+                button.Content = null;
             }
         }
     }

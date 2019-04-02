@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
+using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Controller
 {
@@ -11,43 +12,53 @@ namespace EvoCarcassonne.Controller
             LoadTiles();
         }
 
-        public ObservableCollection<Tile> Tiles { get; set; }
+        public static ObservableCollection<BoardTile> BoardTiles { get; set; }
 
         private void LoadTiles()
         {
-            var tiles = new ObservableCollection<Tile>();
+            var boardTiles = new ObservableCollection<BoardTile>();
             var random = new Random();
 
-            for (var i = 0; i < 10; i++)
+            for (var x = 0; x < 10; x++)
             {
-                for (var j = 0; j < 10; j++)
+                for (var y = 0; y < 10; y++)
                 {
-                    tiles.Add(new Tile
+                    boardTiles.Add(new BoardTile
                     {
-                        Tag = $"{i};{j}",
-                        Background = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))),
+                        Tag = $"{x};{y}",
+                        Background = GenerateRandomBackground(random),
+                        Coordinates = new Coordinates(x, y)
                     });
                 }
             }
 
-            Tiles = tiles;
+            BoardTiles = boardTiles;
         }
 
-    }
-
-    public class Tile
-    {
-        public string Tag { get; set; }
-        public SolidColorBrush Background { get; set; }
-
-        public static Tile GetTile(int x, int y, ObservableCollection<Tile> tiles)
+        public static BoardTile GetTile(int x, int y)
         {
-            if (tiles.Count > x * 10 + y)
+            if (BoardTiles.Count > x * 10 + y)
             {
-                return tiles[x * 10 + y];
+                return BoardTiles[x * 10 + y];
             }
-
             throw new IndexOutOfRangeException();
+        }
+
+        public static BoardTile GetTile(int[] coordinates)
+        {
+            if (BoardTiles.Count > coordinates[0] * 10 + coordinates[1])
+            {
+                return BoardTiles[coordinates[0] * 10 + coordinates[1]];
+            }
+            throw new IndexOutOfRangeException();
+        }
+
+        private SolidColorBrush GenerateRandomBackground(Random random)
+        {
+            return new SolidColorBrush(Color.FromArgb(255,
+                (byte)random.Next(256),
+                (byte)random.Next(256),
+                (byte)random.Next(256)));
         }
     }
 }
