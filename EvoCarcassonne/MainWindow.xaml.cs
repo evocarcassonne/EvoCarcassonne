@@ -8,6 +8,8 @@
         public MainWindow()
         {
             InitializeComponent();
+
+            this.DataContext = new GameController(this);
         }
     }
 }
