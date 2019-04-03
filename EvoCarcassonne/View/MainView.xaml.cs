@@ -19,8 +19,16 @@ namespace EvoCarcassonne.View
         {
             if (sender is Button b)
             {
-                ToggleCoordinates(b);
+                //ToggleCoordinates(b);
+                RotateRight(b);
             }
+        }
+
+        // for testing purposes
+        private void RotateRight(Button button)
+        {
+            var coords = button.Tag.ToString().Split(';').Select(int.Parse).ToArray();
+            MainController.GetTile(coords).Angle += 90.0;
         }
 
         // for testing purposes

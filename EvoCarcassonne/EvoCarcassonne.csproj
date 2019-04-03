@@ -37,6 +37,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Backend\Utils.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="Model\BoardTileModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
@@ -111,6 +114,32 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Tiles\city1.png" />
+    <Resource Include="Resources\Tiles\city11ne.png" />
+    <Resource Include="Resources\Tiles\city11we.png" />
+    <Resource Include="Resources\Tiles\city1rse.png" />
+    <Resource Include="Resources\Tiles\city1rsw.png" />
+    <Resource Include="Resources\Tiles\city1rswe.png" />
+    <Resource Include="Resources\Tiles\city1rwe.png" />
+    <Resource Include="Resources\Tiles\city2nw.png" />
+    <Resource Include="Resources\Tiles\city2nwr.png" />
+    <Resource Include="Resources\Tiles\city2nws.png" />
+    <Resource Include="Resources\Tiles\city2nwsr.png" />
+    <Resource Include="Resources\Tiles\city2we.png" />
+    <Resource Include="Resources\Tiles\city2wes.png" />
+    <Resource Include="Resources\Tiles\city3.png" />
+    <Resource Include="Resources\Tiles\city3r.png" />
+    <Resource Include="Resources\Tiles\city3s.png" />
+    <Resource Include="Resources\Tiles\city3sr.png" />
+    <Resource Include="Resources\Tiles\city4.png" />
+    <Resource Include="Resources\Tiles\cloister.png" />
+    <Resource Include="Resources\Tiles\cloisterr.png" />
+    <Resource Include="Resources\Tiles\road2ns.png" />
+    <Resource Include="Resources\Tiles\road2sw.png" />
+    <Resource Include="Resources\Tiles\road3.png" />
+    <Resource Include="Resources\Tiles\road4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

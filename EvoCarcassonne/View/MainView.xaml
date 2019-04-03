@@ -15,15 +15,24 @@
         <ItemsControl ItemsSource="{Binding Path=BoardTiles}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="10" Rows="10" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
+                    <UniformGrid Columns="10" Rows="10" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Margin="0,20,0,20" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Tag="{Binding Tag}" Background="{Binding Background}" Content="{x:Null}"
+                    <Button Tag="{Binding Tag}" Content="{x:Null}"
                             Click="Button_Click"
                             IsTabStop="False" RenderOptions.EdgeMode="Aliased">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding Image}">
+                                <ImageBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="{Binding Angle}" CenterY="0.5" CenterX="0.5"/>
+                                    </TransformGroup>
+                                </ImageBrush.RelativeTransform>
+                            </ImageBrush>
+                        </Button.Background>
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Setter Property="OverridesDefaultStyle" Value="True" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
+using EvoCarcassonne.Backend;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Controller
@@ -19,6 +20,8 @@ namespace EvoCarcassonne.Controller
             var boardTiles = new ObservableCollection<BoardTile>();
             var random = new Random();
 
+            var tilesImageList = Utils.GetResourceNames(@"tiles");
+
             for (var x = 0; x < 10; x++)
             {
                 for (var y = 0; y < 10; y++)
@@ -27,8 +30,10 @@ namespace EvoCarcassonne.Controller
                     {
                         Tag = $"{x};{y}",
                         Coordinates = new Coordinates(x, y),
-                        Background = GenerateRandomBackground(random) // for testing purposes
-
+                        Image = tilesImageList[random.Next(tilesImageList.Count)], // for testing purposes
+                        // Image = null,
+                        Angle = 0,
+                        BackendTile = new Tile()
                     });
                 }
             }
