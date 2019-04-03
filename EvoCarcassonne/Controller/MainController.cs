@@ -33,7 +33,8 @@ namespace EvoCarcassonne.Controller
                         Image = tilesImageList[random.Next(tilesImageList.Count)], // for testing purposes
                         // Image = null,
                         Angle = 0,
-                        BackendTile = new Tile()
+                        BackendTile = new Tile(0, null, Speciality.None)
+
                     });
                 }
             }

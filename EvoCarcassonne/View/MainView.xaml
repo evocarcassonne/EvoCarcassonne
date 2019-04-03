@@ -12,6 +12,7 @@
     </UserControl.DataContext>
 
     <Grid>
+        
         <ItemsControl ItemsSource="{Binding Path=BoardTiles}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -54,8 +55,15 @@
                             </Style>
                         </Button.Style>
                     </Button>
+                    
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        
+        <Button Content="Lapkérés" Width="100" Height="35" Margin="50,50,50,50" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+        <Button Content="Körvége" Width="100" Height="35" Margin="50,50,50,120" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+        <Button Content="Balra" Width="40" Height="35" Margin="50,50,50,50" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <Button Content="Jobbra" Width="40" Height="35" Margin="50,50,50,120" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <Button Content="" Width="90" Height="90" Margin="50,0,0,0 " VerticalAlignment="Center" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>
