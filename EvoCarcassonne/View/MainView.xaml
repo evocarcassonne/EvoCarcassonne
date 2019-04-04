@@ -12,10 +12,22 @@
     </UserControl.DataContext>
 
     <Grid>
-        <ItemsControl ItemsSource="{Binding Path=BoardTiles}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80*" />
+            <RowDefinition Height="20*" />
+        </Grid.RowDefinitions>
+        
+        <ItemsControl ItemsSource="{Binding Path=BoardTiles}" Grid.Column="1" Grid.ColumnSpan="3">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="10" Rows="10" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Margin="0,20,0,20" />
+                    <UniformGrid Columns="10" Rows="10" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Margin="0,10,0,10" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 
@@ -54,8 +66,15 @@
                             </Style>
                         </Button.Style>
                     </Button>
+                    
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <Button Content="Lapkérés" Width="100" Height="35" Grid.Row="1" />
+        <Button Content="Körvége" Width="100" Height="35" Grid.Row="1" Grid.Column="4" />
+        <Button Content="Balra" Width="40" Height="35" Grid.Row="1" Grid.Column="1" />
+        <Button Content="Jobbra" Width="40" Height="35" Grid.Row="1" Grid.Column="3"/>
+        <Button Content="" Width="90" Height="90" Grid.Row="1" Grid.Column="2"/>
     </Grid>
 </UserControl>
