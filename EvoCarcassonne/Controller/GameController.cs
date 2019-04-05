@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using EvoCarcassonne.Backend;
+using EvoCarcassonne.ViewModel;
 
 namespace EvoCarcassonne
 {
