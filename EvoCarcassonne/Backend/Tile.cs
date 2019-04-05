@@ -35,13 +35,13 @@ namespace EvoCarcassonne.Backend
                         Directions[i] = Directions[i+1];
                     }
 
-                    Directions[Directions.Count] = temp;
+                    Directions[Directions.Count-1] = temp;
                     break;
                 case 90:
                     temp = Directions.Last();
-                    for (int i = 0; i < Directions.Count - 1; i++)
+                    for (int i = Directions.Count - 1; i > 0; i--)
                     {
-                        Directions[i+1] = Directions[i];
+                        Directions[i] = Directions[i-1];
                     }
 
                     Directions[0] = temp;
