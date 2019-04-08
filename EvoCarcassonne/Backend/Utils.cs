@@ -25,10 +25,9 @@ namespace EvoCarcassonne.Backend
         
          public static bool CheckFitOfTile(BoardTile boardTile)
         {
+            
             Tile backendTile = boardTile.BackendTile;
-
-            #region Validation
-
+            
             foreach (var frontEndTile in MainController.BoardTiles)
             {
                 /**
@@ -72,7 +71,7 @@ namespace EvoCarcassonne.Backend
                     }
                 }
             }
-            #endregion
+            
             return true;
         }
 
