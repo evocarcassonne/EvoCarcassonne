@@ -17,5 +17,13 @@
             Figure = figure;
             Neighbor = neighbor;
         }
+
+        public Direction(int id, Landscape landscape, Figure figure)
+        {
+            Id = id;
+            Landscape = landscape;
+            Figure = figure;
+        }
+
     }
 }
