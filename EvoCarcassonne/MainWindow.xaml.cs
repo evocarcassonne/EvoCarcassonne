@@ -9,7 +9,6 @@
         {
             InitializeComponent();
 
-            this.DataContext = new GameController(this);
         }
     }
 }
