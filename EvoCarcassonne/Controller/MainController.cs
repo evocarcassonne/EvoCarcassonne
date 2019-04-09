@@ -14,10 +14,18 @@ namespace EvoCarcassonne.Controller
         }
 
         public static ObservableCollection<BoardTile> BoardTiles { get; set; }
+        
+        /**
+         * Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
+         */
+        public static ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } 
 
         private void LoadTiles()
         {
             var boardTiles = new ObservableCollection<BoardTile>();
+            
+            PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            
             var random = new Random();
 
             var tilesImageList = Utils.GetResourceNames(@"tiles");

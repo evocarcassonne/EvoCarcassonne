@@ -28,7 +28,7 @@ namespace EvoCarcassonne.Backend
             
             Tile backendTile = boardTile.BackendTile;
             
-            foreach (var frontEndTile in MainController.BoardTiles)
+            foreach (var frontEndTile in MainController.PlacedBoardTiles)
             {
                 /**
                  * Check the right side of the tile.
