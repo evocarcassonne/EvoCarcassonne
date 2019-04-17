@@ -22,6 +22,7 @@ namespace EvoCarcassonneTests
         private BoardTile boardTile6 = new BoardTile();
         private BoardTile boardTile7 = new BoardTile();
         private BoardTile boardTile8 = new BoardTile();
+
         
        [Test]
         public void CalculateRoad_RoadIsFinished_ReturnsNumberOfPoints_TestCase1()
@@ -126,6 +127,7 @@ namespace EvoCarcassonneTests
             directions.Add(new Direction(0, new Castle(), figure));
             directions.Add(new Direction(0, new Castle(), figure));
 
+            
             boardTile1.Coordinates = new Coordinates(0, 0);
             boardTile2.Coordinates = new Coordinates(10, 0);
             boardTile3.Coordinates = new Coordinates(10, 10);
@@ -134,7 +136,7 @@ namespace EvoCarcassonneTests
             boardTile6.Coordinates = new Coordinates(20, 10);
             boardTile7.Coordinates = new Coordinates(30, 10);
             boardTile8.Coordinates = new Coordinates(40, 10);
-
+            
             boardTile1.BackendTile = new Tile(1, directions, Speciality.EndOfRoad);
             directions = new List<IDirection>();
             directions.Add(new Direction(0, new Castle(), figure));
