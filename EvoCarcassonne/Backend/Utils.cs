@@ -76,6 +76,45 @@ namespace EvoCarcassonne.Backend
         }
 
 
-        
+         public static bool IsFinishedRoad()
+         {
+             return false;
+         }
+
+         public static Dictionary<CardinalDirection, BoardTile> GetSurroundingTiles(BoardTile currentTile)
+         {
+             Dictionary<CardinalDirection, BoardTile> result =
+                 new Dictionary<CardinalDirection, BoardTile>();
+             
+             foreach (var neighborTile in MainController.PlacedBoardTiles)
+            {
+
+                if (currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X &&
+                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
+                {
+                    result.Add(CardinalDirection.East, neighborTile);
+                }
+
+                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y && currentTile.Coordinates.X == neighborTile.Coordinates.X)
+                {
+                    result.Add(CardinalDirection.South, neighborTile);
+                }
+
+
+                if (currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X &&
+                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
+                {
+                    result.Add(CardinalDirection.West, neighborTile);
+                }
+
+
+                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y && currentTile.Coordinates.X == neighborTile.Coordinates.X)
+                {
+                    result.Add(CardinalDirection.North, neighborTile);
+                }
+            }
+
+             return result;
+         }
     }
 }
