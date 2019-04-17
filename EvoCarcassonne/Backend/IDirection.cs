@@ -4,7 +4,7 @@
     {
         int Id { get; set; }
 
-        Landscape Landscape { get; set; }
+        ILandscape Landscape { get; set; }
 
         IFigure Figure { get; set; }
 

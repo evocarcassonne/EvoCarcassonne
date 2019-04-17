@@ -11,8 +11,7 @@ namespace EvoCarcassonne.Backend
         public int TileID { get; set; }
         public List<IDirection> Directions { get; set; }
         public Speciality Speciality { get; set; }
-
-
+        
         public Tile(int tileId, List<IDirection> directions, Speciality speciality)
         {
             TileID = tileId;

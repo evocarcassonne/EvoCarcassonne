@@ -13,6 +13,11 @@ namespace EvoCarcassonne.Controller
 
         public static ObservableCollection<BoardTile> BoardTiles { get; set; }
 
+        /**
+         * Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
+         */
+        public static ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } 
+        
         /// <summary>
         /// The current player can put down this tile
         /// </summary>
@@ -60,13 +65,6 @@ namespace EvoCarcassonne.Controller
             RotateLeftCommand = new RelayCommand(() => CurrentTile.Rotate(-90));
             RotateRightCommand = new RelayCommand(() => CurrentTile.Rotate(90));
         }
-
-
-        /**
-         * Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
-         */
-        public static ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } 
-
         #endregion
 
         #region Private Methods
