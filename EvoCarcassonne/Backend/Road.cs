@@ -9,6 +9,10 @@ namespace EvoCarcassonne.Backend
 {
     public class Road : ILandscape
     {
+
+        private BoardTile firstTile { get; set; }
+        private BoardTile lastTile { get; set; }
+        
         public Road()
         {
         }
@@ -21,8 +25,20 @@ namespace EvoCarcassonne.Backend
             Console.WriteLine(currentTile);
             if (currentTile.BackendTile.Speciality == Speciality.EndOfRoad && !firstCall)
             {
+                lastTile = currentTile;
                 return 1;
             }
+
+            if (firstCall)
+            {
+                firstTile = currentTile;
+            }
+            
+            if (currentTile.BackendTile.Speciality != Speciality.EndOfRoad && firstCall)
+            {
+                return 0;
+            }
+            
             
 
             int result = 1;
@@ -48,6 +64,7 @@ namespace EvoCarcassonne.Backend
 
                     if (neighborTile == null || neighborTile.BackendTile.Speciality == Speciality.EndOfRoad)
                     {
+                        lastTile = neighborTile;
                         Console.WriteLine(neighborTile);
                         return result;
                     }
@@ -85,6 +102,7 @@ namespace EvoCarcassonne.Backend
 
                     if (neighborTile == null || neighborTile.BackendTile.Speciality == Speciality.EndOfRoad)
                     {
+                        lastTile = neighborTile;
                         Console.WriteLine(neighborTile);
                         return result;
                     }
@@ -123,6 +141,7 @@ namespace EvoCarcassonne.Backend
 
                     if (neighborTile == null || neighborTile.BackendTile.Speciality == Speciality.EndOfRoad)
                     {
+                        lastTile = neighborTile;
                         Console.WriteLine(neighborTile);
                         return result;
                     }
@@ -164,6 +183,7 @@ namespace EvoCarcassonne.Backend
 
                     if (neighborTile == null || neighborTile.BackendTile.Speciality == Speciality.EndOfRoad)
                     {
+                        lastTile = neighborTile;
                         Console.WriteLine(neighborTile);
                         return result;
                     }
@@ -194,11 +214,11 @@ namespace EvoCarcassonne.Backend
                 default: return 0;
             }
 
-            if (firstCall)
+            if (firstCall && firstTile.BackendTile.TileID != lastTile.BackendTile.TileID)
             {
                 result += 1;
             }
-            
+
             
             return result;
         }
