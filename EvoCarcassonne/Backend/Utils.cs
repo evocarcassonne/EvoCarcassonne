@@ -35,7 +35,8 @@ namespace EvoCarcassonne.Backend
                  */
                 if (boardTile.Coordinates.X == frontEndTile.Coordinates.X + 10 && boardTile.Coordinates.Y == frontEndTile.Coordinates.Y)
                 {
-                    if (!backendTile.getTileSideByCardinalDirection(CardinalDirection.East).Landscape.Equals(frontEndTile.BackendTile.getTileSideByCardinalDirection(CardinalDirection.West).Landscape))
+                    if (!backendTile.getTileSideByCardinalDirection(CardinalDirection.East).Landscape
+                        .Equals(frontEndTile.BackendTile.getTileSideByCardinalDirection(CardinalDirection.West).Landscape))
                     {
                         return false;
                     }    
@@ -45,7 +46,8 @@ namespace EvoCarcassonne.Backend
                  */
                 if (boardTile.Coordinates.Y == frontEndTile.Coordinates.Y + 10 && boardTile.Coordinates.X == frontEndTile.Coordinates.X)
                 {
-                    if (!backendTile.getTileSideByCardinalDirection(CardinalDirection.South).Landscape.Equals(frontEndTile.BackendTile.getTileSideByCardinalDirection(CardinalDirection.North).Landscape))
+                    if (!backendTile.getTileSideByCardinalDirection(CardinalDirection.South).Landscape
+                        .Equals(frontEndTile.BackendTile.getTileSideByCardinalDirection(CardinalDirection.North).Landscape))
                     {
                         return false;
                     }
@@ -55,7 +57,8 @@ namespace EvoCarcassonne.Backend
                  */
                 if (boardTile.Coordinates.X == frontEndTile.Coordinates.X - 10 && boardTile.Coordinates.Y == frontEndTile.Coordinates.Y)
                 {
-                    if (!backendTile.getTileSideByCardinalDirection(CardinalDirection.West).Landscape.Equals(frontEndTile.BackendTile.getTileSideByCardinalDirection(CardinalDirection.East).Landscape))
+                    if (!backendTile.getTileSideByCardinalDirection(CardinalDirection.West).Landscape
+                        .Equals(frontEndTile.BackendTile.getTileSideByCardinalDirection(CardinalDirection.East).Landscape))
                     {
                         return false;
                     } 
@@ -65,7 +68,8 @@ namespace EvoCarcassonne.Backend
                  */
                 if (boardTile.Coordinates.Y == frontEndTile.Coordinates.Y - 10 && boardTile.Coordinates.X == frontEndTile.Coordinates.X)
                 {
-                    if (!backendTile.getTileSideByCardinalDirection(CardinalDirection.North).Landscape.Equals(frontEndTile.BackendTile.getTileSideByCardinalDirection(CardinalDirection.South).Landscape))
+                    if (!backendTile.getTileSideByCardinalDirection(CardinalDirection.North).Landscape
+                        .Equals(frontEndTile.BackendTile.getTileSideByCardinalDirection(CardinalDirection.South).Landscape))
                     {
                         return false;
                     }
@@ -76,7 +80,7 @@ namespace EvoCarcassonne.Backend
         }
 
 
-         public static bool IsFinishedRoad()
+         public static bool IsFinishedRoad(BoardTile currentTile)
          {
              return false;
          }
