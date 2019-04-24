@@ -15,21 +15,54 @@ namespace EvoCarcassonne.View
             InitializeComponent();
         }
 
+        private void RotateRightButtonCLick(object sender, RoutedEventArgs e)
+        {
+            var b = sender as Button;
+            RotateRight(b);
+        }
+
+        private void RotateLeftButtonCLick(object sender, RoutedEventArgs e)
+        {
+            var b = sender as Button;
+            RotateLeft(b);
+        }
+
+        private void RotateLeft(Button button)
+        {
+
+            var vm = (MainController)this.DataContext;
+            // If the tile is down we can't rotate
+            if (vm.TileIsDown)
+                return;
+
+            vm.CurrentBoardTile.Angle -= 90;
+        }
+
+        private void RotateRight(Button button)
+        {
+
+            var vm = (MainController)this.DataContext;
+            // If the tile is down we can't rotate
+            if (vm.TileIsDown)
+                return;
+
+            vm.CurrentBoardTile.Angle += 90;
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button b)
             {
+
                 //ToggleCoordinates(b);
-                RotateRight(b);
+
+                // Put the current tile down
+                var vm = (MainController)this.DataContext;
+                vm.PutTile(sender as Button);                
+
             }
         }
 
-        // for testing purposes
-        private void RotateRight(Button button)
-        {
-            var coords = button.Tag.ToString().Split(';').Select(int.Parse).ToArray();
-            MainController.GetTile(coords).Angle += 90.0;
-        }
 
         // for testing purposes
         private void ToggleCoordinates(ContentControl button)

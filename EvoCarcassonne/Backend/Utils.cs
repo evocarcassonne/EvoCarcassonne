@@ -23,7 +23,7 @@ namespace EvoCarcassonne.Backend
         }
         
         
-         public static bool CheckFitOfTile(BoardTile boardTile)
+         public bool CheckFitOfTile(BoardTile boardTile)
         {
             
             Tile backendTile = boardTile.BackendTile;
