@@ -1,18 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Xml;
-using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {
     public class Road : ILandscape
     {
-
         private BoardTile firstTile { get; set; }
         private BoardTile lastTile { get; set; }
-        
+
         public Road()
         {
         }
@@ -33,13 +29,12 @@ namespace EvoCarcassonne.Backend
             {
                 firstTile = currentTile;
             }
-            
+
             if (currentTile.BackendTile.Speciality != Speciality.EndOfRoad && firstCall)
             {
                 return 0;
             }
-            
-            
+
 
             int result = 1;
             Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile =
@@ -48,10 +43,9 @@ namespace EvoCarcassonne.Backend
             tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
             BoardTile neighborTile;
 
-           
+
             switch (whereToGo)
             {
-                    
                 case CardinalDirection.East:
                     neighborTile = null;
                     foreach (var pair in tilesNextToTheGivenTile)
@@ -68,6 +62,7 @@ namespace EvoCarcassonne.Backend
                         Console.WriteLine(neighborTile);
                         return result;
                     }
+
                     for (int i = 0; i < 4; i++)
                     {
                         IDirection side = neighborTile.BackendTile.Directions[i];
@@ -75,21 +70,26 @@ namespace EvoCarcassonne.Backend
                         {
                             if (i == 0)
                             {
-                                result += calculate(neighborTile, CardinalDirection.North, false);break;
+                                result += calculate(neighborTile, CardinalDirection.North, false);
+                                break;
                             }
+
                             if (i == 1)
                             {
-                                result += calculate(neighborTile, CardinalDirection.East, false);break;
+                                result += calculate(neighborTile, CardinalDirection.East, false);
+                                break;
                             }
+
                             if (i == 2)
                             {
-                                result += calculate(neighborTile, CardinalDirection.South, false);break;
+                                result += calculate(neighborTile, CardinalDirection.South, false);
+                                break;
                             }
                         }
                     }
-                    
+
                     break;
-                 
+
                 case CardinalDirection.West:
                     neighborTile = null;
                     foreach (var pair in tilesNextToTheGivenTile)
@@ -114,22 +114,27 @@ namespace EvoCarcassonne.Backend
                         {
                             if (i == 0)
                             {
-                                result += calculate(neighborTile, CardinalDirection.North, false);break;
+                                result += calculate(neighborTile, CardinalDirection.North, false);
+                                break;
                             }
+
                             if (i == 2)
                             {
-                                result += calculate(neighborTile, CardinalDirection.South, false);break;
+                                result += calculate(neighborTile, CardinalDirection.South, false);
+                                break;
                             }
+
                             if (i == 3)
                             {
-                                result += calculate(neighborTile, CardinalDirection.West, false);break;
+                                result += calculate(neighborTile, CardinalDirection.West, false);
+                                break;
                             }
                         }
                     }
 
                     break;
                 case CardinalDirection.North:
-                    
+
                     neighborTile = null;
                     foreach (var pair in tilesNextToTheGivenTile)
                     {
@@ -145,7 +150,7 @@ namespace EvoCarcassonne.Backend
                         Console.WriteLine(neighborTile);
                         return result;
                     }
-                   
+
                     for (int i = 0; i < 4; i++)
                     {
                         IDirection side = neighborTile.BackendTile.Directions[i];
@@ -156,11 +161,13 @@ namespace EvoCarcassonne.Backend
                                 result += calculate(neighborTile, CardinalDirection.North, false);
                                 break;
                             }
+
                             if (i == 1)
                             {
                                 result += calculate(neighborTile, CardinalDirection.East, false);
                                 break;
                             }
+
                             if (i == 3)
                             {
                                 result += calculate(neighborTile, CardinalDirection.West, false);
@@ -168,10 +175,10 @@ namespace EvoCarcassonne.Backend
                             }
                         }
                     }
-                    
+
                     break;
                 case CardinalDirection.South:
-                    
+
                     neighborTile = null;
                     foreach (var pair in tilesNextToTheGivenTile)
                     {
@@ -187,6 +194,7 @@ namespace EvoCarcassonne.Backend
                         Console.WriteLine(neighborTile);
                         return result;
                     }
+
                     for (int i = 0; i < 4; i++)
                     {
                         IDirection side = neighborTile.BackendTile.Directions[i];
@@ -197,11 +205,13 @@ namespace EvoCarcassonne.Backend
                                 result += calculate(neighborTile, CardinalDirection.East, false);
                                 break;
                             }
+
                             if (i == 2)
                             {
                                 result += calculate(neighborTile, CardinalDirection.South, false);
                                 break;
                             }
+
                             if (i == 3)
                             {
                                 result += calculate(neighborTile, CardinalDirection.West, false);
@@ -219,8 +229,14 @@ namespace EvoCarcassonne.Backend
                 result += 1;
             }
 
-            
+
             return result;
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            return obj is Road;
         }
     }
 }

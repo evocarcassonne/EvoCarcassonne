@@ -1,4 +1,4 @@
-using EvoCarcassonne.Model;
+﻿using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {
@@ -16,6 +16,12 @@ namespace EvoCarcassonne.Backend
         public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             throw new System.NotImplementedException();
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            return obj is Castle;
         }
     }
 }

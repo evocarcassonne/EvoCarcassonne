@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using EvoCarcassonne.Controller;
+﻿using System.Collections.Generic;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
@@ -9,7 +8,7 @@ namespace EvoCarcassonne.Backend
         public int TileID { get; set; }
         public List<IDirection> Directions { get; set; }
         public Speciality Speciality { get; set; }
-        
+
         public Church(int tileId, List<IDirection> directions, Speciality speciality)
         {
             TileID = tileId;
