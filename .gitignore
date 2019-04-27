@@ -377,4 +377,4 @@ healthchecksdb
 MigrationBackup/
 
 # Rider files
-.idea/*
+.idea/
