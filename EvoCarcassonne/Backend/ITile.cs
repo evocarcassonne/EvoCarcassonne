@@ -7,7 +7,7 @@ namespace EvoCarcassonne.Backend
     {
         int TileID { get; set; }
         List<IDirection> Directions { get; set; }
-        Speciality Speciality { get; set; }
+        List<Speciality> Speciality { get; set; }
         void Rotate(int direction);
         IDirection getTileSideByCardinalDirection(CardinalDirection side);
     }

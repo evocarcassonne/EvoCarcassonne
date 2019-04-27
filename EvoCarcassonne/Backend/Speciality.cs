@@ -4,6 +4,7 @@
     {
         Colostor,
         Shield,
+        EndOfRoad,
         None
     }
 }

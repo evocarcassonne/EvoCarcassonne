@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Data;
 
 namespace EvoCarcassonne.Backend
 {
@@ -10,10 +8,9 @@ namespace EvoCarcassonne.Backend
     {
         public int TileID { get; set; }
         public List<IDirection> Directions { get; set; }
-        public Speciality Speciality { get; set; }
+        public List<Speciality> Speciality { get; set; }
 
-
-        public Tile(int tileId, List<IDirection> directions, Speciality speciality)
+        public Tile(int tileId, List<IDirection> directions, List<Speciality> speciality)
         {
             TileID = tileId;
             Directions = directions;
@@ -32,16 +29,16 @@ namespace EvoCarcassonne.Backend
                     temp = Directions.First();
                     for (int i = 0; i < Directions.Count - 1; i++)
                     {
-                        Directions[i] = Directions[i+1];
+                        Directions[i] = Directions[i + 1];
                     }
 
-                    Directions[Directions.Count-1] = temp;
+                    Directions[Directions.Count - 1] = temp;
                     break;
                 case 90:
                     temp = Directions.Last();
                     for (int i = Directions.Count - 1; i > 0; i--)
                     {
-                        Directions[i] = Directions[i-1];
+                        Directions[i] = Directions[i - 1];
                     }
 
                     Directions[0] = temp;
@@ -69,8 +66,25 @@ namespace EvoCarcassonne.Backend
 
         public override string ToString()
         {
-            return "ID: " + TileID + "    directions1: " + Directions[0].Landscape + "    directions2" + Directions[1].Landscape +
-                   "    directions2" + Directions[2].Landscape + "    directions4" + Directions[3].Landscape + "    specialty: " + Speciality;
+            return "ID: " + TileID + "    directions1: " + Directions[0].Landscape + "    directions2" +
+                   Directions[1].Landscape +
+                   "    directions2" + Directions[2].Landscape + "    directions4" + Directions[3].Landscape +
+                   "    specialty: " + Speciality;
         }
+
+        public CardinalDirection GetCardinalDirectionByIndex(int index)
+        {
+            switch(index)
+            {
+                case 0: return CardinalDirection.North;
+                case 1: return CardinalDirection.East;
+                case 2: return CardinalDirection.South;
+                case 3: return CardinalDirection.West;
+                default: return CardinalDirection.North;
+                
+            }
+        }
+
     }
+
 }

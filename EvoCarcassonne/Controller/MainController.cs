@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -20,6 +21,11 @@ namespace EvoCarcassonne.Controller
 
         public static ObservableCollection<BoardTile> BoardTiles { get; set; }
 
+        /**
+         * Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
+         */
+        public static ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } 
+        
         /// <summary>
         /// The current player can put down this tile
         /// </summary>
@@ -123,13 +129,13 @@ namespace EvoCarcassonne.Controller
             // Create commands            
             RotateLeftCommand = new RelayCommand(() => CurrentTile.Rotate(-90));
             RotateRightCommand = new RelayCommand(() => CurrentTile.Rotate(90));
+
             GetNewTileCommand = new RelayCommand(() => GetNewTile());
             EndTurnCommand = new RelayCommand(() => EndTurn());
 
 
             CurrentPlayer = Player1;
         }
-
         #endregion
 
         
@@ -155,6 +161,21 @@ namespace EvoCarcassonne.Controller
             {
                 for (var y = 0; y < 10; y++)
                 {
+                    List<Speciality> specialties = new List<Speciality>();
+                    specialties.Add(Speciality.None);
+
+                    boardTiles.Add(new BoardTile
+                    {
+                        Tag = $"{x};{y}",
+                        Coordinates = new Coordinates(x, y),
+                        Image = tilesImageList[random.Next(tilesImageList.Count)], // for testing purposes
+                        // Image = null,
+                        Angle = 0,
+                        
+                        BackendTile = new Tile(0, null, specialties)
+                    });
+
+
                     if (x == 5 && y == 5)
                     {
                         // Put a tile to the middle of the board
@@ -164,7 +185,7 @@ namespace EvoCarcassonne.Controller
                             Coordinates = new Coordinates(x, y),
                             Image = tilesImageList[random.Next(tilesImageList.Count)],
                             Angle = 0,
-                            BackendTile = new Tile(CurrentTileID, null, Speciality.None)
+                            BackendTile = new Tile(CurrentTileID, null, specialties)
 
                         });
                         CurrentTileID++;
@@ -178,7 +199,7 @@ namespace EvoCarcassonne.Controller
                             Coordinates = new Coordinates(x, y),
                             Image = null,
                             Angle = 0,
-                            BackendTile = new Tile(0, null, Speciality.None)
+                            BackendTile = new Tile(0, null, specialties)
 
                         });
                     }
