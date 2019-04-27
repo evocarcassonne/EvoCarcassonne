@@ -6,7 +6,7 @@ using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace RoadCalculatorTests
+namespace EvoCarcassonneUnitTests
 {
     [TestClass]
     public class RoadCalculatorTest
