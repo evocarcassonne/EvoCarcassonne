@@ -71,5 +71,20 @@ namespace EvoCarcassonne.Backend
                    "    directions2" + Directions[2].Landscape + "    directions4" + Directions[3].Landscape +
                    "    specialty: " + Speciality;
         }
+
+        public CardinalDirection GetCardinalDirectionByIndex(int index)
+        {
+            switch(index)
+            {
+                case 0: return CardinalDirection.North;
+                case 1: return CardinalDirection.East;
+                case 2: return CardinalDirection.South;
+                case 3: return CardinalDirection.West;
+                default: return CardinalDirection.North;
+                
+            }
+        }
+
     }
+
 }

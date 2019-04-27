@@ -95,5 +95,19 @@ namespace EvoCarcassonne.Backend
                 default: return CardinalDirection.South;
             }
         }
+
+        public static BoardTile getNeighborTile(Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile, CardinalDirection whereToGo)
+        {
+            foreach (var pair in tilesNextToTheGivenTile)
+            {
+                if (pair.Key == whereToGo)
+                {
+                    return pair.Value;
+                }
+            }
+            return null;
+        }
+
+        
     }
 }
