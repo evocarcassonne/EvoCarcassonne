@@ -71,10 +71,45 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Content="Lapkérés" Width="100" Height="35" Grid.Row="1" />
-        <Button Content="Körvége" Width="100" Height="35" Grid.Row="1" Grid.Column="4" />
-        <Button Content="Balra" Width="40" Height="35" Grid.Row="1" Grid.Column="1" />
-        <Button Content="Jobbra" Width="40" Height="35" Grid.Row="1" Grid.Column="3"/>
-        <Button Content="" Width="90" Height="90" Grid.Row="1" Grid.Column="2"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Jelenlegi játékos: " />
+            <TextBlock Text="{Binding CurrentPlayer.Name}" />
+        </StackPanel>
+        
+        <Button Content="Lapkérés" Command="{Binding GetNewTileCommand}" Width="100" Height="35" Grid.Row="1" />
+        <Button Content="Körvége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Grid.Row="1" Grid.Column="4" />
+        <Button Content="Balra" Click="RotateLeftButtonCLick" Width="40" Height="35" Grid.Row="1" Grid.Column="1" />
+        <Button Content="Jobbra" Click="RotateRightButtonCLick" Width="40" Height="35" Grid.Row="1" Grid.Column="3"/>
+        <Button  x:Name="CurrentTileBtn"  Content="" Width="90" Height="90" Grid.Row="1" Grid.Column="2">
+            <Button.Background>
+                <ImageBrush ImageSource="{Binding CurrentBoardTile.Image}">
+                    <ImageBrush.RelativeTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="{Binding CurrentBoardTile.Angle}" CenterY="0.5" CenterX="0.5"/>
+                        </TransformGroup>
+                    </ImageBrush.RelativeTransform>
+                </ImageBrush>
+            </Button.Background>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="OverridesDefaultStyle" Value="True" />
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.5" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </UserControl>
