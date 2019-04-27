@@ -24,9 +24,8 @@ namespace EvoCarcassonneUnitTests
 
         #endregion
 
-
-        [TestMethod]
-        public void CheckFitOfTile_TileCanFit_ReturnsTrue()
+        [TestInitialize]
+        public void Initialize()
         {
             #region InitializeValues
 
@@ -77,19 +76,108 @@ namespace EvoCarcassonneUnitTests
             directions.Add(new Direction(0, new Road(), figure));
             boardTile5.BackendTile = new Tile(5, directions, Speciality.EndOfRoad);
 
+
+            directions = new List<IDirection>();
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
+            boardTile6.BackendTile = new Tile(6, directions, Speciality.None);
+
+            directions = new List<IDirection>();
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
+            boardTile7.BackendTile = new Tile(7, directions, Speciality.None);
+
+            directions = new List<IDirection>();
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
+            boardTile8.BackendTile = new Tile(8, directions, Speciality.EndOfRoad);
+
+            #endregion
+        }
+
+        [TestMethod]
+        public void CheckFitOfTile_TileCanFit_ReturnsTrue_TestCase1()
+        {
+
+
+
+
             MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
             MainController.PlacedBoardTiles.Add(boardTile1);
             MainController.PlacedBoardTiles.Add(boardTile2);
-            //MainController.PlacedBoardTiles.Add(boardTile3);
+            MainController.PlacedBoardTiles.Add(boardTile3);
             MainController.PlacedBoardTiles.Add(boardTile4);
-            MainController.PlacedBoardTiles.Add(boardTile5);
-            MainController.PlacedBoardTiles.Add(boardTile7);
-            MainController.PlacedBoardTiles.Add(boardTile8);
-
-            #endregion
-
 
             Assert.IsTrue(Utils.CheckFitOfTile(boardTile3));
         }
+
+        [TestMethod]
+        public void CheckFitOfTile_TileCanFit_ReturnsTrue_TestCase2()
+        {
+            var figure = new Figure(0, new Owner(0, "Krisztian"));
+
+            List<IDirection> directions = new List<IDirection>();
+            directions.Add(new Direction(0, new Road(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Castle(), figure));
+            boardTile3.BackendTile = new Tile(3, directions, Speciality.None);
+
+            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            MainController.PlacedBoardTiles.Add(boardTile1);
+            MainController.PlacedBoardTiles.Add(boardTile2);
+            MainController.PlacedBoardTiles.Add(boardTile3);
+            MainController.PlacedBoardTiles.Add(boardTile5);
+            MainController.PlacedBoardTiles.Add(boardTile6);
+            MainController.PlacedBoardTiles.Add(boardTile7);
+
+            Assert.IsTrue(Utils.CheckFitOfTile(boardTile6));
+        }
+
+        [TestMethod]
+        public void CheckFitOfTile_TileCanFit_ReturnsFalse_TestCase1()
+        {
+            var figure = new Figure(0, new Owner(0, "Krisztian"));
+
+            List<IDirection> directions = new List<IDirection>();
+            directions.Add(new Direction(0, new Road(), figure));
+            directions.Add(new Direction(0, new Castle(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
+            directions.Add(new Direction(0, new Castle(), figure));
+            boardTile3.BackendTile = new Tile(3, directions, Speciality.None);
+
+            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            MainController.PlacedBoardTiles.Add(boardTile1);
+            MainController.PlacedBoardTiles.Add(boardTile2);
+            MainController.PlacedBoardTiles.Add(boardTile3);
+            MainController.PlacedBoardTiles.Add(boardTile5);
+            MainController.PlacedBoardTiles.Add(boardTile6);
+            MainController.PlacedBoardTiles.Add(boardTile7);
+
+            Assert.IsFalse(Utils.CheckFitOfTile(boardTile6));
+        }
+
+        [TestMethod]
+        public void CheckFitOfTile_TileCanFit_ReturnsFalse_TestCase2()
+        {
+            
+            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            MainController.PlacedBoardTiles.Add(boardTile1);
+            MainController.PlacedBoardTiles.Add(boardTile2);
+            MainController.PlacedBoardTiles.Add(boardTile3);
+            MainController.PlacedBoardTiles.Add(boardTile5);
+            MainController.PlacedBoardTiles.Add(boardTile6);
+            MainController.PlacedBoardTiles.Add(boardTile7);
+            MainController.PlacedBoardTiles.Add(boardTile8);
+
+            Assert.IsTrue(Utils.CheckFitOfTile(boardTile8));
+        }
+
     }
 }
