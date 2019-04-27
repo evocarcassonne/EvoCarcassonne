@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,6 @@ namespace EvoCarcassonne.Backend
                     .Where(x => x.Contains(condition)).ToList();
             }
         }
-
 
         public static bool CheckFitOfTile(BoardTile boardTile)
         {
