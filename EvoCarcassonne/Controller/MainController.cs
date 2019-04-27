@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -83,6 +84,9 @@ namespace EvoCarcassonne.Controller
             {
                 for (var y = 0; y < 10; y++)
                 {
+                    List<Speciality> specialties = new List<Speciality>();
+                    specialties.Add(Speciality.None);
+
                     boardTiles.Add(new BoardTile
                     {
                         Tag = $"{x};{y}",
@@ -90,8 +94,8 @@ namespace EvoCarcassonne.Controller
                         Image = tilesImageList[random.Next(tilesImageList.Count)], // for testing purposes
                         // Image = null,
                         Angle = 0,
-                        BackendTile = new Tile(0, null, Speciality.None)
-
+                        
+                        BackendTile = new Tile(0, null, specialties)
                     });
                 }
             }

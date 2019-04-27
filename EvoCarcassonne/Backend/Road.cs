@@ -13,27 +13,36 @@ namespace EvoCarcassonne.Backend
         {
         }
 
+
         /**
          * Calculate a finished road's length and gives back the points earned from finishing it.
          */
         public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             Console.WriteLine(currentTile);
-            if (currentTile.BackendTile.Speciality == Speciality.EndOfRoad && !firstCall)
+            foreach(var tile in currentTile.BackendTile.Speciality)
             {
-                lastTile = currentTile;
-                return 1;
+                if (tile == Speciality.EndOfRoad && !firstCall)
+                {
+                    lastTile = currentTile;
+                    return 1;
+                }
             }
+            
 
             if (firstCall)
             {
                 firstTile = currentTile;
             }
 
-            if (currentTile.BackendTile.Speciality != Speciality.EndOfRoad && firstCall)
+            foreach (var tile in currentTile.BackendTile.Speciality)
             {
-                return 0;
+                if (tile != Speciality.EndOfRoad && firstCall)
+                {
+                    return 0;
+                }
             }
+                
 
             int result = 1;
             Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile =
@@ -149,9 +158,12 @@ namespace EvoCarcassonne.Backend
 
         private bool IsEndOfRoad(BoardTile neighborTile)
         {
-            if (neighborTile == null || neighborTile.BackendTile.Speciality == Speciality.EndOfRoad)
+            foreach (var tile in neighborTile.BackendTile.Speciality)
             {
-                return true;
+                if (neighborTile == null || tile == Speciality.EndOfRoad)
+                {
+                    return true;
+                }
             }
             return false;
         }
