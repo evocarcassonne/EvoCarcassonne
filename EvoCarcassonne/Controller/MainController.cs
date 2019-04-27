@@ -21,11 +21,7 @@ namespace EvoCarcassonne.Controller
 
         public static ObservableCollection<BoardTile> BoardTiles { get; set; }
 
-        /**
-         * Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
-         */
-        public static ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } 
-        
+      
         /// <summary>
         /// The current player can put down this tile
         /// </summary>
@@ -156,15 +152,16 @@ namespace EvoCarcassonne.Controller
             var random = new Random();
 
             var tilesImageList = Utils.GetResourceNames(@"tiles");
+            List<Speciality> specialties = new List<Speciality>();
+            specialties.Add(Speciality.None);
 
             for (var x = 0; x < 10; x++)
             {
                 for (var y = 0; y < 10; y++)
                 {
-                    List<Speciality> specialties = new List<Speciality>();
-                    specialties.Add(Speciality.None);
+                    
 
-                    boardTiles.Add(new BoardTile
+                    /*boardTiles.Add(new BoardTile
                     {
                         Tag = $"{x};{y}",
                         Coordinates = new Coordinates(x, y),
@@ -174,7 +171,7 @@ namespace EvoCarcassonne.Controller
                         
                         BackendTile = new Tile(0, null, specialties)
                     });
-
+                    */
 
                     if (x == 5 && y == 5)
                     {
@@ -233,7 +230,7 @@ namespace EvoCarcassonne.Controller
             }
             throw new IndexOutOfRangeException();
         }
-
+        
 
         public void GetNewTile()
         {
@@ -245,13 +242,16 @@ namespace EvoCarcassonne.Controller
             Random random = new Random();
             var tilesImageList = Utils.GetResourceNames(@"tiles");
 
+            List<Speciality> specialities = new List<Speciality>();
+            specialities.Add(Speciality.None);
+
             CurrentBoardTile = new BoardTile
             {
                 Tag = null,
                 Coordinates = null,
                 Image = tilesImageList[random.Next(tilesImageList.Count)],
                 Angle = 0,
-                BackendTile = new Tile(CurrentTileID, null, Speciality.None)
+                BackendTile = new Tile(CurrentTileID, null, specialities)
 
             };
             CurrentTileID++;
@@ -282,7 +282,8 @@ namespace EvoCarcassonne.Controller
 
             var x = b.Tag.ToString().Split(';').Select(int.Parse).ToArray();
             var index = x[1] + (x[0] * 10);
-
+            List<Speciality> specialities = new List<Speciality>();
+            specialities.Add(Speciality.None);
             if (BoardTiles[index].Image == null)
                 BoardTiles[index] = new BoardTile
                 {
@@ -290,7 +291,7 @@ namespace EvoCarcassonne.Controller
                     Coordinates = new Coordinates(x[0], x[1]),
                     Image = CurrentBoardTile.Image, 
                     Angle = CurrentBoardTile.Angle,
-                    BackendTile = new Tile(0, null, Speciality.None)
+                    BackendTile = new Tile(0, null, specialities)
 
                 };                
             else
@@ -304,7 +305,7 @@ namespace EvoCarcassonne.Controller
                 Coordinates = null,
                 Image = null,
                 Angle = 0,
-                BackendTile = new Tile(0, null, Speciality.None)
+                BackendTile = new Tile(0, null, specialities)
 
             };
         }
