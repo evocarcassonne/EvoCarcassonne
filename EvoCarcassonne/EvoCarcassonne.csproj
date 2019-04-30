@@ -59,6 +59,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Backend\Extensions.cs" />
+    <Compile Include="Backend\TileParser.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="Backend\Utils.cs" />
@@ -123,30 +125,30 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Tiles\city1.png" />
-    <Resource Include="Resources\Tiles\city11ne.png" />
-    <Resource Include="Resources\Tiles\city11we.png" />
-    <Resource Include="Resources\Tiles\city1rse.png" />
-    <Resource Include="Resources\Tiles\city1rsw.png" />
-    <Resource Include="Resources\Tiles\city1rswe.png" />
-    <Resource Include="Resources\Tiles\city1rwe.png" />
-    <Resource Include="Resources\Tiles\city2nw.png" />
-    <Resource Include="Resources\Tiles\city2nwr.png" />
-    <Resource Include="Resources\Tiles\city2nws.png" />
-    <Resource Include="Resources\Tiles\city2nwsr.png" />
-    <Resource Include="Resources\Tiles\city2we.png" />
-    <Resource Include="Resources\Tiles\city2wes.png" />
-    <Resource Include="Resources\Tiles\city3.png" />
-    <Resource Include="Resources\Tiles\city3r.png" />
-    <Resource Include="Resources\Tiles\city3s.png" />
-    <Resource Include="Resources\Tiles\city3sr.png" />
-    <Resource Include="Resources\Tiles\city4.png" />
-    <Resource Include="Resources\Tiles\cloister.png" />
-    <Resource Include="Resources\Tiles\cloisterr.png" />
-    <Resource Include="Resources\Tiles\road2ns.png" />
-    <Resource Include="Resources\Tiles\road2sw.png" />
-    <Resource Include="Resources\Tiles\road3.png" />
-    <Resource Include="Resources\Tiles\road4.png" />
+    <Resource Include="Resources\Tiles\000001.png" />
+    <Resource Include="Resources\Tiles\010108.png" />
+    <Resource Include="Resources\Tiles\100004.png" />
+    <Resource Include="Resources\Tiles\110009.png" />
+    <Resource Include="Resources\Tiles\110122.png" />
+    <Resource Include="Resources\Tiles\111124.png" />
+    <Resource Include="Resources\Tiles\121201.png" />
+    <Resource Include="Resources\Tiles\121203.png" />
+    <Resource Include="Resources\Tiles\121212.png" />
+    <Resource Include="Resources\Tiles\200003.png" />
+    <Resource Include="Resources\Tiles\200103.png" />
+    <Resource Include="Resources\Tiles\200203.png" />
+    <Resource Include="Resources\Tiles\200212.png" />
+    <Resource Include="Resources\Tiles\210003.png" />
+    <Resource Include="Resources\Tiles\211105.png" />
+    <Resource Include="Resources\Tiles\211203.png" />
+    <Resource Include="Resources\Tiles\211212.png" />
+    <Resource Include="Resources\Tiles\220201.png" />
+    <Resource Include="Resources\Tiles\220212.png" />
+    <Resource Include="Resources\Tiles\221102.png" />
+    <Resource Include="Resources\Tiles\221203.png" />
+    <Resource Include="Resources\Tiles\221211.png" />
+    <Resource Include="Resources\Tiles\222211.png" />
+    <Resource Include="Resources\Tiles\201003.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -20,6 +20,8 @@ namespace EvoCarcassonne.Controller
 
         public static ObservableCollection<BoardTile> BoardTiles { get; set; }
 
+        public static ObservableCollection<BoardTile> TileStack { get; set; }
+
         /// <summary>
         /// The current player can put down this tile
         /// </summary>
@@ -143,13 +145,10 @@ namespace EvoCarcassonne.Controller
         /// </summary>
         private void LoadTiles()
         {
-            var boardTiles = new ObservableCollection<BoardTile>();
-
+            TileStack = TileParser.GetTileStack();
             PlacedBoardTiles = new ObservableCollection<BoardTile>();
 
-            var random = new Random();
-
-            var tilesImageList = Utils.GetResourceNames(@"tiles");
+            var boardTiles = new ObservableCollection<BoardTile>();
 
             for (var x = 0; x < 10; x++)
             {
@@ -158,15 +157,14 @@ namespace EvoCarcassonne.Controller
                     if (x == 5 && y == 5)
                     {
                         // Put a tile to the middle of the board
-                        boardTiles.Add(new BoardTile
-                        {
-                            Tag = $"{x};{y}",
-                            Coordinates = new Coordinates(x, y),
-                            Image = tilesImageList[random.Next(tilesImageList.Count)],
-                            Angle = 0,
-                            BackendTile = new Tile(CurrentTileID, null, Speciality.None)
 
-                        });
+                        var starterTile = TileStack.RemoveAndGet(0);
+                        starterTile.Tag = $"{x};{y}";
+                        starterTile.Coordinates = new Coordinates(x, y);
+                        starterTile.BackendTile.TileID = CurrentTileID;
+
+                        boardTiles.Add(starterTile);
+
                         CurrentTileID++;
                     }
                     else
@@ -179,15 +177,12 @@ namespace EvoCarcassonne.Controller
                             Image = null,
                             Angle = 0,
                             BackendTile = new Tile(0, null, Speciality.None)
-
                         });
                     }
-
                 }
             }
 
             BoardTiles = boardTiles;
-
         }
 
 
@@ -221,18 +216,12 @@ namespace EvoCarcassonne.Controller
 
             TileIsDown = false;
             HasCurrentTile = true;
-            Random random = new Random();
-            var tilesImageList = Utils.GetResourceNames(@"tiles");
 
-            CurrentBoardTile = new BoardTile
-            {
-                Tag = null,
-                Coordinates = null,
-                Image = tilesImageList[random.Next(tilesImageList.Count)],
-                Angle = 0,
-                BackendTile = new Tile(CurrentTileID, null, Speciality.None)
+            var random = new Random();
 
-            };
+            CurrentBoardTile = TileStack.RemoveAndGet(random.Next(TileStack.Count));
+            CurrentBoardTile.BackendTile.TileID = CurrentTileID;
+
             CurrentTileID++;
 
         }

@@ -25,5 +25,8 @@
             Figure = figure;
         }
 
+        public Direction()
+        {
+        }
     }
 }

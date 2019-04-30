@@ -21,9 +21,8 @@ namespace EvoCarcassonne.Backend
                 return reader.Cast<DictionaryEntry>().Select(entry => (string)entry.Key).Where(x => x.Contains(condition)).ToList();
             }
         }
-        
-        
-         public bool CheckFitOfTile(BoardTile boardTile)
+
+        public bool CheckFitOfTile(BoardTile boardTile)
         {
             
             Tile backendTile = boardTile.BackendTile;
@@ -74,8 +73,5 @@ namespace EvoCarcassonne.Backend
             
             return true;
         }
-
-
-        
     }
 }
