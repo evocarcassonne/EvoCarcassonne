@@ -30,8 +30,17 @@ namespace EvoCarcassonne.Backend
 
         }
 
-        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
+        public int calculateChurch(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
+            int score=isThereEightNeighbor(currentTile);
+            return score;
+        }
+
+        public int calculateChurchFinal(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
+
+        {
+            int finalscore=finalScore(currentTile);
+
             return 0;
         }
 
@@ -48,22 +57,7 @@ namespace EvoCarcassonne.Backend
                 return IsColostor = false;
             }
         }
-        public int checkScore(BoardTile currentTile)
-        {
-            int score = 0;
-
-            if (checkCurrentSpeciality(currentTile) == true)
-            {
-
-                score = isThereEightNeighbor(currentTile);
-
-            }
-            else
-            {
-
-            }
-            return score;
-
+       
         }
         public int isThereEightNeighbor(BoardTile currentTile)
         {
@@ -75,7 +69,7 @@ namespace EvoCarcassonne.Backend
 
 
                 if (currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
                 {
                     if (checkCurrentSpeciality(neighborTile) == true)
                     {
@@ -88,7 +82,7 @@ namespace EvoCarcassonne.Backend
                 }
 
                 if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X == neighborTile.Coordinates.X)
                 {
                     if (checkCurrentSpeciality(neighborTile) == true)
                     {
@@ -100,7 +94,7 @@ namespace EvoCarcassonne.Backend
 
 
                 if (currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
                 {
                     if (checkCurrentSpeciality(neighborTile) == true)
                     {
@@ -113,7 +107,7 @@ namespace EvoCarcassonne.Backend
 
 
                 if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X == neighborTile.Coordinates.X)
                 {
                     if (checkCurrentSpeciality(neighborTile) == true)
                     {
@@ -124,7 +118,7 @@ namespace EvoCarcassonne.Backend
 
                 }
                 if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
                 {
                     if (checkCurrentSpeciality(neighborTile) == true)
                     {
@@ -135,7 +129,7 @@ namespace EvoCarcassonne.Backend
 
                 }
                 if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
                 {
                     if (checkCurrentSpeciality(neighborTile) == true)
                     {
@@ -146,7 +140,7 @@ namespace EvoCarcassonne.Backend
 
                 }
                 if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
                 {
                     if (checkCurrentSpeciality(neighborTile) == true)
                     {
@@ -157,7 +151,7 @@ namespace EvoCarcassonne.Backend
 
                 }
                 if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
                 {
                     if (checkCurrentSpeciality(neighborTile) == true)
                     {
@@ -178,25 +172,7 @@ namespace EvoCarcassonne.Backend
         }
 
 
-        public int checkFinalScore(BoardTile currentTile)
-        {
-            int FinalScore = 0;
-            if (checkCurrentSpeciality(currentTile) == true)
-            {
-
-                FinalScore = isThereFinalEightNeighbor(currentTile);
-
-            }
-            else
-            {
-
-
-
-
-
-            }
-            return FinalScore;
-        }
+        
 
         public int isThereFinalEightNeighbor(BoardTile currentTile)
         {
@@ -208,7 +184,7 @@ namespace EvoCarcassonne.Backend
 
 
                 if (currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y )
                 {
 
                     temp++;
@@ -217,7 +193,7 @@ namespace EvoCarcassonne.Backend
                 }
 
                 if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X == neighborTile.Coordinates.X )
                 {
 
                     temp++;
@@ -225,7 +201,7 @@ namespace EvoCarcassonne.Backend
 
 
                 if (currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
                 {
 
                     temp++;
@@ -234,35 +210,35 @@ namespace EvoCarcassonne.Backend
 
 
                 if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X == neighborTile.Coordinates.X )
                 {
 
                     temp++;
 
                 }
                 if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
                 {
 
                     temp++;
 
                 }
                 if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
                 {
 
                     temp++;
 
                 }
                 if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
                 {
 
                     temp++;
 
                 }
                 if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X && neighborTile.BackendTile.TileID != 0)
+                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
                 {
 
                     temp++;
@@ -283,6 +259,8 @@ namespace EvoCarcassonne.Backend
             int FinalScore = 0;
             foreach (var tile in MainController.PlacedBoardTiles)
             {
+            if (checkCurrentSpeciality(tile))
+	        
                 FinalScore += isThereFinalEightNeighbor(tile);
             }
 
@@ -290,8 +268,5 @@ namespace EvoCarcassonne.Backend
         }
 
 
-
     }
-}
-
 
