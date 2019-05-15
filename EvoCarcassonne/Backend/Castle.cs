@@ -4,11 +4,11 @@ using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {
-    public class Castle
+    public class Castle : ILandscape
     {
         private BoardTile firstTile { get; set; }
         private bool good { get; set; } = true;
-        public int points { get; set; } = 0;
+        public int points { get; set; } = 0;    
         public int whereToGo { get; set; }
         public List<BoardTile> CheckedBoardtiles { get; set; }
 
@@ -40,51 +40,41 @@ namespace EvoCarcassonne.Backend
 
             while (good)
             {
-                foreach (var tile in currentTile.BackendTile.Speciality)
+                if (CheckEndOfCaste(currentTile) && !firstCall && currentTile.BackendTile.Directions[fromDirection] is Castle)
                 {
-                    if (tile == Speciality.EndOfCastle && !firstCall)
-                    {
-                        points++;
-                    }
+                    points++;
+                    return points;
                 }
 
                 if (currentTile.BackendTile.Directions[0].Landscape is Castle && fromDirection != 0 && currentTile != firstTile && !AlreadyCheckedBoardtile(CheckedBoardtiles, currentTile))
                 {
                     whereToGo = 2;
                     currentTile = MainController.BoardTiles[currentTileCoordinate - 10];
-                    calculate(currentTile,2, false);
-
-                    points++;
-                   
+                    calculate(currentTile,2, false);    
                 }
 
                 if (currentTile.BackendTile.Directions[1].Landscape is Castle && fromDirection != 1 && currentTile != firstTile && !AlreadyCheckedBoardtile(CheckedBoardtiles, currentTile))
                 {
                     currentTile = MainController.BoardTiles[currentTileCoordinate + 1];
                     calculate(currentTile, 3, false);
-
-                    points++;
-
                 }
 
                 if (currentTile.BackendTile.Directions[2].Landscape is Castle && fromDirection != 2 && currentTile != firstTile && !AlreadyCheckedBoardtile(CheckedBoardtiles, currentTile))
                 {
                     currentTile = MainController.BoardTiles[currentTileCoordinate + 10];
                     calculate(currentTile, 0, false);
-
-                    points++;
-
                 }
 
                 if (currentTile.BackendTile.Directions[3].Landscape is Castle && fromDirection != 3 && currentTile != firstTile && !AlreadyCheckedBoardtile(CheckedBoardtiles, currentTile))
                 {
                     currentTile = MainController.BoardTiles[currentTileCoordinate - 1];
                     calculate(currentTile, 1, false);
-
-                    points++;
-
                 }
+                points++;
             }
+
+            if (good == false)
+                points = 0;
 
             return points;
         }
@@ -111,6 +101,24 @@ namespace EvoCarcassonne.Backend
                 default: return 0; 
             }
 
+        }
+
+        private bool CheckEndOfCaste(BoardTile currentTile)
+        {
+            foreach (var tile in currentTile.BackendTile.Speciality)
+            {
+                if (tile == Speciality.EndOfCastle)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
