@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 
@@ -20,253 +22,73 @@ namespace EvoCarcassonne.Backend
 
         public void Rotate(int direction)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public IDirection getTileSideByCardinalDirection(CardinalDirection side)
-        {
-
-            return null;
-
-        }
-
-        public int calculateChurch(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
-        {
-            int score=isThereEightNeighbor(currentTile);
-            return score;
-        }
-
-        public int calculateChurchFinal(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
-
-        {
-            int finalscore=finalScore(currentTile);
-
-            return 0;
-        }
-
-        public bool checkCurrentSpeciality(BoardTile currentTile)
-        {
-
-            if (currentTile.BackendTile.Speciality.Contains(Backend.Speciality.Colostor))
+            IDirection temp;
+            switch (direction)
             {
-                return IsColostor = true;
-            }
+                case -90:
+                    temp = Directions.First();
+                    for (int i = 0; i < Directions.Count - 1; i++)
+                    {
+                        Directions[i] = Directions[i + 1];
+                    }
 
-            else
-            {
-                return IsColostor = false;
+                    Directions[Directions.Count - 1] = temp;
+                    break;
+                case 90:
+                    temp = Directions.Last();
+                    for (int i = Directions.Count - 1; i > 0; i--)
+                    {
+                        Directions[i] = Directions[i - 1];
+                    }
+
+                    Directions[0] = temp;
+                    break;
+                default:
+                    Debug.WriteLine(@"[ERROR] You have given a wrong rotation value!");
+                    break;
             }
         }
-       
-        }
-        public int isThereEightNeighbor(BoardTile currentTile)
-        {
-            int temp = 0;
-            int score = 0;
-
-            foreach (var neighborTile in MainController.PlacedBoardTiles)
-            {
-
-
-                if (currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
-                {
-                    if (checkCurrentSpeciality(neighborTile) == true)
-                    {
-
-                        score += isThereEightNeighbor(neighborTile);
-                    }
-                    temp++;
-
-
-                }
-
-                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X)
-                {
-                    if (checkCurrentSpeciality(neighborTile) == true)
-                    {
-
-                        score += isThereEightNeighbor(neighborTile);
-                    }
-                    temp++;
-                }
-
-
-                if (currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
-                {
-                    if (checkCurrentSpeciality(neighborTile) == true)
-                    {
-
-                        score += isThereEightNeighbor(neighborTile);
-                    }
-                    temp++;
-
-                }
-
-
-                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X)
-                {
-                    if (checkCurrentSpeciality(neighborTile) == true)
-                    {
-
-                        score += isThereEightNeighbor(neighborTile);
-                    }
-                    temp++;
-
-                }
-                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
-                {
-                    if (checkCurrentSpeciality(neighborTile) == true)
-                    {
-
-                        score += isThereEightNeighbor(neighborTile);
-                    }
-                    temp++;
-
-                }
-                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
-                {
-                    if (checkCurrentSpeciality(neighborTile) == true)
-                    {
-
-                        score += isThereEightNeighbor(neighborTile);
-                    }
-                    temp++;
-
-                }
-                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
-                {
-                    if (checkCurrentSpeciality(neighborTile) == true)
-                    {
-
-                        score += isThereEightNeighbor(neighborTile);
-                    }
-                    temp++;
-
-                }
-                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
-                {
-                    if (checkCurrentSpeciality(neighborTile) == true)
-                    {
-
-                        score += isThereEightNeighbor(neighborTile);
-                    }
-                    temp++;
-
-                }
-
-            }
-            if (temp == 8)
-            {
-                score++;
-            }
-
-            return score;
-        }
-
 
         
 
-        public int isThereFinalEightNeighbor(BoardTile currentTile)
+        public IDirection getTileSideByCardinalDirection(CardinalDirection side)
         {
-            int temp = 0;
-            int score = 0;
-
-            foreach (var neighborTile in MainController.PlacedBoardTiles)
+            switch (side)
             {
-
-
-                if (currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y )
-                {
-
-                    temp++;
-
-
-                }
-
-                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X )
-                {
-
-                    temp++;
-                }
-
-
-                if (currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
-                {
-
-                    temp++;
-
-                }
-
-
-                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X )
-                {
-
-                    temp++;
-
-                }
-                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
-                {
-
-                    temp++;
-
-                }
-                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
-                {
-
-                    temp++;
-
-                }
-                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
-                {
-
-                    temp++;
-
-                }
-                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
-                {
-
-                    temp++;
-
-                }
-
+                case CardinalDirection.North: return Directions[0];
+                case CardinalDirection.East: return Directions[1];
+                case CardinalDirection.South: return Directions[2];
+                case CardinalDirection.West: return Directions[3];
+                default: return Directions[0];
             }
-            if (temp == 8)
-            {
-                score++;
-            }
-
-            return score;
-        }
-
-        public int finalScore(BoardTile currentTile)
-        {
-            int FinalScore = 0;
-            foreach (var tile in MainController.PlacedBoardTiles)
-            {
-            if (checkCurrentSpeciality(tile))
-	        
-                FinalScore += isThereFinalEightNeighbor(tile);
-            }
-
-            return FinalScore;
         }
 
 
+
+        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
+        {
+            List<BoardTile> surroundingTiles = Utils.GetAllSurroundingTiles(currentTile);
+
+
+            if (gameover)
+            {
+                return surroundingTiles.Count;
+            }
+            else
+            {
+                if (surroundingTiles.Count==8)
+                {
+                    return 9;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+
+
+
+        }
     }
-
+}

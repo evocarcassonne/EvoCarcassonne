@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +76,46 @@ namespace EvoCarcassonne.Backend
                     currentTile.Coordinates.X == neighborTile.Coordinates.X)
                 {
                     result.Add(CardinalDirection.North, neighborTile);
+                }
+            }
+
+            return result;
+        }
+        public static List<BoardTile> GetAllSurroundingTiles(BoardTile currentTile)
+        {
+
+            List<BoardTile> result = new List<BoardTile>();
+            foreach (var list in Utils.GetSurroundingTiles(currentTile))
+            {
+                result.Add(list.Value);
+            }
+
+            foreach (var neighborTile in MainController.PlacedBoardTiles)
+            {
+                if (currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X &&
+                    currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y)
+                {
+                    result.Add(neighborTile);
+                }
+
+                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
+                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
+                {
+                    result.Add(neighborTile);
+                }
+
+
+                if (currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X &&
+                    currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y)
+                {
+                    result.Add(neighborTile);
+                }
+
+
+                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
+                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
+                {
+                    result.Add(neighborTile);
                 }
             }
 

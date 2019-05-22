@@ -17,7 +17,7 @@ namespace EvoCarcassonne.Backend
         /**
          * Calculate a finished road's length and gives back the points earned from finishing it.
          */
-        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
+        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
         {
             Console.WriteLine(currentTile);
             foreach(var tile in currentTile.BackendTile.Speciality)
@@ -69,7 +69,7 @@ namespace EvoCarcassonne.Backend
                        
                         if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != 3)
                         {
-                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
+                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false, false);
                             break;
                         }
                     }
@@ -90,7 +90,7 @@ namespace EvoCarcassonne.Backend
                         
                         if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != 1)
                         {
-                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
+                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false, false);
                             break;
                             
                         }
@@ -113,7 +113,7 @@ namespace EvoCarcassonne.Backend
                         
                         if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != 2)
                         {
-                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
+                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false, false);
                             break;
                         }
                     }
@@ -134,7 +134,7 @@ namespace EvoCarcassonne.Backend
                     {
                         if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != 0)
                         {
-                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
+                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false, false);
                         }
                     }
 

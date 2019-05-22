@@ -61,6 +61,7 @@
     </ApplicationDefinition>
     <Compile Include="Backend\Castle.cs" />
     <Compile Include="Backend\Church.cs" />
+    <Compile Include="Backend\Grass.cs" />
     <Compile Include="Backend\Road.cs" />
     <Compile Include="Model\Coordinates.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
