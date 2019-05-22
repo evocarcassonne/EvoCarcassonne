@@ -49,94 +49,42 @@ namespace EvoCarcassonne.Backend
                 new Dictionary<CardinalDirection, BoardTile>();
 
             tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
-            BoardTile neighborTile;
+            BoardTile neighborTile = Utils.getNeighborTile(tilesNextToTheGivenTile, whereToGo);
 
-
+            if (IsEndOfRoad(neighborTile))
+            {
+                lastTile = neighborTile;
+                Console.WriteLine(neighborTile);
+                return result;
+            }
             switch (whereToGo)
             {
                 case CardinalDirection.East:
-                    neighborTile = Utils.getNeighborTile(tilesNextToTheGivenTile, whereToGo);
 
-                    if (IsEndOfRoad(neighborTile))
-                    {
-                        lastTile = neighborTile;
-                        Console.WriteLine(neighborTile);
-                        return result;
-                    }
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                       
-                        if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != 3)
-                        {
-                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
-                            break;
-                        }
-                    }
+                    result = searchInTilesSides(result, neighborTile, 3);
                     break;
 
                 case CardinalDirection.West:
-                    neighborTile = Utils.getNeighborTile(tilesNextToTheGivenTile, whereToGo);
 
-                    if (IsEndOfRoad(neighborTile))
-                    {
-                        lastTile = neighborTile;
-                        Console.WriteLine(neighborTile);
-                        return result;
-                    }
 
-                    for (int i = 0; i < 4; i++)
-                    {
-                        
-                        if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != 1)
-                        {
-                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
-                            break;
-                            
-                        }
-                    }
+                    result = searchInTilesSides(result, neighborTile, 1);
+
 
                     break;
                 case CardinalDirection.North:
 
-                    neighborTile = Utils.getNeighborTile(tilesNextToTheGivenTile, whereToGo);
 
-                    if (IsEndOfRoad(neighborTile))
-                    {
-                        lastTile = neighborTile;
-                        Console.WriteLine(neighborTile);
-                        return result;
-                    }
 
-                    for (int i = 0; i < 4; i++)
-                    {
-                        
-                        if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != 2)
-                        {
-                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
-                            break;
-                        }
-                    }
+
+                    result = searchInTilesSides(result, neighborTile, 2);
+
 
                     break;
                 case CardinalDirection.South:
 
-                    neighborTile = Utils.getNeighborTile(tilesNextToTheGivenTile, whereToGo);
 
-                    if (IsEndOfRoad(neighborTile))
-                    {
-                        lastTile = neighborTile;
-                        Console.WriteLine(neighborTile);
-                        return result;
-                    }
 
-                    for (int i = 0; i < 4; i++)
-                    {
-                        if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != 0)
-                        {
-                            result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
-                        }
-                    }
+                    result = searchInTilesSides(result, neighborTile, 0);
 
                     break;
                 default: return 0;
@@ -150,6 +98,7 @@ namespace EvoCarcassonne.Backend
             return result;
         }
 
+        
 
         public override bool Equals(object obj)
         {
@@ -167,5 +116,21 @@ namespace EvoCarcassonne.Backend
             }
             return false;
         }
+        
+        private int searchInTilesSides(int result, BoardTile neighborTile, int sideNumber)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+
+                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != sideNumber)
+                {
+                    result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
+                    break;
+                }
+            }
+
+            return result;
+        }
+        
     }
 }
