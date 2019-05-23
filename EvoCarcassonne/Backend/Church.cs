@@ -30,5 +30,17 @@ namespace EvoCarcassonne.Backend
         {
             return 0;
         }
+
+        public CardinalDirection GetCardinalDirectionByIndex(int index)
+        {
+            switch (index)
+            {
+                case 0: return CardinalDirection.North;
+                case 1: return CardinalDirection.East;
+                case 2: return CardinalDirection.South;
+                case 3: return CardinalDirection.West;
+                default: return CardinalDirection.North;
+            }
+        }
     }
 }

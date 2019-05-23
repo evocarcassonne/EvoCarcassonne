@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows.Forms;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
@@ -16,13 +17,12 @@ namespace EvoCarcassonne.Backend
          * speciality: 0-none,1-shield,2-colostor,3-endofroad,4-endofcastle
          */
 
-
         public static ObservableCollection<BoardTile> GetTileStack()
         {
             var tileStack = new ObservableCollection<BoardTile>();
             var tileResourcePathList = Utils.GetResourceNames(@"tiles");
 
-            AddTile(tileStack, tileResourcePathList.Find(x => x[0] == 'S'));
+            AddTile(tileStack, tileResourcePathList.Find(t => Path.GetFileNameWithoutExtension(t).StartsWith("s")));
 
             foreach (var resourcePath in tileResourcePathList)
             {
@@ -34,14 +34,29 @@ namespace EvoCarcassonne.Backend
                 }
             }
 
+            MessageBox.Show(tileStack.Count.ToString());
+
             return tileStack;
         }
 
-        private static void AddTile(ObservableCollection<BoardTile> tileStack, string resourcePath)
+        #region Private methods
+
+        private static void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
         {
             var tileName = Path.GetFileNameWithoutExtension(resourcePath);
+            var tileSpecialities = ParseTileSpecialities(tileName);
 
-            var backendTile = new Tile(-1, ParseTileDirections(tileName), ParseTileSpecialities(tileName));
+            ITile backendTile;
+
+            if (tileSpecialities.Contains(Speciality.Colostor))
+            {
+                backendTile = new Church(-1, ParseTileDirections(tileName), tileSpecialities);
+            }
+            else
+            {
+                backendTile = new Tile(-1, ParseTileDirections(tileName), tileSpecialities);
+            }
+
             var tile = new BoardTile(0, null, null, resourcePath, backendTile);
 
             tileStack.Add(tile);
@@ -69,8 +84,7 @@ namespace EvoCarcassonne.Backend
         private static List<Speciality> ParseTileSpecialities(string tileName)
         {
             var specialities = new List<Speciality>();
-
-            var specialitySubstring = tileName.Substring(6);
+            var specialitySubstring = tileName.Substring(5);
 
             foreach (var c in specialitySubstring)
             {
@@ -123,5 +137,8 @@ namespace EvoCarcassonne.Backend
 
             return landscape;
         }
+
+        #endregion
+
     }
 }
