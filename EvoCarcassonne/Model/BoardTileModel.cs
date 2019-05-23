@@ -37,6 +37,15 @@ namespace EvoCarcassonne.Model
             return "Coordinates    " + Coordinates +
                    "BackEndTile    " + BackendTile;
         }
+
+        public BoardTile(double angle, Coordinates coordinates, string tag, string image, Tile backendTile)
+        {
+            _angle = angle;
+            Coordinates = coordinates;
+            Tag = tag;
+            Image = image;
+            BackendTile = backendTile;
+        }
     }
 
 }
