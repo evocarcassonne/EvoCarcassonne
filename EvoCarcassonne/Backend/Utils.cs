@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {
-    public class Utils
+    public static class Utils
     {
         public static List<string> GetResourceNames(string condition)
         {

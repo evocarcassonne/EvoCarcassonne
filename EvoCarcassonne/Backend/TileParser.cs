@@ -2,21 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Windows.Forms;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {
     public static class TileParser
     {
-        /*
-         * tileLevel, count, landscapeN,E,S,W, speciality
-         * tilelevel: 0 - normal tile, S - starter tile
-         * count: 1-F
-         * landscape: 0-field, 1-road, 2-castle, 3-church
-         * speciality: 0-none,1-shield,2-colostor,3-endofroad,4-endofcastle
-         */
-
         public static ObservableCollection<BoardTile> GetTileStack()
         {
             var tileStack = new ObservableCollection<BoardTile>();
@@ -33,8 +24,6 @@ namespace EvoCarcassonne.Backend
                     AddTile(tileStack, resourcePath);
                 }
             }
-
-            MessageBox.Show(tileStack.Count.ToString());
 
             return tileStack;
         }
