@@ -38,12 +38,23 @@ namespace EvoCarcassonne.Controller
         /// <summary>
         /// A flag that indicates if the round is started
         /// </summary>
-        public bool IsRoundStarded { get; set; } = false;
+        public bool IsRoundStarted { get; set; } = false;
 
         /// <summary>
         /// A flag that indicates if the player has a tile
         /// </summary>
-        public bool HasCurrentTile { get; set; } = false;
+        public bool HasCurrentTile
+        {
+            get => _hasCurrentTile;
+            set
+            {
+                if (_hasCurrentTile != value)
+                {
+                    _hasCurrentTile = value;
+                    OnPropertyChanged("HasCurrentTile");
+                }
+            }
+        }
 
         /// <summary>
         /// The current Tile
@@ -84,7 +95,18 @@ namespace EvoCarcassonne.Controller
         /// <summary>
         /// A flag that indicates if the current tile is on the board
         /// </summary>
-        public bool TileIsDown { get; set; } = false;
+        public bool TileIsDown
+        {
+            get => _tileIsDown;
+            private set
+            {
+                if (_tileIsDown != value)
+                {
+                    _tileIsDown = value;
+                    OnPropertyChanged("TileIsDown");
+                }
+            }
+        }
 
         #endregion
 
@@ -92,6 +114,8 @@ namespace EvoCarcassonne.Controller
 
         private BoardTile _currentBoardTile;
         private Owner _currentPlayer;
+        private bool _tileIsDown;
+        private bool _hasCurrentTile;
 
         #endregion
 
@@ -169,7 +193,8 @@ namespace EvoCarcassonne.Controller
                     else
                     {
                         // Put empty tiles to the board
-                        boardTiles.Add(new BoardTile(0, new Coordinates(x, y), $"{x};{y}", null, new Tile(0, null, nullSpecialty)));
+                        var emptyBoardTile = new BoardTile(0, new Coordinates(x, y), $"{x};{y}", null, new Tile(0, null, nullSpecialty));
+                        boardTiles.Add(emptyBoardTile);
                     }
 
                 }
@@ -229,7 +254,7 @@ namespace EvoCarcassonne.Controller
             if (!TileIsDown)
                 return;
 
-            HasCurrentTile = false;
+            TileIsDown = false;
 
             if (CurrentPlayer == Player1)
                 CurrentPlayer = Player2;
@@ -241,6 +266,8 @@ namespace EvoCarcassonne.Controller
         {
             if (TileIsDown)
                 return;
+
+            HasCurrentTile = false;
 
             var x = b.Tag.ToString().Split(';').Select(int.Parse).ToArray();
             var index = x[1] + (x[0] * 10);
