@@ -6,6 +6,15 @@ using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {
+    /*
+     * file name format: tileLevel; count; landscape[North,East,South,West]; speciality... .png
+     *
+     * tileLevel: 0 - normal tile, S - starter tile
+     * count: 1 - 9
+     * landscape: 0 - field, 1 - road, 2 - castle, 3 - church
+     * speciality: 0 - none, 1 - shield, 2 - colostor, 3 - endOfRoad, 4 - endOfCastle
+     */
+
     public static class TileParser
     {
         public static ObservableCollection<BoardTile> GetTileStack()
