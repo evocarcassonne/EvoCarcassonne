@@ -36,7 +36,9 @@ namespace EvoCarcassonne.Backend
             if (!firstCall && !(currentTile.BackendTile.Directions[unfinishedCastle(fromDirection)] is Castle))
                 good = false;
 
-            CheckedBoardtiles.Add(currentTile);
+
+            if (!CheckEndOfCaste(currentTile))
+                CheckedBoardtiles.Add(currentTile);
 
             while (good)
             {
