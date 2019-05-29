@@ -46,6 +46,8 @@ namespace EvoCarcassonne.Model
             Image = image;
             BackendTile = backendTile;
         }
+        
+        public BoardTile(){}
     }
 
 }

@@ -17,7 +17,7 @@ namespace EvoCarcassonne.Backend
         /**
          * Calculate a finished road's length and gives back the points earned from finishing it.
          */
-        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
+        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
         {
             Console.WriteLine(currentTile);
             foreach(var tile in currentTile.BackendTile.Speciality)
@@ -29,7 +29,6 @@ namespace EvoCarcassonne.Backend
                 }
             }
             
-
             if (firstCall)
             {
                 firstTile = currentTile;
@@ -60,32 +59,16 @@ namespace EvoCarcassonne.Backend
             switch (whereToGo)
             {
                 case CardinalDirection.East:
-
                     result = searchInTilesSides(result, neighborTile, 3);
                     break;
-
                 case CardinalDirection.West:
-
-
                     result = searchInTilesSides(result, neighborTile, 1);
-
-
                     break;
                 case CardinalDirection.North:
-
-
-
-
                     result = searchInTilesSides(result, neighborTile, 2);
-
-
                     break;
                 case CardinalDirection.South:
-
-
-
                     result = searchInTilesSides(result, neighborTile, 0);
-
                     break;
                 default: return 0;
             }
@@ -124,7 +107,7 @@ namespace EvoCarcassonne.Backend
 
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != sideNumber)
                 {
-                    result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
+                    result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false,false);
                     break;
                 }
             }
