@@ -120,7 +120,7 @@ namespace EvoCarcassonneUnitTests
 
             Console.WriteLine(@"Route to the other end of road:");
             var result = boardTile1.BackendTile.Directions[1].Landscape
-                .calculate(boardTile1, CardinalDirection.East, true);
+                .calculate(boardTile1, CardinalDirection.East, true, false);
             Console.WriteLine(@"Ez az eredmeny    " + result);
 
             Assert.IsTrue(result == 6);
@@ -226,7 +226,7 @@ namespace EvoCarcassonneUnitTests
 
             Console.WriteLine(@"Route to the other end of road:");
             var result = boardTile1.BackendTile.Directions[1].Landscape
-                .calculate(boardTile1, CardinalDirection.East, true);
+                .calculate(boardTile1, CardinalDirection.East, true, false);
             Console.WriteLine(@"Ez az eredmeny    " + result);
 
             Assert.IsTrue(result == 5);
@@ -331,7 +331,7 @@ namespace EvoCarcassonneUnitTests
 
             Console.WriteLine(@"Route to the other end of road:");
             var result = boardTile1.BackendTile.Directions[1].Landscape
-                .calculate(boardTile2, CardinalDirection.East, true);
+                .calculate(boardTile2, CardinalDirection.East, true, false);
             Console.WriteLine(@"Ez az eredmeny    " + result);
 
             Assert.IsTrue(result == 0);
@@ -446,7 +446,7 @@ namespace EvoCarcassonneUnitTests
 
             Console.WriteLine(@"Route to the other end of road:");
             var result = boardTile1.BackendTile.Directions[1].Landscape
-                .calculate(boardTile1, CardinalDirection.East, true);
+                .calculate(boardTile1, CardinalDirection.East, true, false);
             Console.WriteLine(@"Ez az eredmeny    " + result);
 
             Assert.IsTrue(result == 4);
