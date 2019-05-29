@@ -23,7 +23,7 @@ namespace EvoCarcassonne.Model
                 }
             }
         }
-        public Tile BackendTile { get; set; }
+        public ITile BackendTile { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -36,6 +36,15 @@ namespace EvoCarcassonne.Model
         {
             return "Coordinates    " + Coordinates +
                    "BackEndTile    " + BackendTile;
+        }
+
+        public BoardTile(double angle, Coordinates coordinates, string tag, string image, ITile backendTile)
+        {
+            _angle = angle;
+            Coordinates = coordinates;
+            Tag = tag;
+            Image = image;
+            BackendTile = backendTile;
         }
     }
 
