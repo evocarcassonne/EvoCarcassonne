@@ -8,6 +8,7 @@ namespace EvoCarcassonne.Backend
     {
         private BoardTile firstTile { get; set; }
         private BoardTile lastTile { get; set; }
+        private bool Gameover { get; set; }
 
         public Road()
         {
@@ -19,6 +20,7 @@ namespace EvoCarcassonne.Backend
          */
         public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
         {
+            Gameover = gameover;
             if (!gameover)
             {
                 Console.WriteLine(currentTile);
@@ -84,7 +86,61 @@ namespace EvoCarcassonne.Backend
             }
             else
             {
-                return 0;
+                foreach (var tile in currentTile.BackendTile.Speciality)
+                {
+                    if (tile == Speciality.EndOfRoad && !firstCall)
+                    {
+                        lastTile = currentTile;
+                        return 1;
+                    }
+                }
+                if (firstCall)
+                {
+                    firstTile = currentTile;
+                }
+                int result = 1;
+                Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile =
+                    new Dictionary<CardinalDirection, BoardTile>();
+
+                tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
+                BoardTile neighborTile = Utils.getNeighborTile(tilesNextToTheGivenTile, whereToGo);
+
+                if (IsEndOfRoad(neighborTile))
+                {
+                    lastTile = neighborTile;
+                    Console.WriteLine(neighborTile);
+                    return result;
+                }
+
+                if (neighborTile.Image == null)
+                {
+                    lastTile = currentTile;
+                    Console.WriteLine(neighborTile);
+                    return result;
+                }
+                switch (whereToGo)
+                {
+                    case CardinalDirection.East:
+                        result = searchInTilesSides(result, neighborTile, 3);
+                        break;
+                    case CardinalDirection.West:
+                        result = searchInTilesSides(result, neighborTile, 1);
+                        break;
+                    case CardinalDirection.North:
+                        result = searchInTilesSides(result, neighborTile, 2);
+                        break;
+                    case CardinalDirection.South:
+                        result = searchInTilesSides(result, neighborTile, 0);
+                        break;
+                    default: return 0;
+                }
+
+                if (firstCall && firstTile.BackendTile.TileID != lastTile.BackendTile.TileID)
+                {
+                    result += 1;
+                }
+
+                return result;
             }
         }
 
@@ -114,7 +170,7 @@ namespace EvoCarcassonne.Backend
 
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != sideNumber)
                 {
-                    result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false,false);
+                    result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false,Gameover);
                     break;
                 }
             }

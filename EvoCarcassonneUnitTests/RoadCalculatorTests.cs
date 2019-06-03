@@ -39,13 +39,13 @@ namespace EvoCarcassonneUnitTests
             directions.Add(new Direction(0, new Castle(), figure));
 
             boardTile1.Coordinates = new Coordinates(0, 0);
-            boardTile2.Coordinates = new Coordinates(10, 0);
-            boardTile3.Coordinates = new Coordinates(10, 10);
-            boardTile4.Coordinates = new Coordinates(10, 20);
-            boardTile5.Coordinates = new Coordinates(20, 20);
-            boardTile6.Coordinates = new Coordinates(20, 10);
-            boardTile7.Coordinates = new Coordinates(30, 10);
-            boardTile8.Coordinates = new Coordinates(40, 10);
+            boardTile2.Coordinates = new Coordinates(1, 0);
+            boardTile3.Coordinates = new Coordinates(1, 1);
+            boardTile4.Coordinates = new Coordinates(1, 2);
+            boardTile5.Coordinates = new Coordinates(2, 2);
+            boardTile6.Coordinates = new Coordinates(2, 1);
+            boardTile7.Coordinates = new Coordinates(3, 1);
+            boardTile8.Coordinates = new Coordinates(4, 1);
 
             boardTile1.BackendTile = new Tile(1, directions, specialities);
 
@@ -144,13 +144,13 @@ namespace EvoCarcassonneUnitTests
 
 
             boardTile1.Coordinates = new Coordinates(0, 0);
-            boardTile2.Coordinates = new Coordinates(10, 0);
-            boardTile3.Coordinates = new Coordinates(10, 10);
-            boardTile4.Coordinates = new Coordinates(10, 20);
-            boardTile5.Coordinates = new Coordinates(20, 20);
-            boardTile6.Coordinates = new Coordinates(20, 10);
-            boardTile7.Coordinates = new Coordinates(30, 10);
-            boardTile8.Coordinates = new Coordinates(40, 10);
+            boardTile2.Coordinates = new Coordinates(1, 0);
+            boardTile3.Coordinates = new Coordinates(1, 1);
+            boardTile4.Coordinates = new Coordinates(1, 2);
+            boardTile5.Coordinates = new Coordinates(2, 2);
+            boardTile6.Coordinates = new Coordinates(2, 1);
+            boardTile7.Coordinates = new Coordinates(3, 1);
+            boardTile8.Coordinates = new Coordinates(4, 1);
 
             boardTile1.BackendTile = new Tile(1, directions, specialities);
 
@@ -247,13 +247,13 @@ namespace EvoCarcassonneUnitTests
 
 
             boardTile1.Coordinates = new Coordinates(0, 0);
-            boardTile2.Coordinates = new Coordinates(10, 0);
-            boardTile3.Coordinates = new Coordinates(10, 10);
-            boardTile4.Coordinates = new Coordinates(10, 20);
-            boardTile5.Coordinates = new Coordinates(20, 20);
-            boardTile6.Coordinates = new Coordinates(20, 10);
-            boardTile7.Coordinates = new Coordinates(30, 10);
-            boardTile8.Coordinates = new Coordinates(40, 10);
+            boardTile2.Coordinates = new Coordinates(1, 0);
+            boardTile3.Coordinates = new Coordinates(1, 1);
+            boardTile4.Coordinates = new Coordinates(1, 2);
+            boardTile5.Coordinates = new Coordinates(2, 2);
+            boardTile6.Coordinates = new Coordinates(2, 1);
+            boardTile7.Coordinates = new Coordinates(3, 1);
+            boardTile8.Coordinates = new Coordinates(4, 1);
 
             var specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
@@ -352,14 +352,14 @@ namespace EvoCarcassonneUnitTests
 
 
             boardTile1.Coordinates = new Coordinates(0, 0);
-            boardTile2.Coordinates = new Coordinates(10, 0);
-            boardTile3.Coordinates = new Coordinates(10, 10);
-            boardTile4.Coordinates = new Coordinates(10, 20);
-            boardTile5.Coordinates = new Coordinates(20, 20);
-            boardTile6.Coordinates = new Coordinates(20, 10);
-            boardTile7.Coordinates = new Coordinates(30, 10);
-            boardTile8.Coordinates = new Coordinates(40, 10);
-            boardTile9.Coordinates = new Coordinates(0, 10);
+            boardTile2.Coordinates = new Coordinates(1, 0);
+            boardTile3.Coordinates = new Coordinates(1, 1);
+            boardTile4.Coordinates = new Coordinates(1, 2);
+            boardTile5.Coordinates = new Coordinates(2, 2);
+            boardTile6.Coordinates = new Coordinates(2, 1);
+            boardTile7.Coordinates = new Coordinates(3, 1);
+            boardTile8.Coordinates = new Coordinates(4, 1);
+            boardTile9.Coordinates = new Coordinates(0, 1);
 
             var specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
