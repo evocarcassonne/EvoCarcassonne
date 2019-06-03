@@ -25,11 +25,7 @@ namespace EvoCarcassonne.Controller
         public static ObservableCollection<BoardTile> TileStack { get; set; }
 
 
-        /// <summary>
-        /// The current player can put down this tile
-        /// </summary>
-        public Tile CurrentTile { get; set; }
-
+       
         /// <summary>
         /// The current tile's ID
         /// </summary>
@@ -150,8 +146,8 @@ namespace EvoCarcassonne.Controller
             LoadTiles();
 
             // Create commands            
-            RotateLeftCommand = new RelayCommand(() => CurrentTile.Rotate(-90));
-            RotateRightCommand = new RelayCommand(() => CurrentTile.Rotate(90));
+            RotateLeftCommand = new RelayCommand(() => CurrentBoardTile.BackendTile.Rotate(-90));
+            RotateRightCommand = new RelayCommand(() => CurrentBoardTile.BackendTile.Rotate(90));
 
             GetNewTileCommand = new RelayCommand(() => GetNewTile());
             EndTurnCommand = new RelayCommand(() => EndTurn());
@@ -187,6 +183,7 @@ namespace EvoCarcassonne.Controller
                         starterTile.BackendTile.TileID = CurrentTileID;
 
                         boardTiles.Add(starterTile);
+                        PlacedBoardTiles.Add(starterTile);
 
                         CurrentTileID++;
                     }
@@ -228,7 +225,7 @@ namespace EvoCarcassonne.Controller
 
         public void GetNewTile()
         {
-            if (HasCurrentTile)
+            if (HasCurrentTile || TileIsDown)
                 return;
 
             if (TileStack.Count < 1)
@@ -267,19 +264,23 @@ namespace EvoCarcassonne.Controller
             if (TileIsDown)
                 return;
 
-            HasCurrentTile = false;
-
             var x = b.Tag.ToString().Split(';').Select(int.Parse).ToArray();
             var index = x[1] + (x[0] * 10);
 
             if (BoardTiles[index].Image == null)
             {
-                TileIsDown = true;
-
                 CurrentBoardTile.Tag = (string) b.Tag;
-                CurrentBoardTile.Coordinates = new Coordinates(x[0], x[1]);
-                
+                CurrentBoardTile.Coordinates = new Coordinates(x[1], x[0]);
+                if (!Utils.CheckFitOfTile(CurrentBoardTile))
+                {
+                    CurrentBoardTile.Coordinates = null;
+                    CurrentBoardTile.Tag = null;
+                    return;
+                }
                 BoardTiles[index] = CurrentBoardTile;
+                PlacedBoardTiles.Add(CurrentBoardTile);
+                TileIsDown = true;
+                HasCurrentTile = false;
             }
             //BoardTiles[index] = new BoardTile(CurrentBoardTile.Angle, new Coordinates(x[0], x[1]), (string) b.Tag, CurrentBoardTile.Image, CurrentBoardTile.BackendTile);
             //BoardTiles[index] = new BoardTile
