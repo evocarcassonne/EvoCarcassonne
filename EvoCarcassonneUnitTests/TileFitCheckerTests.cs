@@ -114,10 +114,7 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void CheckFitOfTile_TileCanFit_ReturnsTrue_TestCase1()
         {
-
-
-
-
+            
             MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
             MainController.PlacedBoardTiles.Add(boardTile1);
             MainController.PlacedBoardTiles.Add(boardTile2);

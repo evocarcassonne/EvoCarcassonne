@@ -27,7 +27,10 @@ namespace EvoCarcassonne.Backend
         public static bool CheckFitOfTile(BoardTile boardTile)
         {
             Dictionary<CardinalDirection, BoardTile> surroundingTiles = GetSurroundingTiles(boardTile);
-            
+            if (surroundingTiles.Count == 0)
+            {
+                return false;
+            }
             foreach (var neighborTile in surroundingTiles)
             {
                 ILandscape currentTileLandscape = boardTile.BackendTile.getTileSideByCardinalDirection(neighborTile.Key).Landscape;

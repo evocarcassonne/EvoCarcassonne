@@ -278,7 +278,7 @@ namespace EvoCarcassonne.Controller
 
                 CurrentBoardTile.Tag = (string) b.Tag;
                 CurrentBoardTile.Coordinates = new Coordinates(x[0], x[1]);
-
+                
                 BoardTiles[index] = CurrentBoardTile;
             }
             //BoardTiles[index] = new BoardTile(CurrentBoardTile.Angle, new Coordinates(x[0], x[1]), (string) b.Tag, CurrentBoardTile.Image, CurrentBoardTile.BackendTile);

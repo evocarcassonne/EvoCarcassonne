@@ -21,8 +21,6 @@ namespace EvoCarcassonne.Backend
         {
             if (!gameover)
             {
-
-
                 Console.WriteLine(currentTile);
                 foreach (var tile in currentTile.BackendTile.Speciality)
                 {
