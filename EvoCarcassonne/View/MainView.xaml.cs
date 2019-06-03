@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using EvoCarcassonne.Controller;
@@ -34,8 +36,9 @@ namespace EvoCarcassonne.View
             // If the tile is down we can't rotate
             if (vm.TileIsDown)
                 return;
-
+           
             vm.CurrentBoardTile.Angle -= 90;
+            vm.RotateLeftCommand.Execute(null);
         }
 
         private void RotateRight(Button button)
@@ -45,8 +48,10 @@ namespace EvoCarcassonne.View
             // If the tile is down we can't rotate
             if (vm.TileIsDown)
                 return;
-
+            
             vm.CurrentBoardTile.Angle += 90;
+            vm.RotateRightCommand.Execute(null);
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -58,7 +63,7 @@ namespace EvoCarcassonne.View
 
                 // Put the current tile down
                 var vm = (MainController)this.DataContext;
-                vm.PutTile(sender as Button);                
+                vm.PutTile(sender as Button);
 
             }
         }
