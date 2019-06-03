@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Runtime.Remoting.Messaging;
 using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 
@@ -12,6 +10,7 @@ namespace EvoCarcassonne.Backend
 {
     public static class Utils
     {
+        public static int DistanceBetweenTiles = 1;
         public static List<string> GetResourceNames(string condition)
         {
             var asm = Assembly.GetEntryAssembly();
@@ -59,19 +58,19 @@ namespace EvoCarcassonne.Backend
 
             foreach (var neighborTile in MainController.PlacedBoardTiles)
             {
-                if (isOnTheGivenSide(currentTile, neighborTile, 10,0))
+                if (isOnTheGivenSide(currentTile, neighborTile, DistanceBetweenTiles,0))
                 {
                     result.Add(CardinalDirection.East, neighborTile);
                 }
-                if (isOnTheGivenSide(currentTile, neighborTile, 0,10))
+                if (isOnTheGivenSide(currentTile, neighborTile, 0,DistanceBetweenTiles))
                 {
                     result.Add(CardinalDirection.South, neighborTile);
                 }
-                if (isOnTheGivenSide(currentTile, neighborTile, -10,0))
+                if (isOnTheGivenSide(currentTile, neighborTile, -DistanceBetweenTiles,0))
                 {
                     result.Add(CardinalDirection.West, neighborTile);
                 }
-                if (isOnTheGivenSide(currentTile, neighborTile, 0,-10))
+                if (isOnTheGivenSide(currentTile, neighborTile, 0,-DistanceBetweenTiles))
                 {
                     result.Add(CardinalDirection.North, neighborTile);
                 }
@@ -89,10 +88,10 @@ namespace EvoCarcassonne.Backend
             }
             foreach (var neighborTile in MainController.PlacedBoardTiles)
             {
-                if (isOnTheGivenSide(currentTile, neighborTile, 10,10) ||
-                    isOnTheGivenSide(currentTile, neighborTile, -10,10) ||
-                    isOnTheGivenSide(currentTile, neighborTile, -10,-10) ||
-                    isOnTheGivenSide(currentTile, neighborTile, 10,-10))
+                if (isOnTheGivenSide(currentTile, neighborTile, DistanceBetweenTiles,DistanceBetweenTiles) ||
+                    isOnTheGivenSide(currentTile, neighborTile, -DistanceBetweenTiles,DistanceBetweenTiles) ||
+                    isOnTheGivenSide(currentTile, neighborTile, -DistanceBetweenTiles,-DistanceBetweenTiles) ||
+                    isOnTheGivenSide(currentTile, neighborTile, DistanceBetweenTiles,-DistanceBetweenTiles))
                 {
                     result.Add(neighborTile);
                 }
