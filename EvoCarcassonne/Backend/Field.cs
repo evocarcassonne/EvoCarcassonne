@@ -9,5 +9,10 @@ namespace EvoCarcassonne.Backend
         {
             throw new NotImplementedException();
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Field;
+        }
     }
 }
