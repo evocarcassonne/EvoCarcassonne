@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 
@@ -25,12 +27,14 @@ namespace EvoCarcassonne.Backend
         public static bool CheckFitOfTile(BoardTile boardTile)
         {
             Dictionary<CardinalDirection, BoardTile> surroundingTiles = GetSurroundingTiles(boardTile);
-
+            
             foreach (var neighborTile in surroundingTiles)
             {
-                if (!boardTile.BackendTile.getTileSideByCardinalDirection(neighborTile.Key).Landscape
-                    .Equals(neighborTile.Value.BackendTile
-                        .getTileSideByCardinalDirection(getOppositeDirection(neighborTile.Key)).Landscape))
+                ILandscape currentTileLandscape = boardTile.BackendTile.getTileSideByCardinalDirection(neighborTile.Key).Landscape;
+                ILandscape neighborTileLandscape = neighborTile.Value.BackendTile
+                    .getTileSideByCardinalDirection(getOppositeDirection(neighborTile.Key)).Landscape;
+                
+                if (!currentTileLandscape.Equals(neighborTileLandscape))
                 {
                     return false;
                 }
@@ -52,28 +56,19 @@ namespace EvoCarcassonne.Backend
 
             foreach (var neighborTile in MainController.PlacedBoardTiles)
             {
-                if (currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
+                if (isOnTheGivenSide(currentTile, neighborTile, 10,0))
                 {
                     result.Add(CardinalDirection.East, neighborTile);
                 }
-
-                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X)
+                if (isOnTheGivenSide(currentTile, neighborTile, 0,10))
                 {
                     result.Add(CardinalDirection.South, neighborTile);
                 }
-
-
-                if (currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y == neighborTile.Coordinates.Y)
+                if (isOnTheGivenSide(currentTile, neighborTile, -10,0))
                 {
                     result.Add(CardinalDirection.West, neighborTile);
                 }
-
-
-                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X == neighborTile.Coordinates.X)
+                if (isOnTheGivenSide(currentTile, neighborTile, 0,-10))
                 {
                     result.Add(CardinalDirection.North, neighborTile);
                 }
@@ -85,43 +80,22 @@ namespace EvoCarcassonne.Backend
         {
 
             List<BoardTile> result = new List<BoardTile>();
-            foreach (var list in Utils.GetSurroundingTiles(currentTile))
+            foreach (var list in GetSurroundingTiles(currentTile))
             {
                 result.Add(list.Value);
             }
-
             foreach (var neighborTile in MainController.PlacedBoardTiles)
             {
-                if (currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y)
-                {
-                    result.Add(neighborTile);
-                }
-
-                if (currentTile.Coordinates.Y + 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X)
-                {
-                    result.Add(neighborTile);
-                }
-
-
-                if (currentTile.Coordinates.X - 10 == neighborTile.Coordinates.X &&
-                    currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y)
-                {
-                    result.Add(neighborTile);
-                }
-
-
-                if (currentTile.Coordinates.Y - 10 == neighborTile.Coordinates.Y &&
-                    currentTile.Coordinates.X + 10 == neighborTile.Coordinates.X)
+                if (isOnTheGivenSide(currentTile, neighborTile, 10,10) ||
+                    isOnTheGivenSide(currentTile, neighborTile, -10,10) ||
+                    isOnTheGivenSide(currentTile, neighborTile, -10,-10) ||
+                    isOnTheGivenSide(currentTile, neighborTile, 10,-10))
                 {
                     result.Add(neighborTile);
                 }
             }
-
             return result;
         }
-
 
         private static CardinalDirection getOppositeDirection(CardinalDirection direction)
         {
@@ -147,6 +121,11 @@ namespace EvoCarcassonne.Backend
             return null;
         }
 
-        
+        public static bool isOnTheGivenSide(BoardTile currentTile, BoardTile neighborTile, int diffX, int diffY)
+        {
+            return currentTile.Coordinates.X + diffX == neighborTile.Coordinates.X &&
+                currentTile.Coordinates.Y + diffY == neighborTile.Coordinates.Y;
+        }
+       
     }
 }
