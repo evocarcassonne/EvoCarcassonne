@@ -75,7 +75,6 @@ namespace EvoCarcassonne.Backend
                     result.Add(CardinalDirection.North, neighborTile);
                 }
             }
-
             return result;
         }
         public static List<BoardTile> GetAllSurroundingTiles(BoardTile currentTile)
@@ -99,7 +98,7 @@ namespace EvoCarcassonne.Backend
             return result;
         }
 
-        private static CardinalDirection getOppositeDirection(CardinalDirection direction)
+        public static CardinalDirection getOppositeDirection(CardinalDirection direction)
         {
             switch (direction)
             {
