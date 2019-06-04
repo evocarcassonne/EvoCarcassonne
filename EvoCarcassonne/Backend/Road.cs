@@ -21,55 +21,51 @@ namespace EvoCarcassonne.Backend
          */
         public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
         {
-            Gameover = gameover;
+            #region Init required values
             Console.WriteLine(currentTile);
             int result = 1;
-            Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile =
-                new Dictionary<CardinalDirection, BoardTile>();
-            tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
+            Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
             BoardTile neighborTile = Utils.getNeighborTile(tilesNextToTheGivenTile, whereToGo);
-            if (!gameover)
+            if (firstCall)
             {
-                if (firstCall)
-                {
-                    FirstTile = currentTile;
-                }
-                if (currentTile.Coordinates.X == FirstTile.Coordinates.X && currentTile.Coordinates.Y == FirstTile.Coordinates.Y && !firstCall)
-                {
-                    LastTile = currentTile;
-                    return 0;
-                }
+                Gameover = gameover;
+                FirstTile = currentTile;
             }
-            else
+            #endregion
+            
+            #region GameOverCall
+            if (gameover && firstCall)
             {
-                if (firstCall)
+                int localResult = 0;
+                for (int i = 0; i < currentTile.BackendTile.Directions.Count; i++)
                 {
-                    FirstTile = currentTile;
-                    int localResult = 0;
-                    int numberOfRoadSides = 0;
-                    for (int i = 0; i < currentTile.BackendTile.Directions.Count; i++)
+                    if (currentTile.BackendTile.Directions[i].Landscape is Road)
                     {
-                        if (currentTile.BackendTile.Directions[i].Landscape is Road)
-                        {
-                            localResult += calculate(currentTile, (CardinalDirection) i, false, true);
-                            numberOfRoadSides++;
-                        }
+                        localResult += calculate(currentTile, (CardinalDirection) i, false, true);
                     }
-                    result = localResult;
-                    if (FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
-                    {
-                        result += 1;
-                    }
-                    return result;
                 }
-            }
-            if (neighborTile == null)
-            {
-                LastTile = currentTile;
+                result = localResult;
+                if (FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
+                {
+                    result += 1;
+                }
                 return result;
             }
-
-            if (!currentTile.BackendTile.Directions[(int)whereToGo].Landscape.Equals(neighborTile.BackendTile.Directions[(int)Utils.getOppositeDirection(whereToGo)].Landscape) && IsEndOfRoad(neighborTile))
+            #endregion
+            
+            #region NormalCall
+            if(!gameover && currentTile.Coordinates.X == FirstTile.Coordinates.X && currentTile.Coordinates.Y == FirstTile.Coordinates.Y && !firstCall)
+            {
+                LastTile = currentTile;
+                return 0;
+            }
+            #endregion
+            
+            #region Calculation
+            ILandscape backEndLandscape = currentTile.BackendTile.Directions[(int)whereToGo].Landscape;
+            /*If the neighbor tile is does not exist or (the neighbor tile does not have the same landscape
+             on the connecting side and the neighbor tile is end of road) then return result and set current tile as the last tile*/
+            if (neighborTile == null || !backEndLandscape.Equals(neighborTile.BackendTile.Directions[(int)Utils.getOppositeDirection(whereToGo)].Landscape) && IsEndOfRoad(neighborTile))
             {
                 LastTile = currentTile;
                 Console.WriteLine(currentTile);
@@ -82,10 +78,13 @@ namespace EvoCarcassonne.Backend
                 return result;
             }
             result = searchInTilesSides(result, neighborTile, (int)Utils.getOppositeDirection(whereToGo));
+            /*If the road does not end with the same tile its started, then increase the result*/
             if (firstCall && FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
             {
                 result += 1;
             }
+            #endregion
+            
             return result;
         }
 
@@ -111,7 +110,6 @@ namespace EvoCarcassonne.Backend
                     break;
                 }
             }
-
             return result;
         }
         
