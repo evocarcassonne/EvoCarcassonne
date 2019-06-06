@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -22,6 +23,7 @@ namespace EvoCarcassonne.Backend
          */
         public void Rotate(int direction)
         {
+            
             IDirection temp;
             switch (direction)
             {
