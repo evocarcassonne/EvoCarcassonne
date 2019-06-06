@@ -63,7 +63,6 @@
     <Compile Include="Backend\Church.cs" />
     <Compile Include="Backend\Extensions.cs" />
     <Compile Include="Backend\Field.cs" />
-    <Compile Include="Backend\Grass.cs" />
     <Compile Include="Backend\Road.cs" />
     <Compile Include="Backend\TileParser.cs" />
     <Compile Include="Model\Coordinates.cs" />
