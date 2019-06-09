@@ -69,7 +69,7 @@
                             
                         </Grid>
                         <Button Panel.ZIndex="-1" Tag="{Binding Tag}" Content="{x:Null}"
-                                Click="Button_Click"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceTileCommand}"
                                 IsTabStop="False" RenderOptions.EdgeMode="Aliased">
                             <Button.Background>
                                 <ImageBrush ImageSource="{Binding Image}">
@@ -114,7 +114,7 @@
         <Button Content="Lapkérés" Command="{Binding GetNewTileCommand}" Width="100" Height="35" Grid.Row="1" />
         <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Grid.Row="1"
                 Grid.Column="4" />
-        <Button Click="RotateLeftButtonCLick" Width="35" Height="35" Grid.Row="1" Grid.Column="1"
+        <Button CommandParameter="-90" Command="{Binding Path=RotateLeftCommand}" Width="35" Height="35" Grid.Row="1" Grid.Column="1"
                 Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Right" Margin="0,0,35,0">
             <Viewbox Width="24" Height="24">
                 <Canvas Width="24" Height="24">
@@ -124,7 +124,7 @@
                 </Canvas>
             </Viewbox>
         </Button>
-        <Button Click="RotateRightButtonCLick" Width="35" Height="35" Grid.Row="1" Grid.Column="3"
+        <Button CommandParameter="90" Command="{Binding Path=RotateRightCommand}" Width="35" Height="35" Grid.Row="1" Grid.Column="3"
                 Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Left" Margin="35,0,0,0">
             <Viewbox Width="24" Height="24">
                 <Canvas Width="24" Height="24">
