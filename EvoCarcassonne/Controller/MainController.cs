@@ -152,7 +152,7 @@ namespace EvoCarcassonne.Controller
             RotateRightCommand = new RelayCommand(() => Rotate(90), CanRotate);
             GetNewTileCommand = new RelayCommand(GetNewTile, CanGetNewTile);
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
-            PlaceTileCommand = new RelayCommand<Button>(PlaceTile);
+            PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
 
             CurrentPlayer = Player1;
         }
@@ -251,16 +251,11 @@ namespace EvoCarcassonne.Controller
         {
             return !HasCurrentTile;
         }
+
         private void PlaceTile(Button button)
         {
-            if (TileIsDown)
-                return;
-
             var x = button.Tag.ToString().Split(';').Select(int.Parse).ToArray();
             var index = x[1] + (x[0] * 10);
-
-            if (BoardTiles[index].Image != null)
-                return;
 
             CurrentBoardTile.Tag = (string)button.Tag;
             CurrentBoardTile.Coordinates = new Coordinates(x[1], x[0]);
@@ -281,8 +276,23 @@ namespace EvoCarcassonne.Controller
             CurrentBoardTile = new BoardTile(0, null, null, null, new Tile(0, null, nullSpecialty));
         }
 
+        private bool CanPlaceTile(Button button)
+        {
+            if (!HasCurrentTile || TileIsDown)
+            {
+                return false;
+            }
 
-        
+            var x = button.Tag.ToString().Split(';').Select(int.Parse).ToArray();
+            var index = x[1] + (x[0] * 10);
+
+            if (BoardTiles[index].Image != null)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         #endregion
     }
