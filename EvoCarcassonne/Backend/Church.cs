@@ -9,6 +9,8 @@ namespace EvoCarcassonne.Backend
     public class Church : ITile, ILandscape
     {
         public int TileID { get; set; }
+        
+        public IFigure Figure { get; set; }
         public List<IDirection> Directions { get; set; }
         public List<Speciality> Speciality { get; set; }
         private bool IsColostor = false;
