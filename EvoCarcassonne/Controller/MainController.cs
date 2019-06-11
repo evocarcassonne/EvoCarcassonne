@@ -69,6 +69,10 @@ namespace EvoCarcassonne.Controller
         public Owner Player1 = new Owner(1, "Pista");
         public Owner Player2 = new Owner(2, "Géza");
 
+        // Players' figures
+        public List<IFigure> Player1Figures = new List<IFigure>();
+        public List<IFigure> Player2Figures = new List<IFigure>();
+        
         /// <summary>
         /// The current player
         /// </summary>
@@ -135,6 +139,12 @@ namespace EvoCarcassonne.Controller
         public ICommand EndTurnCommand { get; set; }
 
         /// <summary>
+        /// The command to end the turn
+        /// </summary>
+        public ICommand PutFigureDownCommand { get; set; }
+        
+        
+        /// <summary>
         /// The command to place the CurrentTile to the board
         /// </summary>
         public ICommand PlaceTileCommand { get; set; }
@@ -153,7 +163,15 @@ namespace EvoCarcassonne.Controller
             GetNewTileCommand = new RelayCommand(GetNewTile, CanGetNewTile);
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
             PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
+            PutFigureDownCommand = new RelayCommand<Button>(PlaceFigure, CanPlaceFigure);
 
+            //Initialize figures
+            for (int i = 0; i < 8; i++)
+            {
+                Player1Figures.Add(new Figure(i, Player1));   
+                Player2Figures.Add(new Figure(i, Player2));   
+            }
+            
             CurrentPlayer = Player1;
         }
 
@@ -294,6 +312,50 @@ namespace EvoCarcassonne.Controller
             return true;
         }
 
+        /// <summary>
+        /// This method processes the front-end button component, and then calls himself with back-end values
+        /// </summary>
+        /// <param name="button"></param>
+        private void PlaceFigure(Button button)
+        {
+           // Itt kéne kiszedni akkor a button-ból hogy hova kattintott stb, és aztán meghívni önmagát, csak a másik paraméterlistával.
+        }
+
+        /// <summary>
+        /// Places a figure on the tile
+        /// </summary>
+        /// <param name="currentTile">The tile, to put figure on</param>
+        /// <param name="side">Which side of tile should be the figure placed</param>
+        /// <param name="playerFigure">The actual figure object</param>
+        public void PlaceFigure(BoardTile currentTile, int side, Figure playerFigure)
+        {
+            if (side == 4 && currentTile.BackendTile is Church)
+            {
+                var church = currentTile.BackendTile as Church;
+                church.Figure = playerFigure;
+                currentTile.BackendTile = church;
+            }
+            else
+            {
+                currentTile.BackendTile.Directions[side].Figure = playerFigure;
+            }
+
+            if (CurrentPlayer == Player1)
+            {
+                Extensions.RemoveAndGet(Player1Figures, 0);
+            }
+            else
+            {
+                Extensions.RemoveAndGet(Player2Figures, 0);
+            }
+        }
+        
+        private bool CanPlaceFigure(Button button)
+        {
+           // Ezt rád bíznám Dani pls :D
+           
+            return true;
+        }
         #endregion
     }
 }
