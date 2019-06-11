@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using EvoCarcassonne.Backend;
@@ -139,15 +140,14 @@ namespace EvoCarcassonne.Controller
         public ICommand EndTurnCommand { get; set; }
 
         /// <summary>
-        /// The command to end the turn
-        /// </summary>
-        public ICommand PutFigureDownCommand { get; set; }
-        
-        
-        /// <summary>
         /// The command to place the CurrentTile to the board
         /// </summary>
         public ICommand PlaceTileCommand { get; set; }
+
+        /// <summary>
+        /// The command to place figure in the CurrentTile
+        /// </summary>
+        public ICommand PlaceFigureCommand { get; set; }
 
         #endregion
 
@@ -163,7 +163,8 @@ namespace EvoCarcassonne.Controller
             GetNewTileCommand = new RelayCommand(GetNewTile, CanGetNewTile);
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
             PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
-            PutFigureDownCommand = new RelayCommand<Button>(PlaceFigure, CanPlaceFigure);
+
+            PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure, CanPlaceFigure);
 
             //Initialize figures
             for (int i = 0; i < 8; i++)
@@ -311,6 +312,8 @@ namespace EvoCarcassonne.Controller
 
             return true;
         }
+
+        
 
         /// <summary>
         /// This method processes the front-end button component, and then calls himself with back-end values

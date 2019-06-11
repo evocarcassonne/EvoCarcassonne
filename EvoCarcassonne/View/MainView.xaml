@@ -11,9 +11,6 @@
     <UserControl.DataContext>
         <controller:MainController />
     </UserControl.DataContext>
-    <UserControl.Resources>
-        <evoCarcassonne:PropertyToVisibilityValueConverter x:Key="PropertyToVisibilityValueConverter" />
-    </UserControl.Resources>
 
     <Grid Background="White">
         <Grid.ColumnDefinitions>
@@ -49,7 +46,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Grid Visibility="{Binding Path=BackendTile.Directions, Mode=OneWay, Converter={StaticResource PropertyToVisibilityValueConverter}}">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="0.5*" />
                                 <RowDefinition Height="*" />
@@ -61,15 +58,25 @@
                                 <ColumnDefinition Width="0.5*" />
                             </Grid.ColumnDefinitions>
 
-                            <Button Visibility="{Binding Path=BackendTile.Directions[0].CanPlaceFigure, Mode=OneWay, Converter={StaticResource PropertyToVisibilityValueConverter}}" x:Name="FigurePlaceNorth" Grid.Row="0" Grid.Column="1" />
-                            <Button Visibility="{Binding Path=BackendTile.Directions[1].CanPlaceFigure, Mode=OneWay, Converter={StaticResource PropertyToVisibilityValueConverter}}" x:Name="FigurePlaceEast" Grid.Row="1" Grid.Column="2" />
-                            <Button Visibility="{Binding Path=BackendTile.Directions[2].CanPlaceFigure, Mode=OneWay, Converter={StaticResource PropertyToVisibilityValueConverter}}" x:Name="FigurePlaceSouth" Grid.Row="2" Grid.Column="1" />
-                            <Button Visibility="{Binding Path=BackendTile.Directions[3].CanPlaceFigure, Mode=OneWay, Converter={StaticResource PropertyToVisibilityValueConverter}}" x:Name="FigurePlaceWest" Grid.Row="1" Grid.Column="0" />
-                            <!--<Button x:Name="FigurePlaceCenter" Grid.Row="1" Grid.Column="1" />-->
-                            
+                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
+                                    Tag="N" x:Name="FigurePlaceNorth" Grid.Row="0" Grid.Column="1" />
+                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
+                                    Tag="E" x:Name="FigurePlaceEast" Grid.Row="1" Grid.Column="2" />
+                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
+                                    Tag="S" x:Name="FigurePlaceSouth" Grid.Row="2" Grid.Column="1" />
+                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
+                                    Tag="W" x:Name="FigurePlaceWest" Grid.Row="1" Grid.Column="0" />
+                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
+                                    Tag="C" x:Name="FigurePlaceCenter" Grid.Row="1" Grid.Column="1" />
                         </Grid>
                         <Button Panel.ZIndex="-1" Tag="{Binding Tag}" Content="{x:Null}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource Self}}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceTileCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceTileCommand}"
                                 IsTabStop="False" RenderOptions.EdgeMode="Aliased">
                             <Button.Background>
                                 <ImageBrush ImageSource="{Binding Image}">
@@ -114,7 +121,8 @@
         <Button Content="Lapkérés" Command="{Binding GetNewTileCommand}" Width="100" Height="35" Grid.Row="1" />
         <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Grid.Row="1"
                 Grid.Column="4" />
-        <Button CommandParameter="-90" Command="{Binding Path=RotateLeftCommand}" Width="35" Height="35" Grid.Row="1" Grid.Column="1"
+        <Button CommandParameter="-90" Command="{Binding Path=RotateLeftCommand}" Width="35" Height="35" Grid.Row="1"
+                Grid.Column="1"
                 Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Right" Margin="0,0,35,0">
             <Viewbox Width="24" Height="24">
                 <Canvas Width="24" Height="24">
@@ -124,7 +132,8 @@
                 </Canvas>
             </Viewbox>
         </Button>
-        <Button CommandParameter="90" Command="{Binding Path=RotateRightCommand}" Width="35" Height="35" Grid.Row="1" Grid.Column="3"
+        <Button CommandParameter="90" Command="{Binding Path=RotateRightCommand}" Width="35" Height="35" Grid.Row="1"
+                Grid.Column="3"
                 Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Left" Margin="35,0,0,0">
             <Viewbox Width="24" Height="24">
                 <Canvas Width="24" Height="24">
