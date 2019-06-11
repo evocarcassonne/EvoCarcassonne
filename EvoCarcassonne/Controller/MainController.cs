@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using EvoCarcassonne.Backend;
@@ -139,6 +140,11 @@ namespace EvoCarcassonne.Controller
         /// </summary>
         public ICommand PlaceTileCommand { get; set; }
 
+        /// <summary>
+        /// The command to place figure in the CurrentTile
+        /// </summary>
+        public ICommand PlaceFigureCommand { get; set; }
+
         #endregion
 
         #region Constructor
@@ -153,6 +159,8 @@ namespace EvoCarcassonne.Controller
             GetNewTileCommand = new RelayCommand(GetNewTile, CanGetNewTile);
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
             PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
+
+            PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure);
 
             CurrentPlayer = Player1;
         }
@@ -292,6 +300,11 @@ namespace EvoCarcassonne.Controller
             }
 
             return true;
+        }
+
+        private void PlaceFigure(Button button)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
