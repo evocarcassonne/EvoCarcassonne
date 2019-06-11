@@ -322,6 +322,9 @@ namespace EvoCarcassonne.Controller
         private void PlaceFigure(Button button)
         {
            // Itt kéne kiszedni akkor a button-ból hogy hova kattintott stb, és aztán meghívni önmagát, csak a másik paraméterlistával.
+           var directionIndex = int.Parse(button.Tag.ToString());
+           var currentTile = PlacedBoardTiles.Last();
+           PlaceFigure(currentTile, directionIndex);
         }
 
         /// <summary>
