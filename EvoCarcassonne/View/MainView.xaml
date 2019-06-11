@@ -60,19 +60,19 @@
 
                             <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="N" x:Name="FigurePlaceNorth" Grid.Row="0" Grid.Column="1" />
+                                    Tag="0" x:Name="FigurePlaceNorth" Grid.Row="0" Grid.Column="1" />
                             <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="E" x:Name="FigurePlaceEast" Grid.Row="1" Grid.Column="2" />
+                                    Tag="1" x:Name="FigurePlaceEast" Grid.Row="1" Grid.Column="2" />
                             <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="S" x:Name="FigurePlaceSouth" Grid.Row="2" Grid.Column="1" />
+                                    Tag="2" x:Name="FigurePlaceSouth" Grid.Row="2" Grid.Column="1" />
                             <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="W" x:Name="FigurePlaceWest" Grid.Row="1" Grid.Column="0" />
+                                    Tag="3" x:Name="FigurePlaceWest" Grid.Row="1" Grid.Column="0" />
                             <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="C" x:Name="FigurePlaceCenter" Grid.Row="1" Grid.Column="1" />
+                                    Tag="4" x:Name="FigurePlaceCenter" Grid.Row="1" Grid.Column="1" />
                         </Grid>
                         <Button Panel.ZIndex="-1" Tag="{Binding Tag}" Content="{x:Null}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
