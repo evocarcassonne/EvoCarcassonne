@@ -164,7 +164,7 @@ namespace EvoCarcassonne.Controller
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
             PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
 
-            PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure, CanPlaceFigure);
+            PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure);
 
             //Initialize figures
             for (int i = 0; i < 8; i++)
@@ -329,12 +329,20 @@ namespace EvoCarcassonne.Controller
         /// </summary>
         /// <param name="currentTile">The tile, to put figure on</param>
         /// <param name="side">Which side of tile should be the figure placed</param>
-        /// <param name="playerFigure">The actual figure object</param>
-        public void PlaceFigure(BoardTile currentTile, int side, Figure playerFigure)
+        private void PlaceFigure(BoardTile currentTile, int side)
         {
-            if (side == 4 && currentTile.BackendTile is Church)
+            IFigure playerFigure;
+            if (CurrentPlayer == Player1)
             {
-                var church = currentTile.BackendTile as Church;
+                playerFigure = Player1Figures.RemoveAndGet(0);
+            }
+            else
+            {
+                playerFigure = Player2Figures.RemoveAndGet(0);
+            }
+
+            if (side == 4 && currentTile.BackendTile is Church church)
+            {
                 church.Figure = playerFigure;
                 currentTile.BackendTile = church;
             }
@@ -343,17 +351,10 @@ namespace EvoCarcassonne.Controller
                 currentTile.BackendTile.Directions[side].Figure = playerFigure;
             }
 
-            if (CurrentPlayer == Player1)
-            {
-                Extensions.RemoveAndGet(Player1Figures, 0);
-            }
-            else
-            {
-                Extensions.RemoveAndGet(Player2Figures, 0);
-            }
+            
         }
         
-        private bool CanPlaceFigure(Button button)
+        private bool CanPlaceFigure()
         {
            // Ezt rád bíznám Dani pls :D
            
