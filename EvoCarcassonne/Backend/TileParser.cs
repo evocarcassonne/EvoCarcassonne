@@ -48,11 +48,11 @@ namespace EvoCarcassonne.Backend
 
             if (tileSpecialities.Contains(Speciality.Colostor))
             {
-                backendTile = new Church(-1, ParseTileDirections(tileName), tileSpecialities);
+                backendTile = new Church(-1, ParseTileDirections(tileName, true), tileSpecialities);
             }
             else
             {
-                backendTile = new Tile(-1, ParseTileDirections(tileName), tileSpecialities);
+                backendTile = new Tile(-1, ParseTileDirections(tileName, false), tileSpecialities);
             }
 
             var tile = new BoardTile(0, null, null, resourcePath, backendTile);
@@ -65,7 +65,7 @@ namespace EvoCarcassonne.Backend
             return Convert.ToInt32(tileName[1].ToString());
         }
 
-        private static List<IDirection> ParseTileDirections(string tileName)
+        private static List<IDirection> ParseTileDirections(string tileName, bool isChurch)
         {
             var directions = new List<IDirection>();
 
@@ -74,6 +74,13 @@ namespace EvoCarcassonne.Backend
                 var direction = new Direction(-1, ParseLandscape(c), null, null);
 
                 directions.Add(direction);
+            }
+
+            if (isChurch)
+            {
+                var centerDirection = new Direction(-1, null, null, null);
+
+                directions.Add(centerDirection);
             }
 
             return directions;
