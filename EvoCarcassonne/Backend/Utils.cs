@@ -123,43 +123,31 @@ namespace EvoCarcassonne.Backend
                 currentTile.Coordinates.Y + diffY == neighborTile.Coordinates.Y;
         }
 
-        public static Dictionary<BoardTile, bool> IsFinishedRoad(BoardTile currentTile)
+        /// <summary>
+        /// Checks whether a road is finished ot not with the given tile.
+        /// </summary>
+        /// <param name="currentTile"></param>
+        /// <returns></returns>
+        public static Dictionary<CardinalDirection, bool> IsFinishedRoad(BoardTile currentTile)
         {
-            Dictionary<CardinalDirection, bool> isThereEndOfRoad = new Dictionary<CardinalDirection, bool>();
-            Dictionary<BoardTile, bool> result = new Dictionary<BoardTile, bool>();
+            Dictionary<CardinalDirection, bool> result = new Dictionary<CardinalDirection, bool>();
             
             for (int i = 0; i < currentTile.BackendTile.Directions.Count; i++)
             {
                 if (currentTile.BackendTile.Directions[i].Landscape is Road)
                 {
-                    isThereEndOfRoad.Add((CardinalDirection)i, IsRoadFinishedGivenDirection(currentTile, (CardinalDirection)i));
+                    result.Add((CardinalDirection)i, IsRoadFinishedGivenDirection(currentTile, (CardinalDirection)i));
                 }
+                /*else
+                {
+                    result.Add((CardinalDirection)i, false);
+                }*/
             }
 
-            foreach (KeyValuePair<CardinalDirection,bool> finishedRoads in isThereEndOfRoad)
-            {
-                if (IsEndOfRoad(currentTile))
-                {
-                    result.Add(currentTile, IsRoadFinishedGivenDirection(currentTile, finishedRoads.Key));   
-                }
-                else
-                {
-                    if (finishedRoads.Value)
-                    {
-                        result.Add(SearchEndOfRoadTileInGivenDirection(currentTile, finishedRoads.Key), true);
-                    }
-                    else
-                    {
-                        result.Add(currentTile, false);
-                    }
-                }
-            }
-            
-            
             return result;
         }
 
-        private static BoardTile SearchEndOfRoadTileInGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
+        public static BoardTile SearchEndOfRoadTileInGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
         {
             Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = GetSurroundingTiles(currentTile);
             BoardTile neighborTile = getNeighborTile(tilesNextToTheGivenTile, whereToGo);
