@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Media.Animation;
 using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 
@@ -43,12 +44,6 @@ namespace EvoCarcassonne.Backend
             }
 
             return true;
-        }
-
-
-        public static bool IsFinishedRoad(BoardTile currentTile)
-        {
-            return false;
         }
 
         public static Dictionary<CardinalDirection, BoardTile> GetSurroundingTiles(BoardTile currentTile)
@@ -127,6 +122,100 @@ namespace EvoCarcassonne.Backend
             return currentTile.Coordinates.X + diffX == neighborTile.Coordinates.X &&
                 currentTile.Coordinates.Y + diffY == neighborTile.Coordinates.Y;
         }
+
+        public static Dictionary<BoardTile, bool> IsFinishedRoad(BoardTile currentTile)
+        {
+            Dictionary<CardinalDirection, bool> isThereEndOfRoad = new Dictionary<CardinalDirection, bool>();
+            Dictionary<BoardTile, bool> result = new Dictionary<BoardTile, bool>();
+            
+            for (int i = 0; i < currentTile.BackendTile.Directions.Count; i++)
+            {
+                if (currentTile.BackendTile.Directions[i].Landscape is Road)
+                {
+                    isThereEndOfRoad.Add((CardinalDirection)i, IsRoadFinishedGivenDirection(currentTile, (CardinalDirection)i));
+                }
+            }
+
+            foreach (KeyValuePair<CardinalDirection,bool> finishedRoads in isThereEndOfRoad)
+            {
+                if (IsEndOfRoad(currentTile))
+                {
+                    result.Add(currentTile, IsRoadFinishedGivenDirection(currentTile, finishedRoads.Key));   
+                }
+                else
+                {
+                    if (finishedRoads.Value)
+                    {
+                        result.Add(SearchEndOfRoadTileInGivenDirection(currentTile, finishedRoads.Key), true);
+                    }
+                    else
+                    {
+                        result.Add(currentTile, false);
+                    }
+                }
+            }
+            
+            
+            return result;
+        }
+
+        private static BoardTile SearchEndOfRoadTileInGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
+        {
+            Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = GetSurroundingTiles(currentTile);
+            BoardTile neighborTile = getNeighborTile(tilesNextToTheGivenTile, whereToGo);
+            if (neighborTile == null || IsEndOfRoad(neighborTile))
+            {
+                return neighborTile;
+            }
+            for (var i = 0; i < 4; i++)
+            {
+                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)getOppositeDirection(whereToGo))
+                {
+                    return SearchEndOfRoadTileInGivenDirection(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i));
+                }
+            }
+            return null;
+        }
+
+        public static bool IsRoadFinishedGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
+        {
+            #region Init required values
+            
+            Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = GetSurroundingTiles(currentTile);
+            BoardTile neighborTile = getNeighborTile(tilesNextToTheGivenTile, whereToGo);
+            #endregion
+            
+            #region Calculation
+            if (neighborTile == null)
+            {
+                return false;
+            }
+            if (IsEndOfRoad(neighborTile))
+            {
+                return true;
+            }
+            return searchInTilesSides(neighborTile, (int)getOppositeDirection(whereToGo));
+            #endregion
+            
+        }
+
+        private static bool IsEndOfRoad(BoardTile neighborTile)
+        {
+            return neighborTile.BackendTile.Speciality.Contains(Speciality.EndOfRoad);
+        }
+        
+        private static bool searchInTilesSides(BoardTile neighborTile, int sideNumber)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != sideNumber)
+                {
+                    return IsRoadFinishedGivenDirection(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i));
+                }
+            }
+            return false;
+        }
+        
        
     }
 }
