@@ -8,6 +8,19 @@
              xmlns:evoCarcassonne="clr-namespace:EvoCarcassonne"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <evoCarcassonne:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <evoCarcassonne:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Style TargetType="Button" x:Key="FigurePlaceButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="2"></Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <controller:MainController />
     </UserControl.DataContext>
@@ -25,15 +38,6 @@
             <RowDefinition Height="0.25*" />
         </Grid.RowDefinitions>
 
-        <!--<Viewbox Width="20" Height="20">
-            <Canvas Width="100" Height="100">
-                <Path
-                    Data="F0 M100,100z M0,0z M99.992,43.019C100.57,29.262 67.638,22.564 66.211,20.996 65.5,20.216 67.861,-0.015 50,0 32.139,-0.015 34.499,20.216 33.788,20.996 32.361,22.564 -0.569000000000003,29.262 0.00799999999999557,43.019 0.583999999999996,56.777 18.059,49.711 21.786,53.76 25.046,57.304 6.50699999999999,79.989 4.43299999999999,94.394 3.757,99.089 5.077,100 9.64,100 17.916,100 25.817,99.995 33.093,99.995 36.38,99.995 37.549,98.106 39.245,95.503 42.999,89.741 47.533,80.479 50,80.48 52.466,80.479 57.001,89.741 60.755,95.502 62.451,98.106 63.619,99.994 66.906,99.994 74.181,99.994 82.083,99.999 90.359,99.999 94.922,99.999 96.243,99.088 95.566,94.393 93.493,79.988 74.955,57.303 78.213,53.759 81.94,49.711 99.417,56.777 99.992,43.019z"
-                    Fill="Red" />
-            </Canvas>
-        </Viewbox>-->
-
-
         <ItemsControl ItemsSource="{Binding Path=BoardTiles}" Grid.Column="1" Grid.ColumnSpan="3">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -46,33 +50,113 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Grid Visibility="Collapsed">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="0.5*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="0.5*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.5*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="0.5*" />
-                            </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid Panel.ZIndex="2" Visibility="{Binding Path=CanPlaceFigure, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.5*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="0.5*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="0.5*" />
+                                </Grid.ColumnDefinitions>
 
-                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                <Button BorderBrush="{Binding Path=Player.Color}" Style="{StaticResource FigurePlaceButton}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="0" x:Name="FigurePlaceNorth" Grid.Row="0" Grid.Column="1" />
-                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Tag="0" x:Name="FigurePlaceNorth" Grid.Row="0" Grid.Column="1" >
+                                    <Button.Effect>
+                                        <DropShadowEffect/>
+                                    </Button.Effect>
+                                </Button>
+                                <Button BorderBrush="{Binding Path=Player.Color}" Style="{StaticResource FigurePlaceButton}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
                                     Tag="1" x:Name="FigurePlaceEast" Grid.Row="1" Grid.Column="2" />
-                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                <Button BorderBrush="{Binding Path=Player.Color}" Style="{StaticResource FigurePlaceButton}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
                                     Tag="2" x:Name="FigurePlaceSouth" Grid.Row="2" Grid.Column="1" />
-                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                <Button BorderBrush="{Binding Path=Player.Color}" Style="{StaticResource FigurePlaceButton}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
                                     Tag="3" x:Name="FigurePlaceWest" Grid.Row="1" Grid.Column="0" />
-                            <Button CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                <Button BorderBrush="{Binding Path=Player.Color}" Style="{StaticResource FigurePlaceButton}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
                                     Tag="4" x:Name="FigurePlaceCenter" Grid.Row="1" Grid.Column="1" />
+                            </Grid>
+                            <Grid Margin="1" Panel.ZIndex="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <Viewbox Visibility="{Binding Path=BackendTile.Directions[0].Figure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="6">
+                                    <Canvas Width="100" Height="100">
+                                        <Path
+                                            Data="F0 M100,100z M0,0z M99.992,43.019C100.57,29.262 67.638,22.564 66.211,20.996 65.5,20.216 67.861,-0.015 50,0 32.139,-0.015 34.499,20.216 33.788,20.996 32.361,22.564 -0.569000000000003,29.262 0.00799999999999557,43.019 0.583999999999996,56.777 18.059,49.711 21.786,53.76 25.046,57.304 6.50699999999999,79.989 4.43299999999999,94.394 3.757,99.089 5.077,100 9.64,100 17.916,100 25.817,99.995 33.093,99.995 36.38,99.995 37.549,98.106 39.245,95.503 42.999,89.741 47.533,80.479 50,80.48 52.466,80.479 57.001,89.741 60.755,95.502 62.451,98.106 63.619,99.994 66.906,99.994 74.181,99.994 82.083,99.999 90.359,99.999 94.922,99.999 96.243,99.088 95.566,94.393 93.493,79.988 74.955,57.303 78.213,53.759 81.94,49.711 99.417,56.777 99.992,43.019z"
+                                            Fill="{Binding Path=Player.Color}" >
+                                            <Path.Effect>
+                                                <DropShadowEffect/>
+                                            </Path.Effect>
+                                        </Path>
+                                    </Canvas>
+                                </Viewbox>
+                                <Viewbox Visibility="{Binding Path=BackendTile.Directions[1].Figure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="4" Grid.RowSpan="6" Grid.ColumnSpan="2">
+                                    <Canvas Width="100" Height="100">
+                                        <Path
+                                            Data="F0 M100,100z M0,0z M99.992,43.019C100.57,29.262 67.638,22.564 66.211,20.996 65.5,20.216 67.861,-0.015 50,0 32.139,-0.015 34.499,20.216 33.788,20.996 32.361,22.564 -0.569000000000003,29.262 0.00799999999999557,43.019 0.583999999999996,56.777 18.059,49.711 21.786,53.76 25.046,57.304 6.50699999999999,79.989 4.43299999999999,94.394 3.757,99.089 5.077,100 9.64,100 17.916,100 25.817,99.995 33.093,99.995 36.38,99.995 37.549,98.106 39.245,95.503 42.999,89.741 47.533,80.479 50,80.48 52.466,80.479 57.001,89.741 60.755,95.502 62.451,98.106 63.619,99.994 66.906,99.994 74.181,99.994 82.083,99.999 90.359,99.999 94.922,99.999 96.243,99.088 95.566,94.393 93.493,79.988 74.955,57.303 78.213,53.759 81.94,49.711 99.417,56.777 99.992,43.019z"
+                                            Fill="{Binding Path=Player.Color}" >
+                                            <Path.Effect>
+                                                <DropShadowEffect/>
+                                            </Path.Effect>
+                                        </Path>
+                                    </Canvas>
+                                </Viewbox>
+                                <Viewbox Visibility="{Binding Path=BackendTile.Directions[2].Figure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="6">
+                                    <Canvas Width="100" Height="100">
+                                        <Path
+                                            Data="F0 M100,100z M0,0z M99.992,43.019C100.57,29.262 67.638,22.564 66.211,20.996 65.5,20.216 67.861,-0.015 50,0 32.139,-0.015 34.499,20.216 33.788,20.996 32.361,22.564 -0.569000000000003,29.262 0.00799999999999557,43.019 0.583999999999996,56.777 18.059,49.711 21.786,53.76 25.046,57.304 6.50699999999999,79.989 4.43299999999999,94.394 3.757,99.089 5.077,100 9.64,100 17.916,100 25.817,99.995 33.093,99.995 36.38,99.995 37.549,98.106 39.245,95.503 42.999,89.741 47.533,80.479 50,80.48 52.466,80.479 57.001,89.741 60.755,95.502 62.451,98.106 63.619,99.994 66.906,99.994 74.181,99.994 82.083,99.999 90.359,99.999 94.922,99.999 96.243,99.088 95.566,94.393 93.493,79.988 74.955,57.303 78.213,53.759 81.94,49.711 99.417,56.777 99.992,43.019z"
+                                            Fill="{Binding Path=Player.Color}" >
+                                            <Path.Effect>
+                                                <DropShadowEffect/>
+                                            </Path.Effect>
+                                        </Path>
+                                    </Canvas>
+                                </Viewbox>
+                                <Viewbox Visibility="{Binding Path=BackendTile.Directions[3].Figure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" Grid.ColumnSpan="2">
+                                    <Canvas Width="100" Height="100">
+                                        <Path
+                                            Data="F0 M100,100z M0,0z M99.992,43.019C100.57,29.262 67.638,22.564 66.211,20.996 65.5,20.216 67.861,-0.015 50,0 32.139,-0.015 34.499,20.216 33.788,20.996 32.361,22.564 -0.569000000000003,29.262 0.00799999999999557,43.019 0.583999999999996,56.777 18.059,49.711 21.786,53.76 25.046,57.304 6.50699999999999,79.989 4.43299999999999,94.394 3.757,99.089 5.077,100 9.64,100 17.916,100 25.817,99.995 33.093,99.995 36.38,99.995 37.549,98.106 39.245,95.503 42.999,89.741 47.533,80.479 50,80.48 52.466,80.479 57.001,89.741 60.755,95.502 62.451,98.106 63.619,99.994 66.906,99.994 74.181,99.994 82.083,99.999 90.359,99.999 94.922,99.999 96.243,99.088 95.566,94.393 93.493,79.988 74.955,57.303 78.213,53.759 81.94,49.711 99.417,56.777 99.992,43.019z"
+                                            Fill="{Binding Path=Player.Color}" >
+                                            <Path.Effect>
+                                                <DropShadowEffect/>
+                                            </Path.Effect>
+                                        </Path>
+                                    </Canvas>
+                                </Viewbox>
+                                <Viewbox Visibility="{Binding Path=BackendTile.Directions, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter='4', UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                                    <Canvas Width="100" Height="100">
+                                        <Path
+                                            Data="F0 M100,100z M0,0z M99.992,43.019C100.57,29.262 67.638,22.564 66.211,20.996 65.5,20.216 67.861,-0.015 50,0 32.139,-0.015 34.499,20.216 33.788,20.996 32.361,22.564 -0.569000000000003,29.262 0.00799999999999557,43.019 0.583999999999996,56.777 18.059,49.711 21.786,53.76 25.046,57.304 6.50699999999999,79.989 4.43299999999999,94.394 3.757,99.089 5.077,100 9.64,100 17.916,100 25.817,99.995 33.093,99.995 36.38,99.995 37.549,98.106 39.245,95.503 42.999,89.741 47.533,80.479 50,80.48 52.466,80.479 57.001,89.741 60.755,95.502 62.451,98.106 63.619,99.994 66.906,99.994 74.181,99.994 82.083,99.999 90.359,99.999 94.922,99.999 96.243,99.088 95.566,94.393 93.493,79.988 74.955,57.303 78.213,53.759 81.94,49.711 99.417,56.777 99.992,43.019z"
+                                            Fill="{Binding Path=Player.Color}" >
+                                            <Path.Effect>
+                                                <DropShadowEffect/>
+                                            </Path.Effect>
+                                        </Path>
+                                    </Canvas>
+                                </Viewbox>
+                            </Grid>
                         </Grid>
                         <Button Panel.ZIndex="-1" Tag="{Binding Tag}" Content="{x:Null}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource Self}}"

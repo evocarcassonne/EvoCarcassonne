@@ -160,12 +160,12 @@ namespace EvoCarcassonne.Controller
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
             PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
 
-            PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure);
+            PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure, CanPlaceFigure);
 
             // Initialize players
             Players = new ObservableCollection<Player>();
-            Players.Add(new Player(Players.Count, "Pista", new SolidColorBrush(Colors.Blue)));
-            Players.Add(new Player(Players.Count, "Géza", new SolidColorBrush(Colors.Red)));
+            Players.Add(new Player(Players.Count, "Pista", Brushes.Red));
+            Players.Add(new Player(Players.Count, "Géza", Brushes.Blue));
 
             CurrentPlayer = Players.First();
         }
@@ -196,6 +196,7 @@ namespace EvoCarcassonne.Controller
                         starterTile.Tag = $"{x};{y}";
                         starterTile.Coordinates = new Coordinates(x, y);
                         starterTile.BackendTile.TileID = CurrentTileID;
+                        starterTile.CanPlaceFigure = false;
 
                         boardTiles.Add(starterTile);
                         PlacedBoardTiles.Add(starterTile);
@@ -206,6 +207,7 @@ namespace EvoCarcassonne.Controller
                     {
                         // Put empty tiles to the board
                         var emptyBoardTile = new BoardTile(0, new Coordinates(x, y), $"{x};{y}", null, new Tile(0, null, nullSpecialty));
+                        emptyBoardTile.CanPlaceFigure = false;
                         boardTiles.Add(emptyBoardTile);
                     }
 
@@ -228,12 +230,6 @@ namespace EvoCarcassonne.Controller
 
         private void GetNewTile()
         {
-            if (TileStack.Count < 1)
-            {
-                /* TODO */
-                throw new NotImplementedException();
-            }
-
             TileIsDown = false;
             HasCurrentTile = true;
 
@@ -247,12 +243,18 @@ namespace EvoCarcassonne.Controller
 
         private bool CanGetNewTile()
         {
-            return !HasCurrentTile;
+            if (TileStack.Count == 0)
+            {
+                return false;
+            }
+
+            return !HasCurrentTile && !TileIsDown;
         }
 
         private void EndTurn()
         {
             TileIsDown = false;
+            PlacedBoardTiles.Last().CanPlaceFigure = false;
 
             CurrentPlayer = Players[(Players.IndexOf(CurrentPlayer) + 1) % Players.Count];
         }
@@ -267,8 +269,10 @@ namespace EvoCarcassonne.Controller
             var x = button.Tag.ToString().Split(';').Select(int.Parse).ToArray();
             var index = x[1] + (x[0] * 10);
 
+            CurrentBoardTile.Player = CurrentPlayer;
             CurrentBoardTile.Tag = (string)button.Tag;
             CurrentBoardTile.Coordinates = new Coordinates(x[1], x[0]);
+            CurrentBoardTile.CanPlaceFigure = true;
             if (!Utils.CheckFitOfTile(CurrentBoardTile))
             {
                 CurrentBoardTile.Coordinates = null;
@@ -276,6 +280,7 @@ namespace EvoCarcassonne.Controller
                 return;
             }
 
+            OnPropertyChanged("CurrentPlayer");
             BoardTiles[index] = CurrentBoardTile;
             PlacedBoardTiles.Add(CurrentBoardTile);
             TileIsDown = true;
@@ -316,6 +321,7 @@ namespace EvoCarcassonne.Controller
            var directionIndex = int.Parse(button.Tag.ToString());
            var currentTile = PlacedBoardTiles.Last();
            PlaceFigure(currentTile, directionIndex);
+           OnPropertyChanged("Figure");
         }
 
         /// <summary>
@@ -336,15 +342,34 @@ namespace EvoCarcassonne.Controller
             {
                 currentTile.BackendTile.Directions[side].Figure = playerFigure;
             }
-
-            
         }
         
-        private bool CanPlaceFigure()
+        private bool CanPlaceFigure(Button button)
         {
-           // Ezt rád bíznám Dani pls :D
-           
-            return true;
+            if (CurrentPlayer.Figures.Count == 0)
+            {
+                return false;
+            }
+
+            var directionIndex = int.Parse(button.Tag.ToString());
+
+            var tile = PlacedBoardTiles.Last();
+            if (tile.CanPlaceFigure)
+            {
+                if (directionIndex == 4 && !tile.BackendTile.Speciality.Contains(Speciality.Colostor))
+                {
+                    return false;
+                }
+
+                if (tile.BackendTile.Directions[directionIndex].Figure != null)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
         }
         #endregion
     }

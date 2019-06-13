@@ -5,16 +5,19 @@ using System.Windows.Data;
 
 namespace EvoCarcassonne
 {
-    public class PropertyToVisibilityValueConverter : IValueConverter
+    public class BooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null ? Visibility.Visible : Visibility.Hidden;
+            if (value is bool prop)
+            {
+                return prop ? Visibility.Visible : Visibility.Collapsed;
+            }
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            // We don't need this.
             throw new NotImplementedException();
         }
     }

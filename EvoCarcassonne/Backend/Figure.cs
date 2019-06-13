@@ -1,8 +1,12 @@
-﻿namespace EvoCarcassonne.Backend
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace EvoCarcassonne.Backend
 {
     public class Figure : IFigure
     {
         public int Id { get; set; }
+
         public IOwner Owner { get; set; }
 
         public Figure(int id, IOwner owner)
