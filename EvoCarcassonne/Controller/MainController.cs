@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using EvoCarcassonne.Backend;
 using EvoCarcassonne.Model;
 
@@ -67,17 +68,12 @@ namespace EvoCarcassonne.Controller
         }
 
         // The players
-        public Owner Player1 = new Owner(1, "Pista");
-        public Owner Player2 = new Owner(2, "Géza");
+        public ObservableCollection<Player> Players;
 
-        // Players' figures
-        public List<IFigure> Player1Figures = new List<IFigure>();
-        public List<IFigure> Player2Figures = new List<IFigure>();
-        
         /// <summary>
         /// The current player
         /// </summary>
-        public Owner CurrentPlayer
+        public Player CurrentPlayer
         {
             get => _currentPlayer;
             set
@@ -111,7 +107,7 @@ namespace EvoCarcassonne.Controller
         #region Private Members
 
         private BoardTile _currentBoardTile;
-        private Owner _currentPlayer;
+        private Player _currentPlayer;
         private bool _tileIsDown;
         private bool _hasCurrentTile;
 
@@ -166,14 +162,12 @@ namespace EvoCarcassonne.Controller
 
             PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure);
 
-            //Initialize figures
-            for (int i = 0; i < 8; i++)
-            {
-                Player1Figures.Add(new Figure(i, Player1));   
-                Player2Figures.Add(new Figure(i, Player2));   
-            }
-            
-            CurrentPlayer = Player1;
+            // Initialize players
+            Players = new ObservableCollection<Player>();
+            Players.Add(new Player(Players.Count, "Pista", new SolidColorBrush(Colors.Blue)));
+            Players.Add(new Player(Players.Count, "Géza", new SolidColorBrush(Colors.Red)));
+
+            CurrentPlayer = Players.First();
         }
 
         #endregion
@@ -260,10 +254,7 @@ namespace EvoCarcassonne.Controller
         {
             TileIsDown = false;
 
-            if (CurrentPlayer == Player1)
-                CurrentPlayer = Player2;
-            else
-                CurrentPlayer = Player1;
+            CurrentPlayer = Players[(Players.IndexOf(CurrentPlayer) + 1) % Players.Count];
         }
 
         private bool CanEndTurn()
@@ -334,15 +325,7 @@ namespace EvoCarcassonne.Controller
         /// <param name="side">Which side of tile should be the figure placed</param>
         private void PlaceFigure(BoardTile currentTile, int side)
         {
-            IFigure playerFigure;
-            if (CurrentPlayer == Player1)
-            {
-                playerFigure = Player1Figures.RemoveAndGet(0);
-            }
-            else
-            {
-                playerFigure = Player2Figures.RemoveAndGet(0);
-            }
+            var playerFigure = CurrentPlayer.Figures.RemoveAndGet(0);
 
             if (side == 4 && currentTile.BackendTile is Church church)
             {

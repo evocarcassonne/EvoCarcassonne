@@ -67,6 +67,7 @@
     <Compile Include="Backend\TileParser.cs" />
     <Compile Include="Helpers\PropertyToVisibilityValueConverter.cs" />
     <Compile Include="Model\Coordinates.cs" />
+    <Compile Include="Model\PlayerModel.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Backend\Utils.cs" />

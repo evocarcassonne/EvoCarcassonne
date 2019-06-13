@@ -46,7 +46,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Grid>
+                        <Grid Visibility="Collapsed">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="0.5*" />
                                 <RowDefinition Height="*" />
@@ -116,7 +116,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <TextBlock>Jelenlegi játékos: <Run Text="{Binding CurrentPlayer.Name}" /></TextBlock>
+        <TextBlock>Jelenlegi játékos: <Run Foreground="{Binding Path=CurrentPlayer.Color}" Text="{Binding CurrentPlayer.Name}" FontWeight="Bold" /></TextBlock>
 
         <Button Content="Lapkérés" Command="{Binding GetNewTileCommand}" Width="100" Height="35" Grid.Row="1" />
         <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Grid.Row="1"
