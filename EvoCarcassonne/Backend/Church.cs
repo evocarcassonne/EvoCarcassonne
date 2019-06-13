@@ -24,6 +24,8 @@ namespace EvoCarcassonne.Backend
 
         public void Rotate(int direction)
         {
+            var churchDirection = Directions.RemoveAndGet(Directions.Count - 1);
+
             IDirection temp;
             switch (direction)
             {
@@ -49,6 +51,8 @@ namespace EvoCarcassonne.Backend
                     Debug.WriteLine(@"[ERROR] You have given a wrong rotation value!");
                     break;
             }
+
+            Directions.Add(churchDirection);
         }
 
         
