@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows.Media.Animation;
 using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
@@ -11,6 +12,7 @@ namespace EvoCarcassonne.Backend
 {
     public static class Utils
     {
+        private static BoardTile firstTile = new BoardTile();
         public static int DistanceBetweenTiles = 1;
         public static List<string> GetResourceNames(string condition)
         {
@@ -136,7 +138,7 @@ namespace EvoCarcassonne.Backend
             {
                 if (currentTile.BackendTile.Directions[i].Landscape is Road)
                 {
-                    result.Add((CardinalDirection)i, IsRoadFinishedGivenDirection(currentTile, (CardinalDirection)i));
+                    result.Add((CardinalDirection)i, IsRoadFinishedGivenDirection(currentTile, (CardinalDirection)i, true));
                 }
                 /*else
                 {
@@ -165,8 +167,12 @@ namespace EvoCarcassonne.Backend
             return null;
         }
 
-        public static bool IsRoadFinishedGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
+        public static bool IsRoadFinishedGivenDirection(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
+            if (firstCall)
+            {
+                firstTile = currentTile;
+            }
             #region Init required values
             
             Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = GetSurroundingTiles(currentTile);
@@ -178,7 +184,7 @@ namespace EvoCarcassonne.Backend
             {
                 return false;
             }
-            if (IsEndOfRoad(neighborTile))
+            if (IsEndOfRoad(neighborTile) || firstTile.Coordinates.X == neighborTile.Coordinates.X && firstTile.Coordinates.Y == neighborTile.Coordinates.Y)
             {
                 return true;
             }
@@ -198,7 +204,7 @@ namespace EvoCarcassonne.Backend
             {
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != sideNumber)
                 {
-                    return IsRoadFinishedGivenDirection(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i));
+                    return IsRoadFinishedGivenDirection(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false);
                 }
             }
             return false;
