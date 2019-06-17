@@ -25,7 +25,7 @@ namespace EvoCarcassonne.Backend
             Console.WriteLine(currentTile);
             int result = 1;
             Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
-            BoardTile neighborTile = Utils.getNeighborTile(tilesNextToTheGivenTile, whereToGo);
+            BoardTile neighborTile = Utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
             if (firstCall)
             {
                 Gameover = gameover;
@@ -65,19 +65,19 @@ namespace EvoCarcassonne.Backend
             ILandscape backEndLandscape = currentTile.BackendTile.Directions[(int)whereToGo].Landscape;
             /*If the neighbor tile is does not exist or (the neighbor tile does not have the same landscape
              on the connecting side and the neighbor tile is end of road) then return result and set current tile as the last tile*/
-            if (neighborTile == null || !backEndLandscape.Equals(neighborTile.BackendTile.Directions[(int)Utils.getOppositeDirection(whereToGo)].Landscape) && IsEndOfRoad(neighborTile))
+            if (neighborTile == null || !backEndLandscape.Equals(neighborTile.BackendTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Landscape) && Utils.IsEndOfRoad(neighborTile))
             {
                 LastTile = currentTile;
                 Console.WriteLine(currentTile);
                 return result;
             }
-            if (IsEndOfRoad(neighborTile))
+            if (Utils.IsEndOfRoad(neighborTile))
             {
                 LastTile = neighborTile;
                 Console.WriteLine(neighborTile);
                 return result;
             }
-            result = searchInTilesSides(result, neighborTile, (int)Utils.getOppositeDirection(whereToGo));
+            result = SearchInTilesSides(result, neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
             /*If the road does not end with the same tile its started, then increase the result*/
             if (firstCall && FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
             {
@@ -87,20 +87,8 @@ namespace EvoCarcassonne.Backend
             
             return result;
         }
-
-        private bool IsEndOfRoad(BoardTile neighborTile)
-        {
-            foreach (var tile in neighborTile.BackendTile.Speciality)
-            {
-                if (tile == Speciality.EndOfRoad)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
         
-        private int searchInTilesSides(int result, BoardTile neighborTile, int sideNumber)
+        private int SearchInTilesSides(int result, BoardTile neighborTile, int sideNumber)
         {
             for (int i = 0; i < 4; i++)
             {

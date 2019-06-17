@@ -123,7 +123,6 @@ namespace EvoCarcassonneUnitTests
             MainController.PlacedBoardTiles.Add(boardTile7);
             MainController.PlacedBoardTiles.Add(boardTile8);
             MainController.PlacedBoardTiles.Add(boardTile9);
-
         }
         
         

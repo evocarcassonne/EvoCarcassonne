@@ -132,7 +132,7 @@ namespace EvoCarcassonneUnitTests
         public void Test()
         {
             MainController.PlacedBoardTiles.RemoveAndGet(5);
-            Assert.IsTrue(Utils.IsRoadFinishedGivenDirection(boardTile6, CardinalDirection.East));
+            Assert.IsTrue(Utils.IsRoadFinishedInGivenDirection(boardTile6, CardinalDirection.East, true));
         }
         
         [TestMethod]
