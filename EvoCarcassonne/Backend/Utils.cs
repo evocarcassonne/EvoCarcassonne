@@ -13,7 +13,8 @@ namespace EvoCarcassonne.Backend
     public static class Utils
     {
         private static BoardTile FirstTile = new BoardTile();
-        public static int DistanceBetweenTiles = 1;
+        private static int DistanceBetweenTiles = 1;
+        public static Dictionary<CardinalDirection, IFigure> FiguresOnBoardTile = new Dictionary<CardinalDirection, IFigure>();
         public static List<string> GetResourceNames(string condition)
         {
             var asm = Assembly.GetEntryAssembly();
@@ -213,6 +214,10 @@ namespace EvoCarcassonne.Backend
             }
             for (var i = 0; i < 4; i++)
             {
+                if (neighborTile.BackendTile.Directions[i].Figure != null)
+                {
+                    FiguresOnBoardTile.Add((CardinalDirection)i, neighborTile.BackendTile.Directions[i].Figure);
+                }
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)GetOppositeDirection(whereToGo))
                 {
                     return SearchEndOfRoadTileInGivenDirection(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i));
