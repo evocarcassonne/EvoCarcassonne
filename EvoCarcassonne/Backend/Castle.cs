@@ -7,12 +7,6 @@ namespace EvoCarcassonne.Backend
 {
     public class Castle : ILandscape
     {
-        #region Public Properties
- 
-        public static List<BoardTile> BoardTileList { get; set; } = new List<BoardTile>();       
-        public static int Count { get; set; } = 0;
-
-        #endregion
 
         #region Private Members
 
@@ -21,6 +15,8 @@ namespace EvoCarcassonne.Backend
         private int Points { get; set; }
         private BoardTile CurrentBoardTile { get; set; }
         private CardinalDirection FromDirection { get; set; }
+        private List<BoardTile> BoardTileList { get; set; } = new List<BoardTile>();
+        private int Count { get; set; } = 0;
 
         #endregion
 
