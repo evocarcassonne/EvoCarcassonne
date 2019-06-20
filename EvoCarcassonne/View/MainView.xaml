@@ -74,6 +74,9 @@
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Jelenlegi játékos: " />
             <TextBlock Text="{Binding CurrentPlayer.Name}" />
+
+            <TextBlock Text="  Pontok: " />
+            <TextBlock Text="{Binding Points}" />
         </StackPanel>
 
         <Button Content="Lapkérés" Command="{Binding GetNewTileCommand}" Width="100" Height="35" Grid.Row="1" />

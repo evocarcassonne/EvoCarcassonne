@@ -24,8 +24,21 @@ namespace EvoCarcassonne.Controller
 
         public static ObservableCollection<BoardTile> TileStack { get; set; }
 
+        public int Points
+        {
+            get => _points;
+            set
+            {
+                if (_points != value)
+                {
+                    _points = value;
+                    OnPropertyChanged("Points");
+                }
+            }
+        }
 
-       
+
+
         /// <summary>
         /// The current tile's ID
         /// </summary>
@@ -112,6 +125,7 @@ namespace EvoCarcassonne.Controller
         private Owner _currentPlayer;
         private bool _tileIsDown;
         private bool _hasCurrentTile;
+        private int _points;
 
         #endregion
 
@@ -294,6 +308,11 @@ namespace EvoCarcassonne.Controller
             //};
             else
                 return;
+
+
+            // Test
+            var castle = new Castle();
+            Points += castle.calculate(CurrentBoardTile, CardinalDirection.East, true, false);
 
             // Set the current tile's image null
             var nullSpecialty = new List<Speciality> { Speciality.None };

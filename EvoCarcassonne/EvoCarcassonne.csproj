@@ -145,23 +145,23 @@
     <Resource Include="Resources\Tiles\0202021.png" />
     <Resource Include="Resources\Tiles\0220021.png" />
     <Resource Include="Resources\Tiles\0221121.png" />
-    <Resource Include="Resources\Tiles\0222000.png" />
     <Resource Include="Resources\Tiles\0222121.png" />
-    <Resource Include="Resources\Tiles\0302020.png" />
     <Resource Include="Resources\Tiles\0320020.png" />
-    <Resource Include="Resources\Tiles\0320110.png" />
-    <Resource Include="Resources\Tiles\0321100.png" />
-    <Resource Include="Resources\Tiles\0321110.png" />
     <Resource Include="Resources\Tiles\0321120.png" />
     <Resource Include="Resources\Tiles\0322020.png" />
     <Resource Include="Resources\Tiles\0400002.png" />
     <Resource Include="Resources\Tiles\0401110.png" />
-    <Resource Include="Resources\Tiles\0520000.png" />
     <Resource Include="Resources\Tiles\0810100.png" />
     <Resource Include="Resources\Tiles\0900110.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Tiles\S321010.png" />
+    <Resource Include="Resources\Tiles\0222004.png" />
+    <Resource Include="Resources\Tiles\0302024.png" />
+    <Resource Include="Resources\Tiles\0320114.png" />
+    <Resource Include="Resources\Tiles\0321104.png" />
+    <Resource Include="Resources\Tiles\0321114.png" />
+    <Resource Include="Resources\Tiles\0520004.png" />
+    <Resource Include="Resources\Tiles\S321014.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
