@@ -5,6 +5,6 @@ namespace EvoCarcassonne.Backend
 {
     public interface ILandscape
     {
-        int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover);
+        void calculate(BoardTile currentTile, bool gameover);
     }
 }

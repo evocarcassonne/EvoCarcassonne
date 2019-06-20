@@ -64,12 +64,14 @@ namespace EvoCarcassonne.Backend
         }
 
 
+        public void calculate(BoardTile currentTile, bool gameover)
+        {
+            throw new System.NotImplementedException();
+        }
 
         public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
         {
             List<BoardTile> surroundingTiles = Utils.GetAllSurroundingTiles(currentTile);
-
-
             if (gameover)
             {
                 return surroundingTiles.Count;
@@ -85,10 +87,6 @@ namespace EvoCarcassonne.Backend
                     return 0;
                 }
             }
-
-
-
-
         }
 
         public CardinalDirection GetCardinalDirectionByIndex(int index)
