@@ -21,6 +21,8 @@ namespace EvoCarcassonneUnitTests
         private BoardTile boardTile8 = new BoardTile();
         private BoardTile boardTile9 = new BoardTile();
         private IOwner Player1 = new Owner(0, "Krisztian");
+        private IOwner Player2 = new Owner(1, "Pista");
+        private IOwner Player3 = new Owner(2, "Karcsi");
         
         [TestInitialize]
         public void Init()
@@ -415,6 +417,46 @@ namespace EvoCarcassonneUnitTests
             Assert.IsTrue(Player1.Points == 4);
         }
         
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase1()
+        {
+            boardTile2.BackendTile.Directions[2].Figure = new Figure(0, Player2);
+            boardTile6.BackendTile.Directions[3].Figure = new Figure(1, Player3);
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player2.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player3.Points);
+            Assert.IsTrue(Player1.Points == 2);
+            Assert.IsTrue(Player2.Points == 2);
+            Assert.IsTrue(Player3.Points == 2);
+        }
         
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase2()
+        {
+            boardTile2.BackendTile.Directions[2].Figure = new Figure(0, Player2);
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player2.Points);
+            Assert.IsTrue(Player1.Points == 3);
+            Assert.IsTrue(Player2.Points == 3);
+        }
+
+        
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase3()
+        {
+            boardTile2.BackendTile.Directions[2].Figure = new Figure(0, Player2);
+            boardTile6.BackendTile.Directions[3].Figure = new Figure(1, Player1);
+            boardTile3.BackendTile.Directions[1].Figure = new Figure(2, Player1);
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player2.Points);
+            Assert.IsTrue(Player1.Points == 6);
+            Assert.IsTrue(Player2.Points == 0);
+        }
     }      
 }

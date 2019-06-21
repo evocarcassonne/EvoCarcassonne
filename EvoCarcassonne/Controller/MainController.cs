@@ -279,6 +279,7 @@ namespace EvoCarcassonne.Controller
                 }
                 BoardTiles[index] = CurrentBoardTile;
                 PlacedBoardTiles.Add(CurrentBoardTile);
+                ForTestPurposeRemoveIfStuckHere();
                 TileIsDown = true;
                 HasCurrentTile = false;
             }
@@ -298,6 +299,19 @@ namespace EvoCarcassonne.Controller
             // Set the current tile's image null
             var nullSpecialty = new List<Speciality> { Speciality.None };
             CurrentBoardTile = new BoardTile(0, null, null, null, new Tile(0, null, nullSpecialty));
+        }
+
+        private void ForTestPurposeRemoveIfStuckHere()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (CurrentBoardTile.BackendTile.Directions[i].Landscape is Road)
+                {
+                    CurrentBoardTile.BackendTile.Directions[i].Figure = new Figure(0, Player1);
+                    CurrentBoardTile.BackendTile.Directions[i].Landscape.calculate(CurrentBoardTile, false);
+                    break;
+                }
+            }
         }
 
         #endregion

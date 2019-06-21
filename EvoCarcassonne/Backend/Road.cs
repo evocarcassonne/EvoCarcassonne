@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Documents;
 using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
@@ -24,7 +25,7 @@ namespace EvoCarcassonne.Backend
         public void calculate(BoardTile currentTile, bool gameover)
         {
             int result = 0;
-            CheckFigureOnTile(currentTile);
+            //CheckFigureOnTile(currentTile);
             Gameover = gameover;
         
             if (gameover)
@@ -58,6 +59,7 @@ namespace EvoCarcassonne.Backend
                         result += CalculateWithDirections(SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i), _whereToGoAfterEndOfRoadFound);
                         break;
                     }
+                    CheckFigureOnTile(FirstTile);
                     /*If the road is not finished, then result should be 0*/
                     if (!IsRoadFinished)
                     {
@@ -74,9 +76,9 @@ namespace EvoCarcassonne.Backend
             }
 
             Console.WriteLine(@"Figures found:    " + FiguresOnTiles.Count);
-            if(FiguresOnTiles.Count != 0)
+            if (FiguresOnTiles.Count != 0)
             {
-                FiguresOnTiles[0].Owner.Points += result;
+                DistributePoints(result);
             }
         }
 
@@ -128,6 +130,8 @@ namespace EvoCarcassonne.Backend
             }
         }
 
+        //TODO: Hogyha nem endofroad-al van meghívva a caluculate és a figura az eggyel mellette lévő tilera van téve, valamiért nem találja meg. Ezt kéne leellenőrizni hogy miért. 
+        
         /// <summary>
         /// Checks if the given tile has any figure on it, but only on the given side
         /// </summary>
@@ -154,7 +158,7 @@ namespace EvoCarcassonne.Backend
             {
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && !IsEndOfRoad(neighborTile))
                 {
-                    CheckFigureOnTile(neighborTile);
+                    CheckFigureOnTile(neighborTile, i);
                 }
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != sideNumber)
                 {
@@ -199,6 +203,50 @@ namespace EvoCarcassonne.Backend
         public bool IsEndOfRoad(BoardTile currentTile)
         {
             return currentTile.BackendTile.Speciality.Contains(Speciality.EndOfRoad);
+        }
+        
+        private void DistributePoints(int result)
+        {
+            var points = new List<int>();
+            var players = new List<IOwner>();
+            var playersToGetPoints = new List<IOwner>();
+            foreach (var i in FiguresOnTiles)
+            {
+                if (!players.Contains(i.Owner))
+                {
+                    players.Add(i.Owner);
+                }
+            }
+            int maxIndex = 0;
+            for (int i = 0; i < players.Count; i++)
+            {
+                int currentCount = 0;
+                for (int j = 0; j < FiguresOnTiles.Count; j++)
+                {
+                    if (players[i].Equals(FiguresOnTiles[i].Owner))
+                    {
+                        currentCount++;
+                    }
+                }
+                points.Add(currentCount);
+                if (points[i] > points[maxIndex])
+                {
+                    maxIndex = i;
+                }
+            }
+            playersToGetPoints.Add(players[maxIndex]);
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i] == points[maxIndex] && i != maxIndex)
+                {
+                    playersToGetPoints.Add(players[i]);
+                }
+            }
+
+            foreach (IOwner i in playersToGetPoints)
+            {
+                i.Points += result / playersToGetPoints.Count;
+            }
         }
     }
 }
