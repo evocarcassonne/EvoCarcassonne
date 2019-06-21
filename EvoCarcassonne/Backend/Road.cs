@@ -26,13 +26,6 @@ namespace EvoCarcassonne.Backend
             int result = 0;
             CheckFigureOnTile(currentTile);
             Gameover = gameover;
-            /*if (!Gameover && currentTile.Coordinates.X == FirstTile.Coordinates.X && 
-                currentTile.Coordinates.Y == FirstTile.Coordinates.Y)
-            {
-                LastTile = currentTile;
-                result = 0;
-            }*/
-            
         
             if (gameover)
             {
@@ -51,11 +44,11 @@ namespace EvoCarcassonne.Backend
             }
             else
             {
+                FirstTile = currentTile;
                 for (int i = 0; i < 4; i++)
                 {
                     if (IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road)
                     {
-                        FirstTile = currentTile;
                         result += CalculateWithDirections(currentTile, (CardinalDirection)i);
                     }
                     else if (!IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road 
@@ -177,15 +170,17 @@ namespace EvoCarcassonne.Backend
         /// </summary>
         /// <param name="currentTile">The tile which has just been put down</param>
         /// <param name="whereToGo">The direction where to search for end of road tile</param>
+        /// <param name="b"></param>
         /// <returns>The end of road tile found in the given direction. Null if there is no end of road tile</returns>
         private BoardTile SearchEndOfRoadTileInGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
         {
             BoardTile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
-            if (neighborTile == null || IsEndOfRoad(neighborTile))
+            if (neighborTile == null || IsEndOfRoad(neighborTile) || FirstTile.Coordinates.Equals(neighborTile.Coordinates))
             {
                 _whereToGoAfterEndOfRoadFound = Utils.GetOppositeDirection(whereToGo);
                 return neighborTile;
             }
+
             for (var i = 0; i < 4; i++)
             {
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))

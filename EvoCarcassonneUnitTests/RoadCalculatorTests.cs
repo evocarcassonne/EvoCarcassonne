@@ -257,9 +257,9 @@ namespace EvoCarcassonneUnitTests
             
             directions = new List<IDirection>();
             directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
+            directions.Add(new Direction(0, new Road(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
+            directions.Add(new Direction(0, new Road(), figure));
             boardTile6.BackendTile = new Tile(6, directions, specialities);
             
             directions = new List<IDirection>();
@@ -335,5 +335,86 @@ namespace EvoCarcassonneUnitTests
             Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
             Assert.IsTrue(Player1.Points == 0);
         }
+        
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_TestCase1()
+        {
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
+            Assert.IsTrue(Player1.Points == 6);
+        }
+        
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_TestCase2()
+        {
+            #region Initialize values
+
+            BoardTile boardTile10 = new BoardTile();
+            boardTile10.Coordinates = new Coordinates(2,3);
+            List<IDirection> directions = new List<IDirection>();
+            directions.Add(new Direction(0, new Road(), new Figure(0, Player1)));
+            directions.Add(new Direction(1, new Field(), null));
+            directions.Add(new Direction(2, new Field(), null));
+            directions.Add(new Direction(3, new Field(), null));
+            List<Speciality> speciality = new List<Speciality>();
+            speciality.Add(Speciality.EndOfRoad);
+            speciality.Add(Speciality.Colostor);
+            boardTile10.BackendTile = new Church(0, directions, speciality);
+            #endregion
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile10.BackendTile.Directions[0].Landscape.calculate(boardTile10, false);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
+            Assert.IsTrue(Player1.Points == 8);
+        }
+        
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_TestCase3()
+        {
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  true);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
+            Assert.IsTrue(Player1.Points == 6);
+        }
+        
+         [TestMethod]
+        public void CalculateRoad_RoadIsFinishedGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_TestCase4()
+        {
+            #region Initialize values
+            List<IDirection> directions = new List<IDirection>();
+            List<Speciality> specialities = new List<Speciality>();
+            specialities.Add(Speciality.None);
+            directions.Add(new Direction(0, new Road(), new Figure(0, Player1)));
+            directions.Add(new Direction(1, new Castle(), null));
+            directions.Add(new Direction(2, new Castle(), null));
+            directions.Add(new Direction(3, new Road(), null));
+            boardTile3.BackendTile.Directions = directions;
+            boardTile3.BackendTile.Speciality = specialities;
+            
+            directions = new List<IDirection>();
+            directions.Add(new Direction(0, new Castle(), null));
+            directions.Add(new Direction(1, new Road(), null));
+            directions.Add(new Direction(2, new Road(), null));
+            directions.Add(new Direction(3, new Castle(), null));
+            boardTile1.BackendTile.Directions = directions;
+            boardTile1.BackendTile.Speciality = specialities;
+            
+            directions = new List<IDirection>();
+            directions.Add(new Direction(0, new Castle(), null));
+            directions.Add(new Direction(1, new Castle(), null));
+            directions.Add(new Direction(2, new Road(), null));
+            directions.Add(new Direction(3, new Road(), null));
+            boardTile2.BackendTile.Directions = directions;
+            boardTile2.BackendTile.Speciality = specialities;
+            #endregion
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1,  false);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
+            Assert.IsTrue(Player1.Points == 4);
+        }
+        
+        
     }      
 }
