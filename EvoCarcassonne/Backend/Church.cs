@@ -82,7 +82,7 @@ namespace EvoCarcassonne.Backend
             }
             else
             {
-                if (surroundingTiles.Count==8)
+                if (surroundingTiles.Count == 8)
                 {
                     if (churchTile.CenterFigure != null)
                     {

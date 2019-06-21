@@ -13,7 +13,7 @@ namespace EvoCarcassonne.Backend
         private bool Gameover { get; set; }
         private bool IsRoadFinished { get; set; } = true;
 
-        private CardinalDirection WhereToGoAfterEndOfRoadFound;
+        private CardinalDirection _whereToGoAfterEndOfRoadFound;
        
         private List<IFigure> FiguresOnTiles { get; set; } = new List<IFigure>();
 
@@ -32,10 +32,11 @@ namespace EvoCarcassonne.Backend
                 LastTile = currentTile;
                 result = 0;
             }*/
-            FirstTile = currentTile;
+            
         
             if (gameover)
             {
+                FirstTile = currentTile;
                 for (var i = 0; i < currentTile.BackendTile.Directions.Count; i++)
                 {
                     if (currentTile.BackendTile.Directions[i].Landscape is Road)
@@ -54,29 +55,32 @@ namespace EvoCarcassonne.Backend
                 {
                     if (IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road)
                     {
+                        FirstTile = currentTile;
                         result += CalculateWithDirections(currentTile, (CardinalDirection)i);
                     }
                     else if (!IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road 
                                                        && SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i) != null)
                     {
-                        result += CalculateWithDirections(SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i), WhereToGoAfterEndOfRoadFound);
+                        FirstTile = SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i);
+                        result += CalculateWithDirections(SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i), _whereToGoAfterEndOfRoadFound);
+                        break;
+                    }
+                    /*If the road is not finished, then result should be 0*/
+                    if (!IsRoadFinished)
+                    {
+                        result = 0;
                     }
                 }
                 /*If the road does not end with the same tile its started, then increase the result*/
-                if (FirstTile.Coordinates.X != LastTile.Coordinates.X &&
-                    FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
+                if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
+                    FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
                 {
                     result += 1;
                 }
-                
-                /*If the road is not finished, then result should be 0*/
-                if (!IsRoadFinished)
-                {
-                    result = 0;
-                }
+               
             }
 
-            Console.WriteLine(@"Figures found:    "+FiguresOnTiles.Count);
+            Console.WriteLine(@"Figures found:    " + FiguresOnTiles.Count);
             if(FiguresOnTiles.Count != 0)
             {
                 FiguresOnTiles[0].Owner.Points += result;
@@ -85,7 +89,7 @@ namespace EvoCarcassonne.Backend
 
 
         /**
-         * Calculate a road's length and gives back the points earned from finishing it. Returns 0 if the road is not finished.
+         * Calculate a road's length and gives back the points earned from finishing it. Sets IsRoadFinished false if the road is not finished.
          */
         private int CalculateWithDirections(BoardTile currentTile, CardinalDirection whereToGo)
         {
@@ -101,7 +105,7 @@ namespace EvoCarcassonne.Backend
                 IsRoadFinished = false;
                 return result;
             }
-            if (IsEndOfRoad(neighborTile))
+            if (IsEndOfRoad(neighborTile) || neighborTile.Coordinates.Equals(FirstTile.Coordinates))
             {
                 CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
                 LastTile = neighborTile;
@@ -119,7 +123,7 @@ namespace EvoCarcassonne.Backend
         /// <summary>
         /// Checks whether the given tile has any figure on it and is road.
         /// </summary>
-        /// <param name="currentTile"></param>
+        /// <param name="currentTile">The examined tile</param>
         private void CheckFigureOnTile(BoardTile currentTile)
         {
             foreach (var direction in currentTile.BackendTile.Directions)
@@ -131,6 +135,11 @@ namespace EvoCarcassonne.Backend
             }
         }
 
+        /// <summary>
+        /// Checks if the given tile has any figure on it, but only on the given side
+        /// </summary>
+        /// <param name="currentTile">The examined tile</param>
+        /// <param name="onlySideToCheck">The side of tile to be examined</param>
         private void CheckFigureOnTile(BoardTile currentTile, int onlySideToCheck)
         {
             if (currentTile.BackendTile.Directions[onlySideToCheck].Figure != null)
@@ -139,6 +148,13 @@ namespace EvoCarcassonne.Backend
             }
         }
 
+        /// <summary>
+        /// Search the given tile's sides for roads, and if it find one it will cal calculation on it
+        /// </summary>
+        /// <param name="result">Gets the current number of road tiles</param>
+        /// <param name="neighborTile">The tile to be examined</param>
+        /// <param name="sideNumber">The integer value of that CardinalDirection where we came from</param>
+        /// <returns>The number of tiles found following the road</returns>
         private int SearchInTilesSides(int result, BoardTile neighborTile, int sideNumber)
         {
             for (int i = 0; i < 4; i++)
@@ -167,7 +183,7 @@ namespace EvoCarcassonne.Backend
             BoardTile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
             if (neighborTile == null || IsEndOfRoad(neighborTile))
             {
-                WhereToGoAfterEndOfRoadFound = Utils.GetOppositeDirection(whereToGo);
+                _whereToGoAfterEndOfRoadFound = Utils.GetOppositeDirection(whereToGo);
                 return neighborTile;
             }
             for (var i = 0; i < 4; i++)
