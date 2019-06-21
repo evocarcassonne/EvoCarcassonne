@@ -103,13 +103,12 @@ namespace EvoCarcassonne.Backend
             }
             if (IsEndOfRoad(neighborTile))
             {
+                CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
                 LastTile = neighborTile;
                 Console.WriteLine(neighborTile);
                 return result;
             }
-            result = SearchInTilesSides(result, neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
-            
-            return result;
+            return SearchInTilesSides(result, neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
         }
 
         public override bool Equals(object obj)
@@ -144,7 +143,7 @@ namespace EvoCarcassonne.Backend
         {
             for (int i = 0; i < 4; i++)
             {
-                if (neighborTile.BackendTile.Directions[i].Landscape is Road)
+                if (neighborTile.BackendTile.Directions[i].Landscape is Road && !IsEndOfRoad(neighborTile))
                 {
                     CheckFigureOnTile(neighborTile);
                 }
