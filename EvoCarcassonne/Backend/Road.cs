@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Documents;
 using EvoCarcassonne.Controller;
@@ -25,17 +26,31 @@ namespace EvoCarcassonne.Backend
         public void calculate(BoardTile currentTile, bool gameover)
         {
             int result = 0;
-            //CheckFigureOnTile(currentTile);
             Gameover = gameover;
-        
+            FirstTile = currentTile;
             if (gameover)
             {
-                FirstTile = currentTile;
                 for (var i = 0; i < currentTile.BackendTile.Directions.Count; i++)
                 {
                     if (currentTile.BackendTile.Directions[i].Landscape is Road)
                     {
+                        CheckFigureOnTile(currentTile, i);
                         result += CalculateWithDirections(currentTile, (CardinalDirection) i);
+                    }
+                    if (IsEndOfRoad(currentTile))
+                    {
+                        if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
+                              FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
+                        {
+                            result++;
+                        }
+                        if (!IsRoadFinished)
+                        {
+                            result = 0;
+                        }
+                        DistributePoints(result);
+                        result = 0;
+                        FiguresOnTiles = new List<IFigure>();
                     }
                 }
                 if (FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
@@ -45,21 +60,34 @@ namespace EvoCarcassonne.Backend
             }
             else
             {
-                FirstTile = currentTile;
                 for (int i = 0; i < 4; i++)
                 {
                     if (IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road)
                     {
+                        CheckFigureOnTile(currentTile, i);
                         result += CalculateWithDirections(currentTile, (CardinalDirection)i);
+                        if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
+                              FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
+                        {
+                            result++;
+                        }
+                        if (!IsRoadFinished)
+                        {
+                            result = 0;
+                        }
+                        IsRoadFinished = true;
+                        DistributePoints(result);
+                        FiguresOnTiles = new List<IFigure>();
+                        result = 0;
                     }
                     else if (!IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road 
                                                        && SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i) != null)
                     {
                         FirstTile = SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i);
+                        CheckFigureOnTile(FirstTile, (int)_whereToGoAfterEndOfRoadFound);
                         result += CalculateWithDirections(SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i), _whereToGoAfterEndOfRoadFound);
                         break;
                     }
-                    CheckFigureOnTile(FirstTile);
                     /*If the road is not finished, then result should be 0*/
                     if (!IsRoadFinished)
                     {
@@ -70,11 +98,9 @@ namespace EvoCarcassonne.Backend
                 if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
                     FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
                 {
-                    result += 1;
+                    result++;
                 }
-               
             }
-
             Console.WriteLine(@"Figures found:    " + FiguresOnTiles.Count);
             if (FiguresOnTiles.Count != 0)
             {
@@ -93,6 +119,13 @@ namespace EvoCarcassonne.Backend
             Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
             BoardTile neighborTile = Utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
             
+            for (int i = 0; i < 4; i++)
+            {
+                if (currentTile.BackendTile.Directions[i].Landscape is Road && !Gameover && !IsEndOfRoad(currentTile))
+                {
+                    CheckFigureOnTile(currentTile, i);
+                }
+            }
             /*If the neighbor tile does not exist then return result and set current tile as the last tile and sets IsRoadFinished false*/
             if (neighborTile == null)
             {
@@ -114,23 +147,6 @@ namespace EvoCarcassonne.Backend
         {
             return obj is Road;
         }
-
-        /// <summary>
-        /// Checks whether the given tile has any figure on it and is road.
-        /// </summary>
-        /// <param name="currentTile">The examined tile</param>
-        private void CheckFigureOnTile(BoardTile currentTile)
-        {
-            foreach (var direction in currentTile.BackendTile.Directions)
-            {
-                if (direction.Figure != null && direction.Landscape is Road)
-                {
-                    FiguresOnTiles.Add(direction.Figure);
-                }
-            }
-        }
-
-        //TODO: Hogyha nem endofroad-al van meghívva a caluculate és a figura az eggyel mellette lévő tilera van téve, valamiért nem találja meg. Ezt kéne leellenőrizni hogy miért. 
         
         /// <summary>
         /// Checks if the given tile has any figure on it, but only on the given side
@@ -141,6 +157,7 @@ namespace EvoCarcassonne.Backend
         {
             if (currentTile.BackendTile.Directions[onlySideToCheck].Figure != null)
             {
+                Console.WriteLine(@"Ezt adom hozzá:    " + currentTile.BackendTile.Directions[onlySideToCheck].Figure.Owner.Name);
                 FiguresOnTiles.Add(currentTile.BackendTile.Directions[onlySideToCheck].Figure);
             }
         }
@@ -156,10 +173,6 @@ namespace EvoCarcassonne.Backend
         {
             for (int i = 0; i < 4; i++)
             {
-                if (neighborTile.BackendTile.Directions[i].Landscape is Road && !IsEndOfRoad(neighborTile))
-                {
-                    CheckFigureOnTile(neighborTile, i);
-                }
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != sideNumber)
                 {
                     result += CalculateWithDirections(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i));
@@ -174,7 +187,6 @@ namespace EvoCarcassonne.Backend
         /// </summary>
         /// <param name="currentTile">The tile which has just been put down</param>
         /// <param name="whereToGo">The direction where to search for end of road tile</param>
-        /// <param name="b"></param>
         /// <returns>The end of road tile found in the given direction. Null if there is no end of road tile</returns>
         private BoardTile SearchEndOfRoadTileInGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
         {
@@ -223,7 +235,7 @@ namespace EvoCarcassonne.Backend
                 int currentCount = 0;
                 for (int j = 0; j < FiguresOnTiles.Count; j++)
                 {
-                    if (players[i].Equals(FiguresOnTiles[i].Owner))
+                    if (players[i].Equals(FiguresOnTiles[j].Owner))
                     {
                         currentCount++;
                     }
@@ -234,7 +246,11 @@ namespace EvoCarcassonne.Backend
                     maxIndex = i;
                 }
             }
-            playersToGetPoints.Add(players[maxIndex]);
+
+            if (players.Count!=0)
+            {
+                playersToGetPoints.Add(players[maxIndex]);   
+            }
             for (int i = 0; i < points.Count; i++)
             {
                 if (points[i] == points[maxIndex] && i != maxIndex)
@@ -242,8 +258,7 @@ namespace EvoCarcassonne.Backend
                     playersToGetPoints.Add(players[i]);
                 }
             }
-
-            foreach (IOwner i in playersToGetPoints)
+            foreach (var i in playersToGetPoints)
             {
                 i.Points += result / playersToGetPoints.Count;
             }

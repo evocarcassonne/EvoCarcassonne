@@ -13,5 +13,11 @@ namespace EvoCarcassonne.Backend
             Id = id;
             Name = name;
         }
+        
+        public override bool Equals(object obj)
+        {
+            var other = (Owner)obj;
+            return Name == other.Name && Points == other.Points && Id == other.Id;
+        }
     }
 }
