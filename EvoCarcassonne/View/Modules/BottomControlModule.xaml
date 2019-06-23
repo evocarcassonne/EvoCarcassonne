@@ -12,6 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+
     <Grid Height="100">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -20,23 +21,14 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+
         <Button Content="Lapkérés" Command="{Binding GetNewTileCommand}" Width="100" Height="35" Grid.Column="0" />
-        <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Grid.Column="4" />
         <Button CommandParameter="-90" Command="{Binding Path=RotateLeftCommand}" Width="35" Height="35"
                 Grid.Column="1"
                 Background="Transparent" BorderBrush="Transparent" Margin="35,0">
             <Viewbox Width="24" Height="24">
                 <Canvas Width="24" Height="24">
                     <Path Data="{StaticResource RotateLeftSvg}" Fill="Black" />
-                </Canvas>
-            </Viewbox>
-        </Button>
-        <Button CommandParameter="90" Command="{Binding Path=RotateRightCommand}" Width="35" Height="35"
-                Grid.Column="3"
-                Background="Transparent" BorderBrush="Transparent" Margin="35,0">
-            <Viewbox Width="24" Height="24">
-                <Canvas Width="24" Height="24">
-                    <Path Data="{StaticResource RotateRightSvg}" Fill="Black" />
                 </Canvas>
             </Viewbox>
         </Button>
@@ -72,5 +64,15 @@
                 </Style>
             </Button.Style>
         </Button>
+        <Button CommandParameter="90" Command="{Binding Path=RotateRightCommand}" Width="35" Height="35"
+                Grid.Column="3"
+                Background="Transparent" BorderBrush="Transparent" Margin="35,0">
+            <Viewbox Width="24" Height="24">
+                <Canvas Width="24" Height="24">
+                    <Path Data="{StaticResource RotateRightSvg}" Fill="Black" />
+                </Canvas>
+            </Viewbox>
+        </Button>
+        <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Grid.Column="4" />
     </Grid>
 </UserControl>

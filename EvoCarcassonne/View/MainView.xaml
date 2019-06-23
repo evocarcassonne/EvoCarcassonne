@@ -7,12 +7,11 @@
              xmlns:modules="clr-namespace:EvoCarcassonne.View.Modules"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" MinHeight="450" MinWidth="800">
-
     <UserControl.DataContext>
         <controller:MainController />
     </UserControl.DataContext>
 
-    <Grid Background="White">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
@@ -23,11 +22,16 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- Current player module -->
         <TextBlock Grid.Row="0" Grid.Column="0" Panel.ZIndex="1">
             Jelenlegi játékos:
             <Run Foreground="{Binding Path=CurrentPlayer.Color}" Text="{Binding CurrentPlayer.Name}" FontWeight="Bold" />
         </TextBlock>
+
+        <!-- Game board module -->
         <modules:BoardModule Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
+
+        <!-- Tile control module -->
         <modules:BottomControlModule Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
     </Grid>
 </UserControl>

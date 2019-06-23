@@ -24,6 +24,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
+
     <ItemsControl ItemsSource="{Binding Path=BoardTiles}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
@@ -36,6 +37,7 @@
             <DataTemplate>
                 <Grid>
                     <Grid>
+                        <!-- Figure place buttons -->
                         <Grid Panel.ZIndex="2"
                               Visibility="{Binding Path=CanPlaceFigure, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid.RowDefinitions>
@@ -54,9 +56,6 @@
                                     CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
                                     Tag="0" x:Name="FigurePlaceNorth" Grid.Row="0" Grid.Column="1">
-                                <Button.Effect>
-                                    <DropShadowEffect />
-                                </Button.Effect>
                             </Button>
                             <Button BorderBrush="{Binding Path=Player.Color}"
                                     Style="{StaticResource FigurePlaceButton}"
@@ -79,6 +78,8 @@
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
                                     Tag="4" x:Name="FigurePlaceCenter" Grid.Row="1" Grid.Column="1" />
                         </Grid>
+
+                        <!-- Figure images -->
                         <Grid Margin="1" Panel.ZIndex="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -154,6 +155,8 @@
                             </Viewbox>
                         </Grid>
                     </Grid>
+
+                    <!-- Tile image -->
                     <Button Panel.ZIndex="-1" Tag="{Binding Tag}" Content="{x:Null}"
                             CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceTileCommand}"
