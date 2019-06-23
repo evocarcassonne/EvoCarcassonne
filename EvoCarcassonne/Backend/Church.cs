@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {
-    public class Church : ITile, ILandscape, INotifyPropertyChanged
+    public class Church : ObservableObject, ITile, ILandscape
     {
         public int TileID { get; set; }
 
@@ -106,13 +104,6 @@ namespace EvoCarcassonne.Backend
                     }
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

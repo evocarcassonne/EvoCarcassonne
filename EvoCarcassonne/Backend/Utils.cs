@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Windows.Media.Animation;
 using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 

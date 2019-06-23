@@ -1,12 +1,8 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using EvoCarcassonne.Backend;
+﻿using EvoCarcassonne.Backend;
 
 namespace EvoCarcassonne.Model
 {
-    public class BoardTileModel {}
-
-    public class BoardTile : INotifyPropertyChanged
+    public class BoardTile : ObservableObject
     {
         public Coordinates Coordinates { get; set; }
         public string Tag { get; set; }
@@ -71,17 +67,6 @@ namespace EvoCarcassonne.Model
 
         public Player Player { get; set; }
 
-        public BoardTile()
-        {
-
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public BoardTile() { }
     }
-
 }

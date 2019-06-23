@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace EvoCarcassonne.Backend
+﻿namespace EvoCarcassonne.Backend
 {
     public interface IFigure
     {

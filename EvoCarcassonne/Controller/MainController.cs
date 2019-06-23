@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -11,7 +10,7 @@ using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Controller
 {
-    public class MainController : BaseViewModel
+    public class MainController : ObservableObject
     {
 
         #region Public Properties
@@ -46,7 +45,7 @@ namespace EvoCarcassonne.Controller
                 if (_hasCurrentTile != value)
                 {
                     _hasCurrentTile = value;
-                    OnPropertyChanged("HasCurrentTile");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -62,7 +61,7 @@ namespace EvoCarcassonne.Controller
                 if (_currentBoardTile != value)
                 {
                     _currentBoardTile = value;
-                    OnPropertyChanged("CurrentBoardTile");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -81,7 +80,7 @@ namespace EvoCarcassonne.Controller
                 if (_currentPlayer != value)
                 {
                     _currentPlayer = value;
-                    OnPropertyChanged("CurrentPlayer");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -97,7 +96,7 @@ namespace EvoCarcassonne.Controller
                 if (_tileIsDown != value)
                 {
                     _tileIsDown = value;
-                    OnPropertyChanged("TileIsDown");
+                    OnPropertyChanged();
                 }
             }
         }

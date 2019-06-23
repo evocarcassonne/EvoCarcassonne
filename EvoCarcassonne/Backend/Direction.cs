@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace EvoCarcassonne.Backend
 {
-    public class Direction : IDirection
+    public class Direction : ObservableObject, IDirection
     {
         private IFigure _figure;
         public int Id { get; set; }
@@ -38,13 +38,6 @@ namespace EvoCarcassonne.Backend
             Id = id;
             Landscape = landscape;
             Figure = figure;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

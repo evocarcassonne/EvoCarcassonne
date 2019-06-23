@@ -61,7 +61,7 @@
     <Compile Include="Model\Coordinates.cs" />
     <Compile Include="Model\PlayerModel.cs" />
     <Compile Include="Helpers\NullToVisibilityConverter.cs" />
-    <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Backend\Utils.cs" />
     <Compile Include="Controller\MainController.cs" />
@@ -170,5 +170,6 @@
   <ItemGroup>
     <Resource Include="Resources\Tiles\S321010.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
