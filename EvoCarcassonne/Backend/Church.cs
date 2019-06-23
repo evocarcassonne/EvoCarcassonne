@@ -13,7 +13,7 @@ namespace EvoCarcassonne.Backend
 
         public List<IDirection> Directions { get; set; }
         public List<Speciality> Speciality { get; set; }
-        private bool IsColostor = false;
+
         private IFigure _centerFigure;
         public IFigure CenterFigure
         {
@@ -76,34 +76,6 @@ namespace EvoCarcassonne.Backend
             }
         }
 
-
-
-        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
-        {
-            List<BoardTile> surroundingTiles = Utils.GetAllSurroundingTiles(currentTile);
-
-
-            if (gameover)
-            {
-                return surroundingTiles.Count;
-            }
-            else
-            {
-                if (surroundingTiles.Count==8)
-                {
-                    return 9;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-
-
-
-
-        }
-
         public CardinalDirection GetCardinalDirectionByIndex(int index)
         {
             switch (index)
@@ -113,6 +85,26 @@ namespace EvoCarcassonne.Backend
                 case 2: return CardinalDirection.South;
                 case 3: return CardinalDirection.West;
                 default: return CardinalDirection.North;
+            }
+        }
+
+        public void calculate(BoardTile currentTile, bool gameover)
+        {
+            List<BoardTile> surroundingTiles = Utils.GetAllSurroundingTiles(currentTile);
+            var churchTile = (Church)currentTile.BackendTile;
+            if (gameover)
+            {
+                churchTile.CenterFigure.Owner.Points += surroundingTiles.Count;
+            }
+            else
+            {
+                if (surroundingTiles.Count == 8)
+                {
+                    if (churchTile.CenterFigure != null)
+                    {
+                        churchTile.CenterFigure.Owner.Points += 9;
+                    }
+                }
             }
         }
 

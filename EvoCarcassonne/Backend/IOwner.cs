@@ -6,5 +6,6 @@ namespace EvoCarcassonne.Backend
     {
         int Id { get; set; }
         String Name { get; set; }
+        int Points { get; set; }
     }
 }

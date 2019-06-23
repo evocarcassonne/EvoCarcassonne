@@ -290,7 +290,6 @@ namespace EvoCarcassonne.Controller
             var nullSpecialty = new List<Speciality> { Speciality.None };
             CurrentBoardTile = new BoardTile(0, null, null, null, new Tile(0, null, nullSpecialty));
         }
-
         private bool CanPlaceTile(Button button)
         {
             if (!HasCurrentTile || TileIsDown)

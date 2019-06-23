@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Documents;
+using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
@@ -10,100 +13,255 @@ namespace EvoCarcassonne.Backend
         private BoardTile FirstTile { get; set; }
         private BoardTile LastTile { get; set; }
         private bool Gameover { get; set; }
+        private bool IsRoadFinished { get; set; } = true;
+
+        private CardinalDirection _whereToGoAfterEndOfRoadFound;
+       
+        private List<IFigure> FiguresOnTiles { get; set; } = new List<IFigure>();
 
         public Road()
         {
         }
 
-
-        /**
-         * Calculate a finished road's length and gives back the points earned from finishing it.
-         */
-        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
+        public void calculate(BoardTile currentTile, bool gameover)
         {
-            #region Init required values
-            Console.WriteLine(currentTile);
-            int result = 1;
-            Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
-            BoardTile neighborTile = Utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
-            if (firstCall)
+            int result = 0;
+            Gameover = gameover;
+            FirstTile = currentTile;
+            if (gameover)
             {
-                Gameover = gameover;
-                FirstTile = currentTile;
-            }
-            #endregion
-            
-            #region GameOverCall
-            if (gameover && firstCall)
-            {
-                int localResult = 0;
-                for (int i = 0; i < currentTile.BackendTile.Directions.Count; i++)
+                for (var i = 0; i < currentTile.BackendTile.Directions.Count; i++)
                 {
                     if (currentTile.BackendTile.Directions[i].Landscape is Road)
                     {
-                        localResult += calculate(currentTile, (CardinalDirection) i, false, true);
+                        CheckFigureOnTile(currentTile, i);
+                        result += CalculateWithDirections(currentTile, (CardinalDirection) i);
+                    }
+                    if (IsEndOfRoad(currentTile))
+                    {
+                        if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
+                              FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
+                        {
+                            result++;
+                        }
+                        if (!IsRoadFinished)
+                        {
+                            result = 0;
+                        }
+                        DistributePoints(result);
+                        result = 0;
+                        FiguresOnTiles = new List<IFigure>();
                     }
                 }
-                result = localResult;
                 if (FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
                 {
                     result += 1;
                 }
-                return result;
             }
-            #endregion
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road)
+                    {
+                        CheckFigureOnTile(currentTile, i);
+                        result += CalculateWithDirections(currentTile, (CardinalDirection)i);
+                        if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
+                              FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
+                        {
+                            result++;
+                        }
+                        if (!IsRoadFinished)
+                        {
+                            result = 0;
+                        }
+                        IsRoadFinished = true;
+                        DistributePoints(result);
+                        FiguresOnTiles = new List<IFigure>();
+                        result = 0;
+                    }
+                    else if (!IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road 
+                                                       && SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i) != null)
+                    {
+                        FirstTile = SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i);
+                        CheckFigureOnTile(FirstTile, (int)_whereToGoAfterEndOfRoadFound);
+                        result += CalculateWithDirections(SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i), _whereToGoAfterEndOfRoadFound);
+                        break;
+                    }
+                    /*If the road is not finished, then result should be 0*/
+                    if (!IsRoadFinished)
+                    {
+                        result = 0;
+                    }
+                }
+                /*If the road does not end with the same tile its started, then increase the result*/
+                if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
+                    FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
+                {
+                    result++;
+                }
+            }
+            Console.WriteLine(@"Figures found:    " + FiguresOnTiles.Count);
+            if (FiguresOnTiles.Count != 0)
+            {
+                DistributePoints(result);
+            }
+        }
+
+
+        /**
+         * Calculate a road's length and gives back the points earned from finishing it. Sets IsRoadFinished false if the road is not finished.
+         */
+        private int CalculateWithDirections(BoardTile currentTile, CardinalDirection whereToGo)
+        {
+            Console.WriteLine(currentTile);
+            int result = 1;
+            Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
+            BoardTile neighborTile = Utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
             
-            #region NormalCall
-            if(!gameover && currentTile.Coordinates.X == FirstTile.Coordinates.X && currentTile.Coordinates.Y == FirstTile.Coordinates.Y && !firstCall)
+            for (int i = 0; i < 4; i++)
+            {
+                if (currentTile.BackendTile.Directions[i].Landscape is Road && !Gameover && !IsEndOfRoad(currentTile))
+                {
+                    CheckFigureOnTile(currentTile, i);
+                }
+            }
+            /*If the neighbor tile does not exist then return result and set current tile as the last tile and sets IsRoadFinished false*/
+            if (neighborTile == null)
             {
                 LastTile = currentTile;
-                return 0;
-            }
-            #endregion
-            
-            #region Calculation
-            ILandscape backEndLandscape = currentTile.BackendTile.Directions[(int)whereToGo].Landscape;
-            /*If the neighbor tile is does not exist or (the neighbor tile does not have the same landscape
-             on the connecting side and the neighbor tile is end of road) then return result and set current tile as the last tile*/
-            if (neighborTile == null || !backEndLandscape.Equals(neighborTile.BackendTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Landscape) && Utils.IsEndOfRoad(neighborTile))
-            {
-                LastTile = currentTile;
-                Console.WriteLine(currentTile);
+                IsRoadFinished = false;
                 return result;
             }
-            if (Utils.IsEndOfRoad(neighborTile))
+            if (IsEndOfRoad(neighborTile) || neighborTile.Coordinates.Equals(FirstTile.Coordinates))
             {
+                CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
                 LastTile = neighborTile;
                 Console.WriteLine(neighborTile);
                 return result;
             }
-            result = SearchInTilesSides(result, neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
-            /*If the road does not end with the same tile its started, then increase the result*/
-            if (firstCall && FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
-            {
-                result += 1;
-            }
-            #endregion
-            
-            return result;
+            return SearchInTilesSides(result, neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Road;
         }
         
+        /// <summary>
+        /// Checks if the given tile has any figure on it, but only on the given side
+        /// </summary>
+        /// <param name="currentTile">The examined tile</param>
+        /// <param name="onlySideToCheck">The side of tile to be examined</param>
+        private void CheckFigureOnTile(BoardTile currentTile, int onlySideToCheck)
+        {
+            if (currentTile.BackendTile.Directions[onlySideToCheck].Figure != null)
+            {
+                Console.WriteLine(@"Ezt adom hozzá:    " + currentTile.BackendTile.Directions[onlySideToCheck].Figure.Owner.Name);
+                FiguresOnTiles.Add(currentTile.BackendTile.Directions[onlySideToCheck].Figure);
+            }
+        }
+
+        /// <summary>
+        /// Search the given tile's sides for roads, and if it find one it will cal calculation on it
+        /// </summary>
+        /// <param name="result">Gets the current number of road tiles</param>
+        /// <param name="neighborTile">The tile to be examined</param>
+        /// <param name="sideNumber">The integer value of that CardinalDirection where we came from</param>
+        /// <returns>The number of tiles found following the road</returns>
         private int SearchInTilesSides(int result, BoardTile neighborTile, int sideNumber)
         {
             for (int i = 0; i < 4; i++)
             {
                 if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != sideNumber)
                 {
-                    result += calculate(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), false, Gameover);
+                    result += CalculateWithDirections(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i));
                     break;
                 }
             }
             return result;
         }
-        
-        public override bool Equals(object obj)
+
+        /// <summary>
+        /// It is supposed to be called after IsFinishedRoad has at least one true value. With the parameters it is going to go, and find the end of road, which is just put down.
+        /// </summary>
+        /// <param name="currentTile">The tile which has just been put down</param>
+        /// <param name="whereToGo">The direction where to search for end of road tile</param>
+        /// <returns>The end of road tile found in the given direction. Null if there is no end of road tile</returns>
+        private BoardTile SearchEndOfRoadTileInGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
         {
-            return obj is Road;
+            BoardTile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
+            if (neighborTile == null || IsEndOfRoad(neighborTile) || FirstTile.Coordinates.Equals(neighborTile.Coordinates))
+            {
+                _whereToGoAfterEndOfRoadFound = Utils.GetOppositeDirection(whereToGo);
+                return neighborTile;
+            }
+
+            for (var i = 0; i < 4; i++)
+            {
+                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
+                {
+                    return SearchEndOfRoadTileInGivenDirection(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i));
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Checks whether the given tile is end of a road or not
+        /// </summary>
+        /// <param name="currentTile">The examined tile</param>
+        /// <returns>True if the given tile is end of road, false if not</returns>
+        public bool IsEndOfRoad(BoardTile currentTile)
+        {
+            return currentTile.BackendTile.Speciality.Contains(Speciality.EndOfRoad);
+        }
+        
+        private void DistributePoints(int result)
+        {
+            var points = new List<int>();
+            var players = new List<IOwner>();
+            var playersToGetPoints = new List<IOwner>();
+            foreach (var i in FiguresOnTiles)
+            {
+                if (!players.Contains(i.Owner))
+                {
+                    players.Add(i.Owner);
+                }
+            }
+            int maxIndex = 0;
+            for (int i = 0; i < players.Count; i++)
+            {
+                int currentCount = 0;
+                for (int j = 0; j < FiguresOnTiles.Count; j++)
+                {
+                    if (players[i].Equals(FiguresOnTiles[j].Owner))
+                    {
+                        currentCount++;
+                    }
+                }
+                points.Add(currentCount);
+                if (points[i] > points[maxIndex])
+                {
+                    maxIndex = i;
+                }
+            }
+
+            if (players.Count!=0)
+            {
+                playersToGetPoints.Add(players[maxIndex]);   
+            }
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i] == points[maxIndex] && i != maxIndex)
+                {
+                    playersToGetPoints.Add(players[i]);
+                }
+            }
+            foreach (var i in playersToGetPoints)
+            {
+                i.Points += result / playersToGetPoints.Count;
+            }
         }
     }
 }

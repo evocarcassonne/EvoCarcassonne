@@ -15,5 +15,16 @@ namespace EvoCarcassonne.Model
         {
             return $"({ X },{ Y })";
         }
+
+        public override bool Equals(object obj)
+        {
+            Coordinates other = (Coordinates)obj;
+            return other != null && (X == other.X && Y == other.Y);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

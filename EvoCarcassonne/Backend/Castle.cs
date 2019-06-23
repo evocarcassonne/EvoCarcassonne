@@ -13,11 +13,10 @@ namespace EvoCarcassonne.Backend
         {
         }
 
-        public int calculate(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall, bool gameover)
+        public void calculate(BoardTile currentTile, bool gameover)
         {
             throw new System.NotImplementedException();
         }
-
 
         public override bool Equals(object obj)
         {

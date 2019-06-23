@@ -50,9 +50,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChurchCalculatorTests.cs" />
     <Compile Include="RoadCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoadFinishedTests.cs" />
     <Compile Include="TileFitCheckerTests.cs" />
     <Compile Include="TileTests.cs" />
   </ItemGroup>
