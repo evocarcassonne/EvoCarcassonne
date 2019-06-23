@@ -7,8 +7,6 @@ namespace EvoCarcassonne.Backend
 {
     public class Church : ObservableObject, ITile, ILandscape
     {
-        public int TileID { get; set; }
-
         public List<IDirection> Directions { get; set; }
         public List<Speciality> Speciality { get; set; }
 
@@ -26,9 +24,8 @@ namespace EvoCarcassonne.Backend
             }
         }
 
-        public Church(int tileId, List<IDirection> directions, List<Speciality> speciality)
+        public Church(List<IDirection> directions, List<Speciality> speciality)
         {
-            TileID = tileId;
             Directions = directions;
             Speciality = speciality;
         }

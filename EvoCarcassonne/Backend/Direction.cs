@@ -6,7 +6,6 @@ namespace EvoCarcassonne.Backend
     public class Direction : ObservableObject, IDirection
     {
         private IFigure _figure;
-        public int Id { get; set; }
 
         public ILandscape Landscape { get; set; }
 
@@ -23,19 +22,8 @@ namespace EvoCarcassonne.Backend
             }
         }
 
-        public IDirection Neighbor { get; set; }
-
-        public Direction(int id, ILandscape landscape, IFigure figure, IDirection neighbor)
+        public Direction(ILandscape landscape, IFigure figure)
         {
-            Id = id;
-            Landscape = landscape;
-            Figure = figure;
-            Neighbor = neighbor;
-        }
-
-        public Direction(int id, ILandscape landscape, Figure figure)
-        {
-            Id = id;
             Landscape = landscape;
             Figure = figure;
         }

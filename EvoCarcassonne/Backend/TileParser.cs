@@ -47,11 +47,11 @@ namespace EvoCarcassonne.Backend
             ITile backendTile;
             if (tileSpecialities.Contains(Speciality.Colostor))
             {
-                backendTile = new Church(-1, ParseTileDirections(tileName), tileSpecialities);
+                backendTile = new Church(ParseTileDirections(tileName), tileSpecialities);
             }
             else
             {
-                backendTile = new Tile(-1, ParseTileDirections(tileName), tileSpecialities);
+                backendTile = new Tile(ParseTileDirections(tileName), tileSpecialities);
             }
 
             var tile = new BoardTile(0, null, null, resourcePath, backendTile);
@@ -70,7 +70,7 @@ namespace EvoCarcassonne.Backend
 
             foreach (var c in tileName.Substring(2,4))
             {
-                var direction = new Direction(-1, ParseLandscape(c), null, null);
+                var direction = new Direction(ParseLandscape(c), null);
 
                 directions.Add(direction);
             }

@@ -27,12 +27,7 @@ namespace EvoCarcassonne.Controller
         /// <summary>
         /// The current tile's ID
         /// </summary>
-        public int CurrentTileID { get; set; } = 0;
-
-        /// <summary>
-        /// A flag that indicates if the round is started
-        /// </summary>
-        public bool IsRoundStarted { get; set; } = false;
+        public int CurrentTileId { get; set; }
 
         /// <summary>
         /// A flag that indicates if the player has a tile
@@ -163,8 +158,8 @@ namespace EvoCarcassonne.Controller
 
             // Initialize players
             Players = new ObservableCollection<Player>();
-            Players.Add(new Player(Players.Count, "Pista", Brushes.Red));
-            Players.Add(new Player(Players.Count, "Géza", Brushes.Blue));
+            Players.Add(new Player("Pista", Brushes.Red));
+            Players.Add(new Player("Géza", Brushes.Blue));
 
             CurrentPlayer = Players.First();
         }
@@ -194,18 +189,17 @@ namespace EvoCarcassonne.Controller
                         var starterTile = TileStack.RemoveAndGet(0);
                         starterTile.Tag = $"{x};{y}";
                         starterTile.Coordinates = new Coordinates(x, y);
-                        starterTile.BackendTile.TileID = CurrentTileID;
                         starterTile.CanPlaceFigure = false;
 
                         boardTiles.Add(starterTile);
                         PlacedBoardTiles.Add(starterTile);
 
-                        CurrentTileID++;
+                        CurrentTileId++;
                     }
                     else
                     {
                         // Put empty tiles to the board
-                        var emptyBoardTile = new BoardTile(0, new Coordinates(x, y), $"{x};{y}", null, new Tile(0, null, nullSpecialty));
+                        var emptyBoardTile = new BoardTile(0, new Coordinates(x, y), $"{x};{y}", null, new Tile(null, nullSpecialty));
                         emptyBoardTile.CanPlaceFigure = false;
                         boardTiles.Add(emptyBoardTile);
                     }
@@ -235,9 +229,8 @@ namespace EvoCarcassonne.Controller
             var random = new Random();
 
             CurrentBoardTile = TileStack.RemoveAndGet(random.Next(TileStack.Count));
-            CurrentBoardTile.BackendTile.TileID = CurrentTileID;
 
-            CurrentTileID++;
+            CurrentTileId++;
         }
 
         private bool CanGetNewTile()
@@ -287,7 +280,7 @@ namespace EvoCarcassonne.Controller
 
             // Set the current tile's image null
             var nullSpecialty = new List<Speciality> { Speciality.None };
-            CurrentBoardTile = new BoardTile(0, null, null, null, new Tile(0, null, nullSpecialty));
+            CurrentBoardTile = new BoardTile(0, null, null, null, new Tile(null, nullSpecialty));
         }
         private bool CanPlaceTile(Button button)
         {

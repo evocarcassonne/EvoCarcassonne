@@ -15,16 +15,16 @@ namespace EvoCarcassonne.Model
 
         public const int FigureCount = 7;
 
-        public Player(int index, string name, System.Windows.Media.Brush color)
+        public Player(string name, System.Windows.Media.Brush color)
         {
             Name = name;
             Color = color;
-            BackendOwner = new Owner(index, name);
+            BackendOwner = new Owner(name);
             Figures = new ObservableCollection<IFigure>();
 
             for (int i = 0; i < FigureCount; i++)
             {
-                Figures.Add(new Figure(i, BackendOwner));
+                Figures.Add(new Figure(BackendOwner));
             }
         }
     }

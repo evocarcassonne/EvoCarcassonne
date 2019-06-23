@@ -15,13 +15,13 @@ namespace EvoCarcassonneUnitTests
         {
             List<IDirection> directions = new List<IDirection>();
             List<Speciality> specialities = new List<Speciality>();
-            Figure figure = new Figure(0, new Owner(0, "Pista"));
+            Figure figure = new Figure(new Owner("Pista"));
 
-            directions.Add(new Direction(0, new Castle(), figure));
-            directions.Add(new Direction(1, new Road(), figure));
-            directions.Add(new Direction(2, new Road(), figure));
-            directions.Add(new Direction(3, new Castle(), figure));
-            this.tile = new Tile(0, directions, specialities);
+            directions.Add(new Direction(new Castle(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Castle(), figure));
+            this.tile = new Tile(directions, specialities);
         }
 
         [TestMethod]
