@@ -72,6 +72,9 @@
     <Compile Include="View\Modules\BoardModule.xaml.cs">
       <DependentUpon>BoardModule.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Modules\BottomControlModule.xaml.cs">
+      <DependentUpon>BottomControlModule.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -100,6 +103,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Modules\BoardModule.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Modules\BottomControlModule.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
