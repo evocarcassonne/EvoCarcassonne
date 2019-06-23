@@ -321,7 +321,6 @@ namespace EvoCarcassonne.Controller
            var directionIndex = int.Parse(button.Tag.ToString());
            var currentTile = PlacedBoardTiles.Last();
            PlaceFigure(currentTile, directionIndex);
-           OnPropertyChanged("Figure");
         }
 
         /// <summary>
@@ -335,7 +334,7 @@ namespace EvoCarcassonne.Controller
 
             if (side == 4 && currentTile.BackendTile is Church church)
             {
-                church.Figure = playerFigure;
+                church.CenterFigure = playerFigure;
                 currentTile.BackendTile = church;
             }
             else
@@ -356,17 +355,17 @@ namespace EvoCarcassonne.Controller
             var tile = PlacedBoardTiles.Last();
             if (tile.CanPlaceFigure)
             {
-                if (directionIndex == 4 && !tile.BackendTile.Speciality.Contains(Speciality.Colostor))
+                if (directionIndex == 4)
                 {
+                    if (tile.BackendTile is Church backendTile)
+                    {
+                        return backendTile.CenterFigure == null;
+                    }
+
                     return false;
                 }
 
-                if (tile.BackendTile.Directions[directionIndex].Figure != null)
-                {
-                    return false;
-                }
-
-                return true;
+                return tile.BackendTile.Directions[directionIndex].Figure == null;
             }
 
             return false;

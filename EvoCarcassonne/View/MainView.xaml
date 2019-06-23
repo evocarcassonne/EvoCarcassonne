@@ -145,7 +145,7 @@
                                         </Path>
                                     </Canvas>
                                 </Viewbox>
-                                <Viewbox Visibility="{Binding Path=BackendTile.Directions, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter='4', UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                                <Viewbox Visibility="{Binding Path=BackendTile.CenterFigure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
                                     <Canvas Width="100" Height="100">
                                         <Path
                                             Data="F0 M100,100z M0,0z M99.992,43.019C100.57,29.262 67.638,22.564 66.211,20.996 65.5,20.216 67.861,-0.015 50,0 32.139,-0.015 34.499,20.216 33.788,20.996 32.361,22.564 -0.569000000000003,29.262 0.00799999999999557,43.019 0.583999999999996,56.777 18.059,49.711 21.786,53.76 25.046,57.304 6.50699999999999,79.989 4.43299999999999,94.394 3.757,99.089 5.077,100 9.64,100 17.916,100 25.817,99.995 33.093,99.995 36.38,99.995 37.549,98.106 39.245,95.503 42.999,89.741 47.533,80.479 50,80.48 52.466,80.479 57.001,89.741 60.755,95.502 62.451,98.106 63.619,99.994 66.906,99.994 74.181,99.994 82.083,99.999 90.359,99.999 94.922,99.999 96.243,99.088 95.566,94.393 93.493,79.988 74.955,57.303 78.213,53.759 81.94,49.711 99.417,56.777 99.992,43.019z"

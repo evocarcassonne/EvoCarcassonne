@@ -10,5 +10,7 @@ namespace EvoCarcassonne.Backend
         void Rotate(int direction);
         IDirection getTileSideByCardinalDirection(CardinalDirection side);
         CardinalDirection GetCardinalDirectionByIndex(int index);
+
+        IFigure CenterFigure { get; set; }
     }
 }

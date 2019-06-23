@@ -87,6 +87,7 @@ namespace EvoCarcassonne.Backend
             }
         }
 
+        public IFigure CenterFigure { get; set; }
     }
 
 }
