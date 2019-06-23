@@ -45,7 +45,6 @@ namespace EvoCarcassonne.Backend
             var tileSpecialities = ParseTileSpecialities(tileName);
 
             ITile backendTile;
-
             if (tileSpecialities.Contains(Speciality.Colostor))
             {
                 backendTile = new Church(-1, ParseTileDirections(tileName), tileSpecialities);
@@ -82,7 +81,7 @@ namespace EvoCarcassonne.Backend
         private static List<Speciality> ParseTileSpecialities(string tileName)
         {
             var specialities = new List<Speciality>();
-            var specialitySubstring = tileName.Substring(5);
+            var specialitySubstring = tileName.Substring(6);
 
             foreach (var c in specialitySubstring)
             {

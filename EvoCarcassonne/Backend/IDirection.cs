@@ -1,6 +1,8 @@
-﻿namespace EvoCarcassonne.Backend
+﻿using System.ComponentModel;
+
+namespace EvoCarcassonne.Backend
 {
-    public interface IDirection
+    public interface IDirection : INotifyPropertyChanged
     {
         int Id { get; set; }
 

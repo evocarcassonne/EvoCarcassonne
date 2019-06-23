@@ -1,17 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using EvoCarcassonne.Controller;
+using System.Runtime.CompilerServices;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {
-    public class Church : ITile, ILandscape
+    public class Church : ITile, ILandscape, INotifyPropertyChanged
     {
         public int TileID { get; set; }
+
         public List<IDirection> Directions { get; set; }
         public List<Speciality> Speciality { get; set; }
-        public IFigure CenterFigure { get; set; }
+
+        private IFigure _centerFigure;
+        public IFigure CenterFigure
+        {
+            get => _centerFigure;
+            set
+            {
+                if (_centerFigure != value)
+                {
+                    _centerFigure = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public Church(int tileId, List<IDirection> directions, List<Speciality> speciality)
         {
             TileID = tileId;
@@ -90,6 +106,13 @@ namespace EvoCarcassonne.Backend
                     }
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

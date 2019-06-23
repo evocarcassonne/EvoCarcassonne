@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using EvoCarcassonne.Backend;
 
 namespace EvoCarcassonne.Model
@@ -11,6 +12,9 @@ namespace EvoCarcassonne.Model
         public string Tag { get; set; }
         public string Image { get; set; }
         private double _angle;
+        private bool _canPlaceFigure;
+        private ITile _backendTile;
+
         public double Angle
         {
             get => _angle;
@@ -19,17 +23,35 @@ namespace EvoCarcassonne.Model
                 if (_angle != value)
                 {
                     _angle = value;
-                    RaisePropertyChanged("Angle");
+                    OnPropertyChanged();
                 }
             }
         }
-        public ITile BackendTile { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void RaisePropertyChanged(string property)
+        public ITile BackendTile
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            get => _backendTile;
+            set
+            {
+                if (_backendTile != value)
+                {
+                    _backendTile = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool CanPlaceFigure
+        {
+            get => _canPlaceFigure;
+            set
+            {
+                if (_canPlaceFigure != value)
+                {
+                    _canPlaceFigure = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public override string ToString()
@@ -46,8 +68,20 @@ namespace EvoCarcassonne.Model
             Image = image;
             BackendTile = backendTile;
         }
-        
-        public BoardTile(){}
+
+        public Player Player { get; set; }
+
+        public BoardTile()
+        {
+
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
 }
