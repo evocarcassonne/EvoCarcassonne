@@ -24,8 +24,10 @@
 
         <!-- Current player module -->
         <TextBlock Grid.Row="0" Grid.Column="0" Panel.ZIndex="1">
-            Jelenlegi játékos:
+            Jelenlegi játékos:    
             <Run Foreground="{Binding Path=CurrentPlayer.Color}" Text="{Binding CurrentPlayer.Name}" FontWeight="Bold" />
+            Pontok:
+            <Run Text="{Binding CurrentPlayer.BackendOwner.Points}" FontWeight="Bold" />
         </TextBlock>
 
         <!-- Game board module -->
