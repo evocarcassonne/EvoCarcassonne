@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using EvoCarcassonne.Model;
+﻿using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
 {

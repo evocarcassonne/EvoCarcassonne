@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -7,13 +6,11 @@ namespace EvoCarcassonne.Backend
 {
     public class Tile : ITile
     {
-        public int TileID { get; set; }
         public List<IDirection> Directions { get; set; }
         public List<Speciality> Speciality { get; set; }
 
-        public Tile(int tileId, List<IDirection> directions, List<Speciality> speciality)
+        public Tile(List<IDirection> directions, List<Speciality> speciality)
         {
-            TileID = tileId;
             Directions = directions;
             Speciality = speciality;
         }
@@ -68,7 +65,7 @@ namespace EvoCarcassonne.Backend
 
         public override string ToString()
         {
-            return "ID: " + TileID + "    directions1: " + Directions[0].Landscape + "    directions2" +
+            return "directions1: " + Directions[0].Landscape + "    directions2" +
                    Directions[1].Landscape +
                    "    directions2" + Directions[2].Landscape + "    directions4" + Directions[3].Landscape +
                    "    specialty: " + Speciality;

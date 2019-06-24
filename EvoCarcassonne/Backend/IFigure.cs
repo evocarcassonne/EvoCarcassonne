@@ -1,10 +1,7 @@
-﻿using System.ComponentModel;
-
-namespace EvoCarcassonne.Backend
+﻿namespace EvoCarcassonne.Backend
 {
     public interface IFigure
     {
         IOwner Owner { get; set; }
-        int Id { get; set; }
     }
 }

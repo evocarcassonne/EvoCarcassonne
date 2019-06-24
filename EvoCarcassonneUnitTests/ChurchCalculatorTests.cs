@@ -19,12 +19,12 @@ namespace EvoCarcassonneUnitTests
         private BoardTile boardTile7 = new BoardTile();
         private BoardTile boardTile8 = new BoardTile();
         private BoardTile boardTile9 = new BoardTile();
-        private IOwner Player1 = new Owner(0, "Krisztian");
+        private IOwner Player1 = new Owner("Krisztian");
         
         [TestInitialize]
         public void Init()
         {
-            var figure = new Figure(0, Player1);
+            var figure = new Figure(Player1);
             
             boardTile1.Coordinates = new Coordinates(0, 0);
             boardTile2.Coordinates = new Coordinates(1, 0);
@@ -40,27 +40,27 @@ namespace EvoCarcassonneUnitTests
             specialities.Add(Speciality.None);
 
             var directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Field(), null));
-            directions.Add(new Direction(0, new Field(), figure));
-            directions.Add(new Direction(0, new Field(), null));
-            directions.Add(new Direction(0, new Field(), null));
-            boardTile1.BackendTile = new Tile(1, directions, specialities);
-            boardTile2.BackendTile = new Tile(2, directions, specialities);
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
-            boardTile4.BackendTile = new Tile(4, directions, specialities);
-            boardTile6.BackendTile = new Tile(6, directions, specialities);
-            boardTile7.BackendTile = new Tile(7, directions, specialities);
-            boardTile8.BackendTile = new Tile(8, directions, specialities);
-            boardTile9.BackendTile = new Tile(9, directions, specialities);
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), figure));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            boardTile1.BackendTile = new Tile(directions, specialities);
+            boardTile2.BackendTile = new Tile(directions, specialities);
+            boardTile3.BackendTile = new Tile(directions, specialities);
+            boardTile4.BackendTile = new Tile(directions, specialities);
+            boardTile6.BackendTile = new Tile(directions, specialities);
+            boardTile7.BackendTile = new Tile(directions, specialities);
+            boardTile8.BackendTile = new Tile(directions, specialities);
+            boardTile9.BackendTile = new Tile(directions, specialities);
 
             specialities = new List<Speciality>();
             specialities.Add(Speciality.Colostor);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Field(), null));
-            directions.Add(new Direction(0, new Field(), null));
-            directions.Add(new Direction(0, new Field(), null));
-            directions.Add(new Direction(0, new Field(), null));
-            var chuchTile = new Church(5, directions, specialities);
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            var chuchTile = new Church(directions, specialities);
             chuchTile.CenterFigure = figure;
             boardTile5.BackendTile = chuchTile;
             

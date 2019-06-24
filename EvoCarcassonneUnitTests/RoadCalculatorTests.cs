@@ -20,14 +20,14 @@ namespace EvoCarcassonneUnitTests
         private BoardTile boardTile7 = new BoardTile();
         private BoardTile boardTile8 = new BoardTile();
         private BoardTile boardTile9 = new BoardTile();
-        private IOwner Player1 = new Owner(0, "Krisztian");
-        private IOwner Player2 = new Owner(1, "Pista");
-        private IOwner Player3 = new Owner(2, "Karcsi");
+        private IOwner Player1 = new Owner("Krisztian");
+        private IOwner Player2 = new Owner("Pista");
+        private IOwner Player3 = new Owner("Karcsi");
         
         [TestInitialize]
         public void Init()
         {
-            var figure = new Figure(0, Player1);
+            var figure = new Figure(Player1);
             
             boardTile1.Coordinates = new Coordinates(0, 0);
             boardTile2.Coordinates = new Coordinates(1, 0);
@@ -44,77 +44,77 @@ namespace EvoCarcassonneUnitTests
             specialities.Add(Speciality.EndOfRoad);
 
             var directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), figure));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            boardTile1.BackendTile = new Tile(1, directions, specialities);
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            boardTile1.BackendTile = new Tile(directions, specialities);
 
             specialities = new List<Speciality>();
             specialities.Add(Speciality.None);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile2.BackendTile = new Tile(2, directions, specialities);
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile2.BackendTile = new Tile(directions, specialities);
 
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            boardTile3.BackendTile = new Tile(directions, specialities);
 
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            boardTile4.BackendTile = new Tile(4, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            boardTile4.BackendTile = new Tile(directions, specialities);
 
             specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), figure));
-            boardTile5.BackendTile = new Tile(5, directions, specialities);
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), figure));
+            boardTile5.BackendTile = new Tile(directions, specialities);
 
             specialities = new List<Speciality>();
             specialities.Add(Speciality.None);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile6.BackendTile = new Tile(6, directions, specialities);
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile6.BackendTile = new Tile(directions, specialities);
 
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile7.BackendTile = new Tile(7, directions, specialities);
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile7.BackendTile = new Tile(directions, specialities);
 
             specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile8.BackendTile = new Tile(8, directions, specialities);
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile8.BackendTile = new Tile(directions, specialities);
 
             specialities = new List<Speciality>();
             specialities.Add(Speciality.None);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            boardTile9.BackendTile = new Tile(9, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            boardTile9.BackendTile = new Tile(directions, specialities);
             
             MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
             MainController.PlacedBoardTiles.Add(boardTile1);
@@ -144,7 +144,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(0, Player1);
+            var figure = new Figure(Player1);
 
             var specialities = new List<Speciality>();
             var directions = new List<IDirection>();      
@@ -153,11 +153,11 @@ namespace EvoCarcassonneUnitTests
             specialities.Add(Speciality.None);
             
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            boardTile3.BackendTile = new Tile(directions, specialities);
             #endregion
 
             Console.WriteLine(@"Route to the other end of road:");
@@ -171,7 +171,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(0, Player1);
+            var figure = new Figure(Player1);
 
             var directions = new List<IDirection>();
             var specialities = new List<Speciality>();
@@ -179,11 +179,11 @@ namespace EvoCarcassonneUnitTests
             specialities = new List<Speciality>();
             specialities.Add(Speciality.None);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile3.BackendTile = new Tile(directions, specialities);
             #endregion
 
             Console.WriteLine(@"Route to the other end of road:");
@@ -198,7 +198,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(0, Player1);
+            var figure = new Figure(Player1);
 
             var directions = new List<IDirection>();
             var specialities = new List<Speciality>();
@@ -207,18 +207,18 @@ namespace EvoCarcassonneUnitTests
             specialities.Add(Speciality.None);
 
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile3.BackendTile = new Tile(directions, specialities);
 
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            boardTile9.BackendTile = new Tile(9, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            boardTile9.BackendTile = new Tile(directions, specialities);
 
             #endregion
 
@@ -233,7 +233,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(0, Player1);
+            var figure = new Figure(Player1);
 
             var directions = new List<IDirection>();
             var specialities = new List<Speciality>();
@@ -241,35 +241,35 @@ namespace EvoCarcassonneUnitTests
             specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), figure));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile3.BackendTile = new Tile(directions, specialities);
 
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            boardTile5.BackendTile = new Tile(5, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            boardTile5.BackendTile = new Tile(directions, specialities);
 
             specialities = new List<Speciality>();
             specialities.Add(Speciality.None);
             
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), figure));
-            directions.Add(new Direction(0, new Road(), figure));
-            directions.Add(new Direction(0, new Road(), figure));
-            boardTile6.BackendTile = new Tile(6, directions, specialities);
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            boardTile6.BackendTile = new Tile(directions, specialities);
             
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile8.BackendTile = new Tile(8, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile8.BackendTile = new Tile(directions, specialities);
             #endregion
 
             Console.WriteLine(@"Route to the other end of road:");
@@ -283,7 +283,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(0, Player1);
+            var figure = new Figure(Player1);
 
             var directions = new List<IDirection>();
             var specialities = new List<Speciality>();
@@ -291,34 +291,34 @@ namespace EvoCarcassonneUnitTests
             specialities = new List<Speciality>();
             specialities.Add(Speciality.None);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile3.BackendTile = new Tile(directions, specialities);
             
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile6.BackendTile = new Tile(6, directions, specialities);
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile6.BackendTile = new Tile(directions, specialities);
             
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile8.BackendTile = new Tile(8, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile8.BackendTile = new Tile(directions, specialities);
             
             specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(0, new Road(), null));
-            boardTile9.BackendTile = new Tile(9, directions, specialities);
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile9.BackendTile = new Tile(directions, specialities);
             
             #endregion
 
@@ -355,14 +355,14 @@ namespace EvoCarcassonneUnitTests
             BoardTile boardTile10 = new BoardTile();
             boardTile10.Coordinates = new Coordinates(2,3);
             List<IDirection> directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), new Figure(0, Player1)));
-            directions.Add(new Direction(1, new Field(), null));
-            directions.Add(new Direction(2, new Field(), null));
-            directions.Add(new Direction(3, new Field(), null));
+            directions.Add(new Direction(new Road(), new Figure(Player1)));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
             List<Speciality> speciality = new List<Speciality>();
             speciality.Add(Speciality.EndOfRoad);
             speciality.Add(Speciality.Colostor);
-            boardTile10.BackendTile = new Church(0, directions, speciality);
+            boardTile10.BackendTile = new Church(directions, speciality);
             #endregion
             Console.WriteLine(@"Route to the other end of road:");
             boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
@@ -388,26 +388,26 @@ namespace EvoCarcassonneUnitTests
             List<IDirection> directions = new List<IDirection>();
             List<Speciality> specialities = new List<Speciality>();
             specialities.Add(Speciality.None);
-            directions.Add(new Direction(0, new Road(), new Figure(0, Player1)));
-            directions.Add(new Direction(1, new Castle(), null));
-            directions.Add(new Direction(2, new Castle(), null));
-            directions.Add(new Direction(3, new Road(), null));
+            directions.Add(new Direction(new Road(), new Figure(Player1)));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
             boardTile3.BackendTile.Directions = directions;
             boardTile3.BackendTile.Speciality = specialities;
             
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(1, new Road(), null));
-            directions.Add(new Direction(2, new Road(), null));
-            directions.Add(new Direction(3, new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
             boardTile1.BackendTile.Directions = directions;
             boardTile1.BackendTile.Speciality = specialities;
             
             directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Castle(), null));
-            directions.Add(new Direction(1, new Castle(), null));
-            directions.Add(new Direction(2, new Road(), null));
-            directions.Add(new Direction(3, new Road(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
             boardTile2.BackendTile.Directions = directions;
             boardTile2.BackendTile.Speciality = specialities;
             #endregion
@@ -420,8 +420,8 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase1()
         {
-            boardTile2.BackendTile.Directions[2].Figure = new Figure(0, Player2);
-            boardTile6.BackendTile.Directions[1].Figure = new Figure(1, Player3);
+            boardTile2.BackendTile.Directions[2].Figure = new Figure(Player2);
+            boardTile6.BackendTile.Directions[1].Figure = new Figure(Player3);
             Console.WriteLine(@"Route to the other end of road:");
             boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
             Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
@@ -435,7 +435,7 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase2()
         {
-            boardTile2.BackendTile.Directions[2].Figure = new Figure(0, Player2);
+            boardTile2.BackendTile.Directions[2].Figure = new Figure(Player2);
             Console.WriteLine(@"Route to the other end of road:");
             boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
             Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
@@ -448,9 +448,9 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase3()
         {
-            boardTile2.BackendTile.Directions[2].Figure = new Figure(0, Player2);
-            boardTile6.BackendTile.Directions[3].Figure = new Figure(1, Player1);
-            boardTile3.BackendTile.Directions[1].Figure = new Figure(2, Player1);
+            boardTile2.BackendTile.Directions[2].Figure = new Figure(Player2);
+            boardTile6.BackendTile.Directions[3].Figure = new Figure(Player1);
+            boardTile3.BackendTile.Directions[1].Figure = new Figure(Player1);
             Console.WriteLine(@"Route to the other end of road:");
             boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
             Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
@@ -463,7 +463,7 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase4()
         {
-            boardTile8.BackendTile.Directions[3].Figure = new Figure(0, Player2);
+            boardTile8.BackendTile.Directions[3].Figure = new Figure(Player2);
             Console.WriteLine(@"Route to the other end of road:");
             boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
             Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
@@ -475,8 +475,8 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void CalculateRoad_RoadIsNotFinishedGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase1()
         {
-            boardTile8.BackendTile.Directions[3].Figure = new Figure(0, Player2);
-            boardTile7.BackendTile.Directions[3].Figure = new Figure(0, Player1);
+            boardTile8.BackendTile.Directions[3].Figure = new Figure(Player2);
+            boardTile7.BackendTile.Directions[3].Figure = new Figure(Player1);
             MainController.PlacedBoardTiles.RemoveAndGet(1);
             MainController.PlacedBoardTiles.RemoveAndGet(0);
             Console.WriteLine(@"Route to the other end of road:");
@@ -493,15 +493,15 @@ namespace EvoCarcassonneUnitTests
             #region Initialize values
 
             var directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(1, new Road(), new Figure(2, Player2)));
-            directions.Add(new Direction(2, new Road(), new Figure(3, Player3)));
-            directions.Add(new Direction(3, new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), new Figure(Player2)));
+            directions.Add(new Direction(new Road(), new Figure(Player3)));
+            directions.Add(new Direction(new Castle(), null));
             var specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
+            boardTile3.BackendTile = new Tile(directions, specialities);
             #endregion
-            boardTile4.BackendTile.Directions[0].Figure = new Figure(4, Player3);
+            boardTile4.BackendTile.Directions[0].Figure = new Figure(Player3);
             Console.WriteLine(@"Route to the other end of road:");
             boardTile3.BackendTile.Directions[0].Landscape.calculate(boardTile3,  false);
             Console.WriteLine(@"Player1 pont:    " + Player1.Points);
@@ -518,14 +518,14 @@ namespace EvoCarcassonneUnitTests
             #region Initialize values
 
             var directions = new List<IDirection>();
-            directions.Add(new Direction(0, new Road(), null));
-            directions.Add(new Direction(1, new Road(), new Figure(2, Player2)));
-            directions.Add(new Direction(2, new Road(), new Figure(3, Player3)));
-            directions.Add(new Direction(3, new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), new Figure(Player2)));
+            directions.Add(new Direction(new Road(), new Figure(Player3)));
+            directions.Add(new Direction(new Castle(), null));
             var specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
-            boardTile3.BackendTile = new Tile(3, directions, specialities);
-            boardTile4.BackendTile.Directions[0].Figure = new Figure(4, Player3);
+            boardTile3.BackendTile = new Tile(directions, specialities);
+            boardTile4.BackendTile.Directions[0].Figure = new Figure(Player3);
             MainController.PlacedBoardTiles.RemoveAndGet(0);
             #endregion
             

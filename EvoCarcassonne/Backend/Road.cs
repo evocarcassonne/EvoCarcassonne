@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Documents;
-using EvoCarcassonne.Controller;
 using EvoCarcassonne.Model;
 
 namespace EvoCarcassonne.Backend
