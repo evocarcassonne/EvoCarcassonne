@@ -248,7 +248,32 @@ namespace EvoCarcassonne.Controller
             TileIsDown = false;
             PlacedBoardTiles.Last().CanPlaceFigure = false;
 
+            CallCalculate();
             CurrentPlayer = Players[(Players.IndexOf(CurrentPlayer) + 1) % Players.Count];
+        }
+
+        private void CallCalculate()
+        {
+            //Searching for road sides, paying attention to be called only once
+            for (int i = 0; i < 4; i++)
+            {
+                if (PlacedBoardTiles.Last().BackendTile.Directions[i].Landscape is Road)
+                {
+                    PlacedBoardTiles.Last().BackendTile.Directions[i].Landscape.calculate(PlacedBoardTiles.Last(), false);
+                    break;
+                }
+            }
+            //Checks whether there is a church nearby.
+            var allSurrTiles = Utils.GetAllSurroundingTiles(PlacedBoardTiles.Last());
+            allSurrTiles.Add(PlacedBoardTiles.Last());
+            foreach (BoardTile tile in allSurrTiles)
+            {
+                if (tile.BackendTile is Church)
+                {
+                    var churhcTile = (Church)tile.BackendTile;
+                    churhcTile.calculate(tile, false);
+                }
+            }
         }
 
         private bool CanEndTurn()
@@ -362,5 +387,6 @@ namespace EvoCarcassonne.Controller
             return false;
         }
         #endregion
+        
     }
 }
