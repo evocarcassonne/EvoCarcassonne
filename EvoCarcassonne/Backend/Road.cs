@@ -44,6 +44,10 @@ namespace EvoCarcassonne.Backend
                         {
                             result = 0;
                         }
+                        else
+                        {
+                            RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection)i, true);
+                        }
                         DistributePoints(result);
                         result = 0;
                         FiguresOnTiles = new List<IFigure>();
@@ -71,6 +75,10 @@ namespace EvoCarcassonne.Backend
                         {
                             result = 0;
                         }
+                        else
+                        {
+                            RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection) i, true);
+                        }
                         IsRoadFinished = true;
                         DistributePoints(result);
                         FiguresOnTiles = new List<IFigure>();
@@ -82,27 +90,39 @@ namespace EvoCarcassonne.Backend
                         FirstTile = SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i);
                         CheckFigureOnTile(FirstTile, (int)_whereToGoAfterEndOfRoadFound);
                         result += CalculateWithDirections(SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i), _whereToGoAfterEndOfRoadFound);
+                        
+                        /*If the road is not finished, then result should be 0*/
+                        if (!IsRoadFinished)
+                        {
+                            result = 0;
+                        }
+                        else
+                        {
+                            RemoveFiguresFromFinishedRoad(FirstTile, _whereToGoAfterEndOfRoadFound, true);
+                        }
                         break;
+                        
                     }
-                    /*If the road is not finished, then result should be 0*/
-                    if (!IsRoadFinished)
-                    {
-                        result = 0;
-                    }
+                    
                 }
                 /*If the road does not end with the same tile its started, then increase the result*/
-                if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
+                if (LastTile != null && !(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
                     FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
                 {
                     result++;
                 }
+
             }
             Console.WriteLine(@"Figures found:    " + FiguresOnTiles.Count);
             if (FiguresOnTiles.Count != 0)
             {
                 DistributePoints(result);
             }
+            FiguresOnTiles = new List<IFigure>();
+            IsRoadFinished = true;
         }
+
+
 
 
         /**
@@ -257,6 +277,40 @@ namespace EvoCarcassonne.Backend
             foreach (var i in playersToGetPoints)
             {
                 i.Points += result / playersToGetPoints.Count;
+            }
+        }
+        private void RemoveFiguresFromFinishedRoad(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
+        {
+            BoardTile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
+            if (firstCall)
+            {
+                currentTile.BackendTile.Directions[(int)whereToGo].Figure = null;
+            }
+
+            if (neighborTile == null)
+            {
+                return;
+            }
+            if (IsEndOfRoad(neighborTile) || neighborTile.Coordinates.Equals(FirstTile.Coordinates))
+            {
+                neighborTile.BackendTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure = null;
+                return;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                if (neighborTile.BackendTile.Directions[i].Figure != null && neighborTile.BackendTile.Directions[i].Landscape is Road)
+                {
+                    neighborTile.BackendTile.Directions[i].Figure = null;
+                }
+            }
+            
+            for (int i = 0; i < 4; i++)
+            {
+                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
+                {
+                    RemoveFiguresFromFinishedRoad(neighborTile, (CardinalDirection)i, false);
+                    break;
+                }
             }
         }
     }
