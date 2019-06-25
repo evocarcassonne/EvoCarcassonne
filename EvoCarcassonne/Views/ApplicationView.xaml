@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EvoCarcassonne.Views"
+        xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
         mc:Ignorable="d"
-        Title="ApplicationView" Height="450" Width="800">
+        Title="{Binding Path=CurrentViewModel.Title, FallbackValue='ApplicationView'}"
+        d:DataContext="{d:DesignInstance viewModels:ApplicationViewModel, IsDesignTimeCreatable=True}" SizeToContent="WidthAndHeight">
     <Grid>
-        
+        <ContentControl Content="{Binding Path=CurrentViewModel}" />
     </Grid>
 </Window>
