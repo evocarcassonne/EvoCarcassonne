@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="EvoCarcassonne.Views.PlayerEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance viewModels:PlayerEditorViewModel, IsDesignTimeCreatable=True}"
+             Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Resources/SvgDictionary.xaml" />
+    </UserControl.Resources>
+    <StackPanel>
+        <Label>Játékosok hozzáadása</Label>
+        <StackPanel Orientation="Horizontal">
+            <Label Margin="0 0 10 0">Név:</Label>
+            <TextBox Width="150" Text="{Binding Path=PlayerName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <Label Margin="0 0 10 0">Szín:</Label>
+            <ComboBox ItemsSource="{Binding Path=Brushes}" SelectedItem="{Binding Path=SelectedBrush}" HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox Width="16" Height="16" Margin="0,2,5,2">
+                                <Canvas Width="512" Height="512">
+                                    <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Name}">
+                                        <Path.Effect>
+                                            <DropShadowEffect />
+                                        </Path.Effect>
+                                    </Path>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0 10" HorizontalAlignment="Center">
+            <Button Command="{Binding AddPlayerCommand}" Margin="10 0">Hozzáadás</Button>
+            <Button Command="{Binding RemovePlayerCommand}" Margin="10 0">Eltávolítás</Button>
+            <Button IsEnabled="{Binding Path=CanSavePlayers}" CommandParameter="{Binding Players}" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.SavePlayersCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Margin="10 0">Játék indítása</Button>
+            <Button Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.GotoMenuCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Margin="10 0">Vissza a menübe</Button>
+        </StackPanel>
+        <ListView Height="150" ItemsSource="{Binding Path=Players}" SelectedItem="{Binding SelectedPlayer}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Width="16" Height="16" Margin="0,2,5,2">
+                            <Canvas Width="512" Height="512">
+                                <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Color}">
+                                    <Path.Effect>
+                                        <DropShadowEffect />
+                                    </Path.Effect>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackPanel>
+</UserControl>

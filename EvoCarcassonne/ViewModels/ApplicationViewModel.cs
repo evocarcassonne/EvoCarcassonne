@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using EvoCarcassonne.Models;
@@ -53,6 +52,8 @@ namespace EvoCarcassonne.ViewModels
 
         public ICommand SaveGameCommand { get; set; }
 
+        public ICommand SavePlayersCommand { get; set; }
+
         public ApplicationViewModel()
         {
             ViewModels = new List<IViewModel>();
@@ -66,6 +67,7 @@ namespace EvoCarcassonne.ViewModels
             GotoMenuCommand = new RelayCommand(GotoMenu);
             LoadGameCommand = new RelayCommand(LoadGame);
             SaveGameCommand = new RelayCommand(SaveGame, CanSaveGame);
+            SavePlayersCommand = new RelayCommand<ObservableCollection<Player>>(SavePlayers);
         }
 
         private void ChangeViewModel(IViewModel viewModel)
@@ -80,9 +82,7 @@ namespace EvoCarcassonne.ViewModels
 
         private void StartNewGame()
         {
-            ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
-            var players = new List<Player> {new Player("Géza", Brushes.Blue), new Player("Pista", Brushes.Red)};
-            ChangeViewModel(new MainController(players));
+            ChangeViewModel(new PlayerEditorViewModel());
         }
 
         private void ContinueGame()
@@ -113,13 +113,12 @@ namespace EvoCarcassonne.ViewModels
 
         private void GotoMenu()
         {
+            ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(PlayerEditorViewModel));
             ChangeViewModel(ViewModels.First());
         }
 
         private void LoadGame()
         {
-            //throw new NotImplementedException();
-
             var openFileDialog = new OpenFileDialog
             {
                 Filter = "Save file (*.json)|*.json",
@@ -141,8 +140,6 @@ namespace EvoCarcassonne.ViewModels
 
         private void SaveGame()
         {
-            //throw new NotImplementedException();
-
             var gameVm = ViewModels.First(vm => vm.GetType().Name == nameof(MainController)) as MainController;
             var saveFileDialog = new SaveFileDialog
             {
@@ -165,6 +162,12 @@ namespace EvoCarcassonne.ViewModels
         private bool CanSaveGame()
         {
             return IsGameLoaded;
+        }
+
+        private void SavePlayers(ObservableCollection<Player> players)
+        {
+            ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
+            ChangeViewModel(new MainController(players));
         }
     }
 }

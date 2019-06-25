@@ -10,5 +10,8 @@
         <DataTemplate DataType="{x:Type viewModels:MainController}">
             <views:MainView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:PlayerEditorViewModel}">
+            <views:PlayerEditorView />
+        </DataTemplate>
     </Application.Resources>
 </Application>
