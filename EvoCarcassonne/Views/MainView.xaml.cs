@@ -1,4 +1,4 @@
-﻿namespace EvoCarcassonne.View
+﻿namespace EvoCarcassonne.Views
 {
     /// <summary>
     /// Interaction logic for MainView.xaml

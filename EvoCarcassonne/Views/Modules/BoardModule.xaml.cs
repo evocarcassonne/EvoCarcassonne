@@ -1,4 +1,4 @@
-﻿namespace EvoCarcassonne.View.Modules
+﻿namespace EvoCarcassonne.Views.Modules
 {
     /// <summary>
     /// Interaction logic for BoardModule.xaml

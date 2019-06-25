@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using EvoCarcassonne.Backend;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Controller
 {

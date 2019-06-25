@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EvoCarcassonne.Controller;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
 {

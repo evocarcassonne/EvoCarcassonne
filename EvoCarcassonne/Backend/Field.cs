@@ -1,5 +1,5 @@
 ﻿using System;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
 {

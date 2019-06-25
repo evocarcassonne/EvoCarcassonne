@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using EvoCarcassonne.Backend;
 using EvoCarcassonne.Controller;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EvoCarcassonneUnitTests

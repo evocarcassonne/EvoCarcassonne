@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
 {

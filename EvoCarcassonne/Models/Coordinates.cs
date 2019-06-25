@@ -1,4 +1,4 @@
-namespace EvoCarcassonne.Model
+namespace EvoCarcassonne.Models
 {
     public class Coordinates
     {
