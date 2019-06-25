@@ -1,7 +1,15 @@
-﻿namespace EvoCarcassonne.ViewModels
+﻿using System.Windows;
+using System.Windows.Input;
+
+namespace EvoCarcassonne.ViewModels
 {
     public class MenuViewModel : ObservableObject, IViewModel
     {
-        public string Title { get; set; } = "EvoCarcassonne - Menu";
+        public ICommand ExitApplicationCommand { get; set; }
+
+        public MenuViewModel()
+        {
+            ExitApplicationCommand = new RelayCommand(Application.Current.Shutdown);
+        }
     }
 }

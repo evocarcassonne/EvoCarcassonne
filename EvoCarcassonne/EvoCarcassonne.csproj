@@ -58,6 +58,7 @@
     <Compile Include="Backend\Road.cs" />
     <Compile Include="Backend\TileParser.cs" />
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Helpers\Mediator.cs" />
     <Compile Include="Models\Coordinates.cs" />
     <Compile Include="Models\PlayerModel.cs" />
     <Compile Include="Helpers\NullToVisibilityConverter.cs" />
@@ -147,6 +148,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\Fonts\Lindsay Becker Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace EvoCarcassonne.ViewModels
@@ -8,7 +10,7 @@ namespace EvoCarcassonne.ViewModels
     public class ApplicationViewModel : ObservableObject
     {
         private IViewModel _currentViewModel;
-        private ObservableCollection<IViewModel> _viewModels;
+        private List<IViewModel> _viewModels;
 
         public IViewModel CurrentViewModel
         {
@@ -23,7 +25,7 @@ namespace EvoCarcassonne.ViewModels
             }
         }
 
-        public ObservableCollection<IViewModel> ViewModels
+        public List<IViewModel> ViewModels
         {
             get => _viewModels;
             set
@@ -36,33 +38,23 @@ namespace EvoCarcassonne.ViewModels
             }
         }
 
-        public ICommand ChangeViewModelCommand { get; set; }
+        public ICommand StartNewGameCommand { get; set; }
+
+        public ICommand ContinueGameCommand { get; set; }
+
+        public ICommand GotoMenuCommand { get; set; }
 
         public ApplicationViewModel()
         {
-            ViewModels = new ObservableCollection<IViewModel>();
+            ViewModels = new List<IViewModel>();
 
             ViewModels.Add(new MenuViewModel());
-            ViewModels.Add(new MainController());
 
-            CurrentViewModel = ViewModels.First();
+            GotoMenu();
 
-            ChangeViewModelCommand = new RelayCommand<string>(ChangeViewModel);
-        }
-
-        private void ChangeViewModel(string viewModelName)
-        {
-            switch (viewModelName)
-            {
-                case "menu":
-                    ChangeViewModel(ViewModels[0]);
-                    break;
-                case "game":
-                    ChangeViewModel(ViewModels[1]);
-                    break;
-                default:
-                    throw new InvalidOperationException();
-            }
+            StartNewGameCommand = new RelayCommand(StartNewGame);
+            ContinueGameCommand = new RelayCommand(ContinueGame, CanContinueGame);
+            GotoMenuCommand = new RelayCommand(GotoMenu);
         }
 
         private void ChangeViewModel(IViewModel viewModel)
@@ -73,6 +65,35 @@ namespace EvoCarcassonne.ViewModels
             }
 
             CurrentViewModel = ViewModels.FirstOrDefault(vm => vm == viewModel);
+        }
+
+        private void StartNewGame()
+        {
+            ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
+            ChangeViewModel(new MainController());
+        }
+
+        private void ContinueGame()
+        {
+            ChangeViewModel(ViewModels.First(vm => vm.GetType().Name == nameof(MainController)));
+        }
+
+        private bool CanContinueGame()
+        {
+            foreach (var viewModel in ViewModels)
+            {
+                if (viewModel.GetType().Name == nameof(MainController))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void GotoMenu()
+        {
+            ChangeViewModel(ViewModels.First());
         }
     }
 }
