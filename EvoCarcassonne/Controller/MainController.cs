@@ -254,15 +254,6 @@ namespace EvoCarcassonne.Controller
 
         private void CallCalculate()
         {
-            //Searching for road sides, paying attention to be called only once
-            for (int i = 0; i < 4; i++)
-            {
-                if (PlacedBoardTiles.Last().BackendTile.Directions[i].Landscape is Road)
-                {
-                    PlacedBoardTiles.Last().BackendTile.Directions[i].Landscape.calculate(PlacedBoardTiles.Last(), false);
-                    break;
-                }
-            }
             //Checks whether there is a church nearby.
             var allSurrTiles = Utils.GetAllSurroundingTiles(PlacedBoardTiles.Last());
             allSurrTiles.Add(PlacedBoardTiles.Last());
@@ -270,8 +261,18 @@ namespace EvoCarcassonne.Controller
             {
                 if (tile.BackendTile is Church)
                 {
-                    var churhcTile = (Church)tile.BackendTile;
-                    churhcTile.calculate(tile, false);
+                    var church = (Church)tile.BackendTile;
+                    church.calculate(tile, false);
+                }
+            }
+            
+            //Searching for road sides, paying attention to be called only once
+            foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
+            {
+                if (i.Landscape is Road)
+                {
+                    i.Landscape.calculate(PlacedBoardTiles.Last(), false);
+                    break;
                 }
             }
         }
