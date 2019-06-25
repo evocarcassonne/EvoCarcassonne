@@ -104,6 +104,7 @@ namespace EvoCarcassonne.Controller
         private Player _currentPlayer;
         private bool _tileIsDown;
         private bool _hasCurrentTile;
+        private bool _alreadyCalculated;
 
         #endregion
 
@@ -229,7 +230,7 @@ namespace EvoCarcassonne.Controller
             var random = new Random();
 
             CurrentBoardTile = TileStack.RemoveAndGet(random.Next(TileStack.Count));
-
+            _alreadyCalculated = false;
             CurrentTileId++;
         }
 
@@ -254,6 +255,11 @@ namespace EvoCarcassonne.Controller
 
         private void CallCalculate()
         {
+            if (_alreadyCalculated)
+            {
+                return;
+            }
+
             //Checks whether there is a church nearby.
             var allSurrTiles = Utils.GetAllSurroundingTiles(PlacedBoardTiles.Last());
             allSurrTiles.Add(PlacedBoardTiles.Last());
@@ -275,6 +281,8 @@ namespace EvoCarcassonne.Controller
                     break;
                 }
             }
+
+            _alreadyCalculated = true;
         }
 
         private bool CanEndTurn()
