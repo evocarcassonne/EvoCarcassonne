@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvoCarcassonne.Controller;
 using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend

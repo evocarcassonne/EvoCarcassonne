@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -41,7 +42,8 @@ namespace EvoCarcassonne.ViewModels
         {
             ViewModels = new ObservableCollection<IViewModel>();
 
-            // TODO: add view models to the collection
+            ViewModels.Add(new MenuViewModel());
+            ViewModels.Add(new MainController());
 
             CurrentViewModel = ViewModels.First();
 
@@ -50,7 +52,17 @@ namespace EvoCarcassonne.ViewModels
 
         private void ChangeViewModel(string viewModelName)
         {
-            ChangeViewModel(ViewModels.First(vm => vm.Title.Contains(viewModelName)));
+            switch (viewModelName)
+            {
+                case "menu":
+                    ChangeViewModel(ViewModels[0]);
+                    break;
+                case "game":
+                    ChangeViewModel(ViewModels[1]);
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
         private void ChangeViewModel(IViewModel viewModel)

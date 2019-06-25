@@ -8,9 +8,9 @@ using System.Windows.Media;
 using EvoCarcassonne.Backend;
 using EvoCarcassonne.Models;
 
-namespace EvoCarcassonne.Controller
+namespace EvoCarcassonne.ViewModels
 {
-    public class MainController : ObservableObject
+    public class MainController : ObservableObject, IViewModel
     {
 
         #region Public Properties
@@ -387,6 +387,6 @@ namespace EvoCarcassonne.Controller
             return false;
         }
         #endregion
-        
+
     }
 }

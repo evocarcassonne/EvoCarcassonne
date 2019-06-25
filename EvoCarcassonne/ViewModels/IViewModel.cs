@@ -5,6 +5,5 @@
     /// </summary>
     public interface IViewModel
     {
-        string Title { get; set; }
     }
 }

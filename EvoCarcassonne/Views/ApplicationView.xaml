@@ -3,11 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EvoCarcassonne.Views"
-        xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
         mc:Ignorable="d"
-        Title="{Binding Path=CurrentViewModel.Title, FallbackValue='ApplicationView'}"
-        d:DataContext="{d:DesignInstance viewModels:ApplicationViewModel, IsDesignTimeCreatable=True}" SizeToContent="WidthAndHeight">
+        d:DataContext="{d:DesignInstance viewModels:ApplicationViewModel, IsDesignTimeCreatable=True }"
+        xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
+        WindowStartupLocation="CenterScreen"
+        Title="EvoCarcassonne"
+        SizeToContent="WidthAndHeight" >
     <Grid>
         <ContentControl Content="{Binding Path=CurrentViewModel}" />
     </Grid>

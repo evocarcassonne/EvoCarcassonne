@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="100" d:DesignWidth="800" Height="100">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,11 +14,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Height="100">
+    <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition MaxWidth="100" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -73,6 +74,9 @@
                 </Canvas>
             </Viewbox>
         </Button>
-        <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Grid.Column="4" />
+        <StackPanel Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Margin="0,0,15,0"/>
+            <Button Content="Vissza a menübe" CommandParameter="menu" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.ChangeViewModelCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Width="100" Height="35" />
+        </StackPanel>
     </Grid>
 </UserControl>

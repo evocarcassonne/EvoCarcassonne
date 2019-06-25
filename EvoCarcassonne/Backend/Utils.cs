@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EvoCarcassonne.Controller;
 using EvoCarcassonne.Models;
+using EvoCarcassonne.ViewModels;
 
 namespace EvoCarcassonne.Backend
 {
