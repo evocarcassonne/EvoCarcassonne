@@ -84,6 +84,7 @@ namespace EvoCarcassonne.Backend
                         }
                         IsRoadFinished = true;
                         DistributePoints(result);
+                        LastTile = null;
                         FiguresOnTiles = new List<IFigure>();
                         result = 0;
                     }
@@ -114,6 +115,8 @@ namespace EvoCarcassonne.Backend
                 }
             }
             FiguresOnTiles = new List<IFigure>();
+            FirstTile = null;
+            LastTile = null;
             IsRoadFinished = true;
         }
 
