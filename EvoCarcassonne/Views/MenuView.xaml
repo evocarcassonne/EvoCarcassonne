@@ -4,11 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
-             Height="400" Width="400"
+             Height="360" Width="360"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance viewModels:MenuViewModel, IsDesignTimeCreatable=True}"
              Background="White">
-    <ItemsControl>
+    <ItemsControl VerticalAlignment="Center" HorizontalAlignment="Center">
         <ItemsControl.ItemContainerStyle>
             <Style TargetType="FrameworkElement">
                 <Setter Property="Margin" Value="0 0 0 10" />
@@ -28,7 +28,7 @@
         </ItemsControl.ItemsPanel>
 
         <ItemsControl.Items>
-            <TextBlock FontFamily="/EvoCarcassonne;component/Resources/Fonts/#Lindsay Becker" FontSize="48" Text="EvoCarcassonne" HorizontalAlignment="Center" />
+            <TextBlock FontFamily="/EvoCarcassonne;component/Resources/Fonts/#Lindsay Becker" FontSize="42" Text="EvoCarcassonne" HorizontalAlignment="Center" />
 
             <Button Content="Új játék" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.StartNewGameCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
 
