@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using EvoCarcassonne.Models;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace EvoCarcassonne.ViewModels
 {
@@ -44,6 +49,10 @@ namespace EvoCarcassonne.ViewModels
 
         public ICommand GotoMenuCommand { get; set; }
 
+        public ICommand LoadGameCommand { get; set; }
+
+        public ICommand SaveGameCommand { get; set; }
+
         public ApplicationViewModel()
         {
             ViewModels = new List<IViewModel>();
@@ -55,6 +64,8 @@ namespace EvoCarcassonne.ViewModels
             StartNewGameCommand = new RelayCommand(StartNewGame);
             ContinueGameCommand = new RelayCommand(ContinueGame, CanContinueGame);
             GotoMenuCommand = new RelayCommand(GotoMenu);
+            LoadGameCommand = new RelayCommand(LoadGame);
+            SaveGameCommand = new RelayCommand(SaveGame, CanSaveGame);
         }
 
         private void ChangeViewModel(IViewModel viewModel)
@@ -70,7 +81,8 @@ namespace EvoCarcassonne.ViewModels
         private void StartNewGame()
         {
             ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
-            ChangeViewModel(new MainController());
+            var players = new List<Player> {new Player("Géza", Brushes.Blue), new Player("Pista", Brushes.Red)};
+            ChangeViewModel(new MainController(players));
         }
 
         private void ContinueGame()
@@ -80,20 +92,79 @@ namespace EvoCarcassonne.ViewModels
 
         private bool CanContinueGame()
         {
-            foreach (var viewModel in ViewModels)
-            {
-                if (viewModel.GetType().Name == nameof(MainController))
-                {
-                    return true;
-                }
-            }
+            return IsGameLoaded;
+        }
 
-            return false;
+        private bool IsGameLoaded
+        {
+            get
+            {
+                foreach (var viewModel in ViewModels)
+                {
+                    if (viewModel.GetType().Name == nameof(MainController))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
 
         private void GotoMenu()
         {
             ChangeViewModel(ViewModels.First());
+        }
+
+        private void LoadGame()
+        {
+            //throw new NotImplementedException();
+
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "Save file (*.json)|*.json",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var json = File.ReadAllText(openFileDialog.FileName);
+                var gameVm = JsonConvert.DeserializeObject<MainController>(json, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+                });
+                ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
+                ChangeViewModel(gameVm);
+            }
+        }
+
+        private void SaveGame()
+        {
+            //throw new NotImplementedException();
+
+            var gameVm = ViewModels.First(vm => vm.GetType().Name == nameof(MainController)) as MainController;
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Save file (*.json)|*.json",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                FileName = $"EvoCarcassonne_Save_Round{gameVm.CurrentRound:D2}_{DateTime.Now:yyyyMMdd-HHmmss}.json"
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var json = JsonConvert.SerializeObject(gameVm, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+                });
+                File.WriteAllText(saveFileDialog.FileName, json);
+            }
+        }
+
+        private bool CanSaveGame()
+        {
+            return IsGameLoaded;
         }
     }
 }

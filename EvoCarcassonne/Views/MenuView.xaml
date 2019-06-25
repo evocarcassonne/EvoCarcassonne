@@ -6,34 +6,40 @@
              xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
              Height="400" Width="400"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance viewModels:MenuViewModel, IsDesignTimeCreatable=True }"
+             d:DataContext="{d:DesignInstance viewModels:MenuViewModel, IsDesignTimeCreatable=True}"
              Background="White">
-    <Grid Margin="50,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <ItemsControl>
+        <ItemsControl.ItemContainerStyle>
+            <Style TargetType="FrameworkElement">
+                <Setter Property="Margin" Value="0 0 0 10" />
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ItemsControl.ItemContainerStyle>
 
-        <TextBlock FontFamily="/EvoCarcassonne;component/Resources/Fonts/#Lindsay Becker" Grid.Row="1"
-                   HorizontalAlignment="Center" FontSize="36" Text="EvoCarcassonne" Margin="0,0,0,30"/>
 
-        <Button Grid.Row="2" Content="Új játék" Margin="0,0,0,15"
-                Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.StartNewGameCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
 
-        <Grid Grid.Row="3" Margin="0,0,0,15">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Button Content="Folytatás" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.ContinueGameCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Grid.Column="0" />
-            <Button Content="Betöltés" Grid.Column="2" />
-        </Grid>
+        <ItemsControl.Items>
+            <TextBlock FontFamily="/EvoCarcassonne;component/Resources/Fonts/#Lindsay Becker" FontSize="48" Text="EvoCarcassonne" HorizontalAlignment="Center" />
 
-        <Button Content="Kilépés" Grid.Row="4" Command="{Binding Path=ExitApplicationCommand}"/>
-    </Grid>
+            <Button Content="Új játék" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.StartNewGameCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+
+            <Button Content="Folytatás" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.ContinueGameCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+
+            <Button Content="Betöltés" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.LoadGameCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+
+            <Button Content="Mentés" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.SaveGameCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+
+            <Button Content="Kilépés" Command="{Binding Path=ExitApplicationCommand}"/>
+        </ItemsControl.Items>
+    </ItemsControl>
+
 </UserControl>

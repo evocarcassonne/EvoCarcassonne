@@ -101,7 +101,7 @@
                             <Viewbox
                                 Visibility="{Binding Path=BackendTile.Directions[0].Figure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
                                 Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="6">
-                                <Canvas Width="100" Height="100">
+                                <Canvas Width="512" Height="512">
                                     <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Player.Color}">
                                         <Path.Effect>
                                             <DropShadowEffect />
@@ -112,7 +112,7 @@
                             <Viewbox
                                 Visibility="{Binding Path=BackendTile.Directions[1].Figure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
                                 Grid.Row="0" Grid.Column="4" Grid.RowSpan="6" Grid.ColumnSpan="2">
-                                <Canvas Width="100" Height="100">
+                                <Canvas Width="512" Height="512">
                                     <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Player.Color}">
                                         <Path.Effect>
                                             <DropShadowEffect />
@@ -123,7 +123,7 @@
                             <Viewbox
                                 Visibility="{Binding Path=BackendTile.Directions[2].Figure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
                                 Grid.Row="4" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="6">
-                                <Canvas Width="100" Height="100">
+                                <Canvas Width="512" Height="512">
                                     <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Player.Color}">
                                         <Path.Effect>
                                             <DropShadowEffect />
@@ -134,7 +134,7 @@
                             <Viewbox
                                 Visibility="{Binding Path=BackendTile.Directions[3].Figure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
                                 Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" Grid.ColumnSpan="2">
-                                <Canvas Width="100" Height="100">
+                                <Canvas Width="512" Height="512">
                                     <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Player.Color}">
                                         <Path.Effect>
                                             <DropShadowEffect />
@@ -145,7 +145,7 @@
                             <Viewbox
                                 Visibility="{Binding Path=BackendTile.CenterFigure, Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
                                 Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                                <Canvas Width="100" Height="100">
+                                <Canvas Width="512" Height="512">
                                     <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Player.Color}">
                                         <Path.Effect>
                                             <DropShadowEffect />

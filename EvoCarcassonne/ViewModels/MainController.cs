@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using EvoCarcassonne.Backend;
 using EvoCarcassonne.Models;
+using Newtonsoft.Json;
 
 namespace EvoCarcassonne.ViewModels
 {
@@ -18,16 +19,15 @@ namespace EvoCarcassonne.ViewModels
         /// <summary>
         /// Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
         /// </summary>
-        public static ObservableCollection<BoardTile> PlacedBoardTiles { get; set; }
-
-        public static ObservableCollection<BoardTile> BoardTiles { get; set; }
-
-        public static ObservableCollection<BoardTile> TileStack { get; set; }
+        [JsonProperty]
+        public static ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
+        public ObservableCollection<BoardTile> BoardTiles { get; set; }
+        public ObservableCollection<BoardTile> TileStack { get; set; }
 
         /// <summary>
-        /// The current tile's ID
+        /// Gets or sets the current round number
         /// </summary>
-        public int CurrentTileId { get; set; }
+        public int CurrentRound { get; set; } = 1;
 
         /// <summary>
         /// A flag that indicates if the player has a tile
@@ -62,7 +62,7 @@ namespace EvoCarcassonne.ViewModels
         }
 
         // The players
-        public ObservableCollection<Player> Players;
+        public ObservableCollection<Player> Players = new ObservableCollection<Player>();
 
         /// <summary>
         /// The current player
@@ -143,23 +143,26 @@ namespace EvoCarcassonne.ViewModels
 
         #region Constructor
 
-        public MainController()
+        [JsonConstructor]
+        private MainController()
         {
-            LoadTiles();
-
             // Create commands            
             RotateLeftCommand = new RelayCommand(() => Rotate(-90), CanRotate);
             RotateRightCommand = new RelayCommand(() => Rotate(90), CanRotate);
             GetNewTileCommand = new RelayCommand(GetNewTile, CanGetNewTile);
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
             PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
-
             PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure, CanPlaceFigure);
+        }
 
-            // Initialize players
-            Players = new ObservableCollection<Player>();
-            Players.Add(new Player("Pista", Brushes.Red));
-            Players.Add(new Player("Géza", Brushes.Blue));
+        public MainController(IEnumerable<Player> players) : this()
+        {
+            LoadTiles();
+
+            foreach (var player in players)
+            {
+                Players.Add(player);
+            }
 
             CurrentPlayer = Players.First();
         }
@@ -175,7 +178,6 @@ namespace EvoCarcassonne.ViewModels
         {
             TileStack = TileParser.GetTileStack();
             var boardTiles = new ObservableCollection<BoardTile>();
-            PlacedBoardTiles = new ObservableCollection<BoardTile>();
 
             var nullSpecialty = new List<Speciality> { Speciality.None };
 
@@ -193,8 +195,6 @@ namespace EvoCarcassonne.ViewModels
 
                         boardTiles.Add(starterTile);
                         PlacedBoardTiles.Add(starterTile);
-
-                        CurrentTileId++;
                     }
                     else
                     {
@@ -229,8 +229,6 @@ namespace EvoCarcassonne.ViewModels
             var random = new Random();
 
             CurrentBoardTile = TileStack.RemoveAndGet(random.Next(TileStack.Count));
-
-            CurrentTileId++;
         }
 
         private bool CanGetNewTile()
@@ -249,6 +247,7 @@ namespace EvoCarcassonne.ViewModels
             PlacedBoardTiles.Last().CanPlaceFigure = false;
 
             CallCalculate();
+            CurrentRound++;
             CurrentPlayer = Players[(Players.IndexOf(CurrentPlayer) + 1) % Players.Count];
         }
 
