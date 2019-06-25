@@ -104,6 +104,7 @@ namespace EvoCarcassonne.ViewModels
         private Player _currentPlayer;
         private bool _tileIsDown;
         private bool _hasCurrentTile;
+        private bool _alreadyCalculated;
 
         #endregion
 
@@ -226,6 +227,8 @@ namespace EvoCarcassonne.ViewModels
             TileIsDown = false;
             HasCurrentTile = true;
 
+            _alreadyCalculated = false;
+
             var random = new Random();
 
             CurrentBoardTile = TileStack.RemoveAndGet(random.Next(TileStack.Count));
@@ -253,15 +256,11 @@ namespace EvoCarcassonne.ViewModels
 
         private void CallCalculate()
         {
-            //Searching for road sides, paying attention to be called only once
-            for (int i = 0; i < 4; i++)
+            if (_alreadyCalculated)
             {
-                if (PlacedBoardTiles.Last().BackendTile.Directions[i].Landscape is Road)
-                {
-                    PlacedBoardTiles.Last().BackendTile.Directions[i].Landscape.calculate(PlacedBoardTiles.Last(), false);
-                    break;
-                }
+                return;
             }
+
             //Checks whether there is a church nearby.
             var allSurrTiles = Utils.GetAllSurroundingTiles(PlacedBoardTiles.Last());
             allSurrTiles.Add(PlacedBoardTiles.Last());
@@ -269,10 +268,22 @@ namespace EvoCarcassonne.ViewModels
             {
                 if (tile.BackendTile is Church)
                 {
-                    var churhcTile = (Church)tile.BackendTile;
-                    churhcTile.calculate(tile, false);
+                    var church = (Church)tile.BackendTile;
+                    church.calculate(tile, false);
                 }
             }
+            
+            //Searching for road sides, paying attention to be called only once
+            foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
+            {
+                if (i.Landscape is Road)
+                {
+                    i.Landscape.calculate(PlacedBoardTiles.Last(), false);
+                    break;
+                }
+            }
+
+            _alreadyCalculated = true;
         }
 
         private bool CanEndTurn()

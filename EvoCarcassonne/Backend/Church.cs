@@ -90,6 +90,7 @@ namespace EvoCarcassonne.Backend
             if (gameover)
             {
                 churchTile.CenterFigure.Owner.Points += surroundingTiles.Count;
+                churchTile.CenterFigure = null;
             }
             else
             {
@@ -98,6 +99,7 @@ namespace EvoCarcassonne.Backend
                     if (churchTile.CenterFigure != null)
                     {
                         churchTile.CenterFigure.Owner.Points += 9;
+                        churchTile.CenterFigure = null;
                     }
                 }
             }
