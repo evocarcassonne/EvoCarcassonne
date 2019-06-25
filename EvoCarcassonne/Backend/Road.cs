@@ -59,6 +59,7 @@ namespace EvoCarcassonne.Backend
                 {
                     result += 1;
                 }
+                DistributePoints(result);
             }
             else
             {
@@ -83,6 +84,7 @@ namespace EvoCarcassonne.Backend
                         }
                         IsRoadFinished = true;
                         DistributePoints(result);
+                        LastTile = null;
                         FiguresOnTiles = new List<IFigure>();
                         result = 0;
                     }
@@ -92,7 +94,12 @@ namespace EvoCarcassonne.Backend
                         FirstTile = SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i);
                         CheckFigureOnTile(FirstTile, (int)_whereToGoAfterEndOfRoadFound);
                         result += CalculateWithDirections(SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i), _whereToGoAfterEndOfRoadFound);
-                        
+                        /*If the road does not end with the same tile its started, then increase the result*/
+                        if (LastTile != null && !(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
+                                                  FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
+                        {
+                            result++;
+                        }
                         /*If the road is not finished, then result should be 0*/
                         if (!IsRoadFinished)
                         {
@@ -102,25 +109,14 @@ namespace EvoCarcassonne.Backend
                         {
                             RemoveFiguresFromFinishedRoad(FirstTile, _whereToGoAfterEndOfRoadFound, true);
                         }
+                        DistributePoints(result);
                         break;
-                        
-                    }
-                    
+                    }   
                 }
-                /*If the road does not end with the same tile its started, then increase the result*/
-                if (LastTile != null && !(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
-                    FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
-                {
-                    result++;
-                }
-
-            }
-            Console.WriteLine(@"Figures found:    " + FiguresOnTiles.Count);
-            if (FiguresOnTiles.Count != 0)
-            {
-                DistributePoints(result);
             }
             FiguresOnTiles = new List<IFigure>();
+            FirstTile = null;
+            LastTile = null;
             IsRoadFinished = true;
         }
 
@@ -151,6 +147,7 @@ namespace EvoCarcassonne.Backend
                 IsRoadFinished = false;
                 return result;
             }
+
             if (IsEndOfRoad(neighborTile) || neighborTile.Coordinates.Equals(FirstTile.Coordinates))
             {
                 CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
@@ -173,6 +170,10 @@ namespace EvoCarcassonne.Backend
         /// <param name="onlySideToCheck">The side of tile to be examined</param>
         private void CheckFigureOnTile(BoardTile currentTile, int onlySideToCheck)
         {
+            if (currentTile.BackendTile.CenterFigure != null)
+            {
+                FiguresOnTiles.Add(currentTile.BackendTile.CenterFigure);
+            }
             if (currentTile.BackendTile.Directions[onlySideToCheck].Figure != null)
             {
                 Console.WriteLine(@"Ezt adom hozzá:    " + currentTile.BackendTile.Directions[onlySideToCheck].Figure.Owner.Name);

@@ -538,5 +538,44 @@ namespace EvoCarcassonneUnitTests
             Assert.IsTrue(Player2.Points == 4);
             Assert.IsTrue(Player3.Points == 3);
         }
-    }      
+        
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithEndofroadAndChurch_ShouldReturnNumberOfTiles()
+        {
+            #region Initialize values
+
+            var directions = new List<IDirection>();
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            var specialities = new List<Speciality>();
+            specialities.Add(Speciality.EndOfRoad);
+            specialities.Add(Speciality.Colostor);
+            boardTile3.BackendTile = new Church(directions, specialities);
+            boardTile3.BackendTile.CenterFigure = new Figure(Player1);
+            boardTile4.BackendTile = new Church(directions, specialities);
+            boardTile4.BackendTile.CenterFigure = new Figure(Player1);
+            boardTile5.BackendTile.Directions[3].Figure = null;
+            directions = new List<IDirection>();
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            specialities = new List<Speciality>();
+            specialities.Add(Speciality.EndOfRoad);
+            specialities.Add(Speciality.Shield);
+            boardTile8.BackendTile = new Tile(directions, specialities);
+            MainController.PlacedBoardTiles.RemoveAndGet(0);
+            #endregion
+            
+            Console.WriteLine(@"Route to the other end of road:");
+            boardTile3.BackendTile.Directions[1].Landscape.calculate(boardTile6,  false);
+            Console.WriteLine(@"Player1 pont:    " + Player1.Points);
+            
+            boardTile4.BackendTile.Directions[1].Landscape.calculate(boardTile4, false);
+            Console.WriteLine(@"Player1 pont:    " + Player1.Points);
+            Assert.IsTrue(Player1.Points == 6);
+        }   
+    }
 }
