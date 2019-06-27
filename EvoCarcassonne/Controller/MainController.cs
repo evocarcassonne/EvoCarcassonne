@@ -271,7 +271,11 @@ namespace EvoCarcassonne.Controller
                     church.calculate(tile, false);
                 }
             }
-            
+
+                var castle = new Castle();
+                castle.calculate(PlacedBoardTiles.Last(), false);
+
+
             //Searching for road sides, paying attention to be called only once
             foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
             {
@@ -282,8 +286,13 @@ namespace EvoCarcassonne.Controller
                 }
             }
 
+            // ITT KELL
+
+           
+
             _alreadyCalculated = true;
         }
+
 
         private bool CanEndTurn()
         {
