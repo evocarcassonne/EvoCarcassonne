@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Media;
 using EvoCarcassonne.Backend;
 using EvoCarcassonne.Models;
 using EvoCarcassonne.ViewModels;
@@ -19,12 +21,20 @@ namespace EvoCarcassonneUnitTests
         private BoardTile boardTile7 = new BoardTile();
         private BoardTile boardTile8 = new BoardTile();
         private BoardTile boardTile9 = new BoardTile();
-        private IOwner Player1 = new Owner("Krisztian");
+        private MainController _mainController = new MainController();
+        private Player player = new Player("Krisztian", Brushes.Red);
         
         [TestInitialize]
         public void Init()
         {
-            var figure = new Figure(Player1);
+            IEnumerable<Player> players = new List<Player>();
+            players.Append(player);
+            foreach (var VARIABLE in players)
+            {
+                _mainController.Players.Add(VARIABLE);
+            }
+            
+            var figure = new Figure(player.BackendOwner);
             
             boardTile1.Coordinates = new Coordinates(0, 0);
             boardTile2.Coordinates = new Coordinates(1, 0);
@@ -64,46 +74,46 @@ namespace EvoCarcassonneUnitTests
             chuchTile.CenterFigure = figure;
             boardTile5.BackendTile = chuchTile;
             
-            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
-            MainController.PlacedBoardTiles.Add(boardTile1);
-            MainController.PlacedBoardTiles.Add(boardTile2);
-            MainController.PlacedBoardTiles.Add(boardTile3);
-            MainController.PlacedBoardTiles.Add(boardTile4);
-            MainController.PlacedBoardTiles.Add(boardTile5);
-            MainController.PlacedBoardTiles.Add(boardTile6);
-            MainController.PlacedBoardTiles.Add(boardTile7);
-            MainController.PlacedBoardTiles.Add(boardTile8);
-            MainController.PlacedBoardTiles.Add(boardTile9);
+            _mainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            _mainController.PlacedBoardTiles.Add(boardTile1);
+            _mainController.PlacedBoardTiles.Add(boardTile2);
+            _mainController.PlacedBoardTiles.Add(boardTile3);
+            _mainController.PlacedBoardTiles.Add(boardTile4);
+            _mainController.PlacedBoardTiles.Add(boardTile5);
+            _mainController.PlacedBoardTiles.Add(boardTile6);
+            _mainController.PlacedBoardTiles.Add(boardTile7);
+            _mainController.PlacedBoardTiles.Add(boardTile8);
+            _mainController.PlacedBoardTiles.Add(boardTile9);
         }
 
         [TestMethod]
         public void ChurchCalculate_FinishedChurchNotGameover_ShouldReturn_9()
         {
             var church = (Church)boardTile5.BackendTile;
-            church.calculate(boardTile5, false);
-            Assert.AreEqual(9, Player1.Points);
+            church.calculate(boardTile5, false, _mainController.Utils);
+            Assert.AreEqual(9, player.BackendOwner.Points);
         }
         
         [TestMethod]
         public void ChurchCalculate_NotFinishedChurchGameover_ShouldReturn_3()
         {
             var church = (Church)boardTile5.BackendTile;
-            MainController.PlacedBoardTiles.RemoveAndGet(8);
-            MainController.PlacedBoardTiles.RemoveAndGet(7);
-            MainController.PlacedBoardTiles.RemoveAndGet(6);
-            MainController.PlacedBoardTiles.RemoveAndGet(5);
-            MainController.PlacedBoardTiles.RemoveAndGet(3);
-            church.calculate(boardTile5, true);
-            Assert.AreEqual(3, Player1.Points);
+            _mainController.PlacedBoardTiles.RemoveAndGet(8);
+            _mainController.PlacedBoardTiles.RemoveAndGet(7);
+            _mainController.PlacedBoardTiles.RemoveAndGet(6);
+            _mainController.PlacedBoardTiles.RemoveAndGet(5);
+            _mainController.PlacedBoardTiles.RemoveAndGet(3);
+            church.calculate(boardTile5, true, _mainController.Utils);
+            Assert.AreEqual(3, player.BackendOwner.Points);
         }
         
         [TestMethod]
         public void ChurchCalculate_NotFinishedChurchNotGameover_ShouldReturn_0()
         {
             var church = (Church)boardTile5.BackendTile;
-            MainController.PlacedBoardTiles.RemoveAndGet(8);
-            church.calculate(boardTile5, false);
-            Assert.AreEqual(0, Player1.Points);
+            _mainController.PlacedBoardTiles.RemoveAndGet(8);
+            church.calculate(boardTile5, false, _mainController.Utils);
+            Assert.AreEqual(0, player.BackendOwner.Points);
         }
     }
 }
