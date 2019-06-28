@@ -20,9 +20,11 @@ namespace EvoCarcassonne.ViewModels
         /// Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
         /// </summary>
         [JsonProperty]
-        public static ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
+        public ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
         public ObservableCollection<BoardTile> BoardTiles { get; set; }
         public ObservableCollection<BoardTile> TileStack { get; set; }
+        
+        public Utils Utils { get; set; }
 
         /// <summary>
         /// Gets or sets the current round number
@@ -145,8 +147,9 @@ namespace EvoCarcassonne.ViewModels
         #region Constructor
 
         [JsonConstructor]
-        private MainController()
+        public MainController()
         {
+            Utils = new Utils(this);
             // Create commands            
             RotateLeftCommand = new RelayCommand(() => Rotate(-90), CanRotate);
             RotateRightCommand = new RelayCommand(() => Rotate(90), CanRotate);
@@ -177,7 +180,7 @@ namespace EvoCarcassonne.ViewModels
         /// </summary>
         private void LoadTiles()
         {
-            TileStack = TileParser.GetTileStack();
+            TileStack = TileParser.GetTileStack(Utils);
             var boardTiles = new ObservableCollection<BoardTile>();
 
             var nullSpecialty = new List<Speciality> { Speciality.None };
@@ -269,7 +272,7 @@ namespace EvoCarcassonne.ViewModels
                 if (tile.BackendTile is Church)
                 {
                     var church = (Church)tile.BackendTile;
-                    church.calculate(tile, false);
+                    church.calculate(tile, false, Utils);
                 }
             }
             
@@ -278,7 +281,7 @@ namespace EvoCarcassonne.ViewModels
             {
                 if (i.Landscape is Road)
                 {
-                    i.Landscape.calculate(PlacedBoardTiles.Last(), false);
+                    i.Landscape.calculate(PlacedBoardTiles.Last(), false, Utils);
                     break;
                 }
             }

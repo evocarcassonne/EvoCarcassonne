@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
@@ -17,10 +20,10 @@ namespace EvoCarcassonne.Backend
 
     public static class TileParser
     {
-        public static ObservableCollection<BoardTile> GetTileStack()
+        public static ObservableCollection<BoardTile> GetTileStack(Utils utils)
         {
             var tileStack = new ObservableCollection<BoardTile>();
-            var tileResourcePathList = Utils.GetResourceNames(@"tiles");
+            var tileResourcePathList = utils.GetResourceNames(@"tiles");
 
             AddTile(tileStack, tileResourcePathList.Find(t => Path.GetFileNameWithoutExtension(t).StartsWith("s")));
 
@@ -39,6 +42,8 @@ namespace EvoCarcassonne.Backend
 
         #region Private methods
 
+       
+        
         private static void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
         {
             var tileName = Path.GetFileNameWithoutExtension(resourcePath);
