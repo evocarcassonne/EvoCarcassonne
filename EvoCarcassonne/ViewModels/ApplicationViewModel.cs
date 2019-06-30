@@ -128,9 +128,8 @@ namespace EvoCarcassonne.ViewModels
                 var json = File.ReadAllText(openFileDialog.FileName);
                 var gameVm = JsonConvert.DeserializeObject<MainController>(json, new JsonSerializerSettings
                 {
-                    TypeNameHandling = TypeNameHandling.Auto,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+                    TypeNameHandling = TypeNameHandling.Objects,
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
                 });
                 ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
                 ChangeViewModel(gameVm);
@@ -150,9 +149,8 @@ namespace EvoCarcassonne.ViewModels
             {
                 var json = JsonConvert.SerializeObject(gameVm, new JsonSerializerSettings
                 {
-                    TypeNameHandling = TypeNameHandling.Auto,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+                    TypeNameHandling = TypeNameHandling.Objects,
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
                 });
                 File.WriteAllText(saveFileDialog.FileName, json);
             }
