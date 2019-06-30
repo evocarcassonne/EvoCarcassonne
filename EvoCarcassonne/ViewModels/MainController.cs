@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using EvoCarcassonne.Backend;
 using EvoCarcassonne.Models;
 using Newtonsoft.Json;
@@ -23,7 +23,12 @@ namespace EvoCarcassonne.ViewModels
         public ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
         public ObservableCollection<BoardTile> BoardTiles { get; set; }
         public ObservableCollection<BoardTile> TileStack { get; set; }
-        
+
+        /// <summary>
+        /// Contains the players
+        /// </summary>
+        public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
+
         public Utils Utils { get; set; }
 
         /// <summary>
@@ -62,9 +67,6 @@ namespace EvoCarcassonne.ViewModels
                 }
             }
         }
-
-        // The players
-        public ObservableCollection<Player> Players = new ObservableCollection<Player>();
 
         /// <summary>
         /// The current player
