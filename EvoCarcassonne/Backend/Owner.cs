@@ -1,12 +1,22 @@
-﻿using System;
-
-namespace EvoCarcassonne.Backend
+﻿namespace EvoCarcassonne.Backend
 {
-    public class Owner : IOwner
+    public class Owner : ObservableObject, IOwner
     {
+        private int _points = 0;
         public string Name { get; set; }
 
-        public int Points { get; set; } = 0;
+        public int Points
+        {
+            get => _points;
+            set
+            {
+                if (_points != value)
+                {
+                    _points = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public Owner(string name)
         {
