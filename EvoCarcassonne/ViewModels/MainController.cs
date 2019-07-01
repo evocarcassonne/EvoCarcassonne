@@ -366,7 +366,16 @@ namespace EvoCarcassonne.ViewModels
             {
                 _figureDown = false;
                 _currentSideForFigure = -1;
-                currentTile.BackendTile.Directions[side].Figure = null;
+
+                if (side == 4 && currentTile.BackendTile is Church)
+                {
+                    currentTile.BackendTile.CenterFigure = null;
+                }
+                else
+                {
+                    currentTile.BackendTile.Directions[side].Figure = null;
+                }
+
                 Utils.GiveBackFigureToOwner(new Figure(currentTile.Player.BackendOwner));
             }
             else
