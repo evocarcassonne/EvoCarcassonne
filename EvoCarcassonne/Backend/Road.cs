@@ -171,10 +171,6 @@ namespace EvoCarcassonne.Backend
         /// <param name="onlySideToCheck">The side of tile to be examined</param>
         private void CheckFigureOnTile(BoardTile currentTile, int onlySideToCheck)
         {
-            if (currentTile.BackendTile.CenterFigure != null)
-            {
-                FiguresOnTiles.Add(currentTile.BackendTile.CenterFigure);
-            }
             if (currentTile.BackendTile.Directions[onlySideToCheck].Figure != null)
             {
                 Console.WriteLine(@"Ezt adom hozzá:    " + currentTile.BackendTile.Directions[onlySideToCheck].Figure.Owner.Name);
