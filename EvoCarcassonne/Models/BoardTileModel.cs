@@ -1,6 +1,6 @@
 ﻿using EvoCarcassonne.Backend;
 
-namespace EvoCarcassonne.Model
+namespace EvoCarcassonne.Models
 {
     public class BoardTile : ObservableObject
     {

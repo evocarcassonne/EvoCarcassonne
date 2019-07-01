@@ -3,15 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EvoCarcassonne.Controller;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
+using EvoCarcassonne.ViewModels;
 
 namespace EvoCarcassonne.Backend
 {
-    public static class Utils
+    public  class Utils
     {
-        private static int DistanceBetweenTiles = 1;
-        public static List<string> GetResourceNames(string condition)
+        private  int DistanceBetweenTiles = 1;
+        private readonly MainController _mainController;
+
+        public Utils(MainController mainController)
+        {
+            _mainController = mainController;
+        }
+
+        public List<string> GetResourceNames(string condition)
         {
             var asm = Assembly.GetEntryAssembly();
             var resName = asm.GetName().Name + ".g.resources";
@@ -22,8 +29,8 @@ namespace EvoCarcassonne.Backend
                     .Where(x => x.Contains(condition)).ToList();
             }
         }
-
-        public static bool CheckFitOfTile(BoardTile boardTile)
+        
+        public  bool CheckFitOfTile(BoardTile boardTile)
         {
             Dictionary<CardinalDirection, BoardTile> surroundingTiles = GetSurroundingTiles(boardTile);
             if (surroundingTiles.Count == 0)
@@ -45,12 +52,12 @@ namespace EvoCarcassonne.Backend
             return true;
         }
 
-        public static Dictionary<CardinalDirection, BoardTile> GetSurroundingTiles(BoardTile currentTile)
+        public  Dictionary<CardinalDirection, BoardTile> GetSurroundingTiles(BoardTile currentTile)
         {
             Dictionary<CardinalDirection, BoardTile> result =
                 new Dictionary<CardinalDirection, BoardTile>();
 
-            foreach (var neighborTile in MainController.PlacedBoardTiles)
+            foreach (var neighborTile in _mainController.PlacedBoardTiles)
             {
                 if (IsOnTheGivenSide(currentTile, neighborTile, DistanceBetweenTiles,0))
                 {
@@ -71,7 +78,7 @@ namespace EvoCarcassonne.Backend
             }
             return result;
         }
-        public static List<BoardTile> GetAllSurroundingTiles(BoardTile currentTile)
+        public  List<BoardTile> GetAllSurroundingTiles(BoardTile currentTile)
         {
 
             List<BoardTile> result = new List<BoardTile>();
@@ -79,7 +86,7 @@ namespace EvoCarcassonne.Backend
             {
                 result.Add(list.Value);
             }
-            foreach (var neighborTile in MainController.PlacedBoardTiles)
+            foreach (var neighborTile in _mainController.PlacedBoardTiles)
             {
                 if (IsOnTheGivenSide(currentTile, neighborTile, DistanceBetweenTiles,DistanceBetweenTiles) ||
                     IsOnTheGivenSide(currentTile, neighborTile, -DistanceBetweenTiles,DistanceBetweenTiles) ||
@@ -92,7 +99,7 @@ namespace EvoCarcassonne.Backend
             return result;
         }
 
-        public static CardinalDirection GetOppositeDirection(CardinalDirection direction)
+        public  CardinalDirection GetOppositeDirection(CardinalDirection direction)
         {
             switch (direction)
             {
@@ -104,7 +111,7 @@ namespace EvoCarcassonne.Backend
             }
         }
 
-        public static BoardTile GetNeighborTile(Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile, CardinalDirection whereToGo)
+        public  BoardTile GetNeighborTile(Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile, CardinalDirection whereToGo)
         {
             foreach (var pair in tilesNextToTheGivenTile)
             {
@@ -116,7 +123,7 @@ namespace EvoCarcassonne.Backend
             return null;
         }
 
-        private static bool IsOnTheGivenSide(BoardTile currentTile, BoardTile neighborTile, int diffX, int diffY)
+        private  bool IsOnTheGivenSide(BoardTile currentTile, BoardTile neighborTile, int diffX, int diffY)
         {
             return currentTile.Coordinates.X + diffX == neighborTile.Coordinates.X &&
                 currentTile.Coordinates.Y + diffY == neighborTile.Coordinates.Y;

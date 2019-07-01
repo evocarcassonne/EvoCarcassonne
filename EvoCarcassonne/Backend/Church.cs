@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
 {
@@ -83,9 +83,9 @@ namespace EvoCarcassonne.Backend
             }
         }
 
-        public void calculate(BoardTile currentTile, bool gameover)
+        public void calculate(BoardTile currentTile, bool gameover, Utils utils)
         {
-            List<BoardTile> surroundingTiles = Utils.GetAllSurroundingTiles(currentTile);
+            List<BoardTile> surroundingTiles = utils.GetAllSurroundingTiles(currentTile);
             var churchTile = (Church)currentTile.BackendTile;
             if (gameover)
             {

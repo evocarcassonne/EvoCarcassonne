@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvoCarcassonne.Controller;
-using EvoCarcassonne.Model;
-using EvoCarcassonne.View;
+using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
 {
@@ -13,6 +11,8 @@ namespace EvoCarcassonne.Backend
         private bool Gameover { get; set; }
         private bool IsRoadFinished { get; set; } = true;
 
+        private Utils Utils = null;
+
         private CardinalDirection _whereToGoAfterEndOfRoadFound;
        
         private List<IFigure> FiguresOnTiles { get; set; } = new List<IFigure>();
@@ -21,8 +21,9 @@ namespace EvoCarcassonne.Backend
         {
         }
 
-        public void calculate(BoardTile currentTile, bool gameover)
+        public void calculate(BoardTile currentTile, bool gameover, Utils utils)
         {
+            Utils = utils;
             int result = 0;
             Gameover = gameover;
             FirstTile = currentTile;

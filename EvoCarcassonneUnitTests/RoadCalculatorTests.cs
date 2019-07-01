@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Media;
 using EvoCarcassonne.Backend;
-using EvoCarcassonne.Controller;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
+using EvoCarcassonne.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EvoCarcassonneUnitTests
@@ -20,15 +22,25 @@ namespace EvoCarcassonneUnitTests
         private BoardTile boardTile7 = new BoardTile();
         private BoardTile boardTile8 = new BoardTile();
         private BoardTile boardTile9 = new BoardTile();
-        private IOwner Player1 = new Owner("Krisztian");
-        private IOwner Player2 = new Owner("Pista");
-        private IOwner Player3 = new Owner("Karcsi");
-        
+        private Player Player1 = new Player("Krisztian", Brushes.Lime);
+        private Player Player2 = new Player("Pista", Brushes.Gold);
+        private Player Player3 = new Player("Karcsi", Brushes.Red);
+        private MainController _mainController = new MainController();
+
         [TestInitialize]
         public void Init()
         {
-            var figure = new Figure(Player1);
+            IEnumerable<Player> players = new List<Player>();
+            players.Append(Player1);
+            players.Append(Player2);
+            players.Append(Player3);
+
+            foreach (var player in players)
+            {
+               _mainController.Players.Add(player);
+            }
             
+            var figure = new Figure(Player1.BackendOwner);
             boardTile1.Coordinates = new Coordinates(0, 0);
             boardTile2.Coordinates = new Coordinates(1, 0);
             boardTile3.Coordinates = new Coordinates(1, 1);
@@ -116,16 +128,16 @@ namespace EvoCarcassonneUnitTests
             directions.Add(new Direction(new Castle(), null));
             boardTile9.BackendTile = new Tile(directions, specialities);
             
-            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
-            MainController.PlacedBoardTiles.Add(boardTile1);
-            MainController.PlacedBoardTiles.Add(boardTile2);
-            MainController.PlacedBoardTiles.Add(boardTile3);
-            MainController.PlacedBoardTiles.Add(boardTile4);
-            MainController.PlacedBoardTiles.Add(boardTile5);
-            MainController.PlacedBoardTiles.Add(boardTile6);
-            MainController.PlacedBoardTiles.Add(boardTile7);
-            MainController.PlacedBoardTiles.Add(boardTile8);
-            MainController.PlacedBoardTiles.Add(boardTile9);
+            _mainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            _mainController.PlacedBoardTiles.Add(boardTile1);
+            _mainController.PlacedBoardTiles.Add(boardTile2);
+            _mainController.PlacedBoardTiles.Add(boardTile3);
+            _mainController.PlacedBoardTiles.Add(boardTile4);
+            _mainController.PlacedBoardTiles.Add(boardTile5);
+            _mainController.PlacedBoardTiles.Add(boardTile6);
+            _mainController.PlacedBoardTiles.Add(boardTile7);
+            _mainController.PlacedBoardTiles.Add(boardTile8);
+            _mainController.PlacedBoardTiles.Add(boardTile9);
         }
         
         
@@ -133,10 +145,10 @@ namespace EvoCarcassonneUnitTests
         public void CalculateRoad_RoadIsFinished_ReturnsNumberOfPoints_TestCase1()
         {
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1, false);
+            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1, false, _mainController.Utils);
             
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 6);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 6);
         }
 
         [TestMethod]
@@ -144,7 +156,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(Player1);
+            var figure = Player1.Figures[0];
 
             var specialities = new List<Speciality>();
             var directions = new List<IDirection>();      
@@ -161,9 +173,9 @@ namespace EvoCarcassonneUnitTests
             #endregion
 
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1, false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 5);
+            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1, false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 5);
         }
 
         [TestMethod]
@@ -171,7 +183,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(Player1);
+            var figure = Player1.Figures[0];
 
             var directions = new List<IDirection>();
             var specialities = new List<Speciality>();
@@ -187,10 +199,10 @@ namespace EvoCarcassonneUnitTests
             #endregion
 
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1, false);
+            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1, false,_mainController.Utils);
             
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 4);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 4);
         }
         
          [TestMethod]
@@ -198,7 +210,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(Player1);
+            var figure = Player1.Figures[0];
 
             var directions = new List<IDirection>();
             var specialities = new List<Speciality>();
@@ -223,17 +235,17 @@ namespace EvoCarcassonneUnitTests
             #endregion
 
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1, false);
+            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1, false,_mainController.Utils);
             
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 4);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 4);
         }
          [TestMethod]
         public void CalculateRoad_RoadsAreNotFinishedAndGameIsOverCall_ReturnsNumberOfPoints_TestCase1()
         {
             #region InitializeValues
 
-            var figure = new Figure(Player1);
+            var figure = Player1.Figures[0];
 
             var directions = new List<IDirection>();
             var specialities = new List<Speciality>();
@@ -273,9 +285,9 @@ namespace EvoCarcassonneUnitTests
             #endregion
 
             Console.WriteLine(@"Route to the other end of road:");
-           boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile6,  true);
-           Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-           Assert.IsTrue(Player1.Points == 5);
+           boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile6,  true, _mainController.Utils);
+           Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+           Assert.IsTrue(Player1.BackendOwner.Points == 5);
         }
         
         [TestMethod]
@@ -283,7 +295,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(Player1);
+            var figure = Player1.Figures[0];
 
             var directions = new List<IDirection>();
             var specialities = new List<Speciality>();
@@ -323,28 +335,28 @@ namespace EvoCarcassonneUnitTests
             #endregion
 
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile3, true);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 7);
+            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile3, true, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 7);
         }
         
         [TestMethod]
         public void CalculateRoad_RoadIsNotFinishedNotGameover_ShouldReturn0()
         {
             Console.WriteLine(@"Route to the other end of road:");
-            MainController.PlacedBoardTiles.RemoveAndGet(7);
-            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1,  false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 0);
+            _mainController.PlacedBoardTiles.RemoveAndGet(7);
+            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1,  false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 0);
         }
         
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_TestCase1()
         {
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 6);
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 6);
         }
         
         [TestMethod]
@@ -355,7 +367,7 @@ namespace EvoCarcassonneUnitTests
             BoardTile boardTile10 = new BoardTile();
             boardTile10.Coordinates = new Coordinates(2,3);
             List<IDirection> directions = new List<IDirection>();
-            directions.Add(new Direction(new Road(), new Figure(Player1)));
+            directions.Add(new Direction(new Road(), Player1.Figures[0]));
             directions.Add(new Direction(new Field(), null));
             directions.Add(new Direction(new Field(), null));
             directions.Add(new Direction(new Field(), null));
@@ -365,20 +377,20 @@ namespace EvoCarcassonneUnitTests
             boardTile10.BackendTile = new Church(directions, speciality);
             #endregion
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false, _mainController.Utils);
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile10.BackendTile.Directions[0].Landscape.calculate(boardTile10, false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 8);
+            boardTile10.BackendTile.Directions[0].Landscape.calculate(boardTile10, false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 8);
         }
         
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_TestCase3()
         {
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  true);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 6);
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  true,_mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 6);
         }
         
          [TestMethod]
@@ -388,7 +400,7 @@ namespace EvoCarcassonneUnitTests
             List<IDirection> directions = new List<IDirection>();
             List<Speciality> specialities = new List<Speciality>();
             specialities.Add(Speciality.None);
-            directions.Add(new Direction(new Road(), new Figure(Player1)));
+            directions.Add(new Direction(new Road(), Player1.Figures[0]));
             directions.Add(new Direction(new Castle(), null));
             directions.Add(new Direction(new Castle(), null));
             directions.Add(new Direction(new Road(), null));
@@ -412,79 +424,79 @@ namespace EvoCarcassonneUnitTests
             boardTile2.BackendTile.Speciality = specialities;
             #endregion
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1,  false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 4);
+            boardTile1.BackendTile.Directions[1].Landscape.calculate(boardTile1,  false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 4);
         }
         
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase1()
         {
-            boardTile2.BackendTile.Directions[2].Figure = new Figure(Player2);
-            boardTile6.BackendTile.Directions[1].Figure = new Figure(Player3);
+            boardTile2.BackendTile.Directions[2].Figure = Player2.Figures[0];
+            boardTile6.BackendTile.Directions[1].Figure = Player3.Figures[0];
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player2.Points);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player3.Points);
-            Assert.IsTrue(Player1.Points == 2);
-            Assert.IsTrue(Player2.Points == 2);
-            Assert.IsTrue(Player3.Points == 2);
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player2.BackendOwner.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player3.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 2);
+            Assert.IsTrue(Player2.BackendOwner.Points == 2);
+            Assert.IsTrue(Player3.BackendOwner.Points == 2);
         }
         
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase2()
         {
-            boardTile2.BackendTile.Directions[2].Figure = new Figure(Player2);
+            boardTile2.BackendTile.Directions[2].Figure = Player2.Figures[0];
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player2.Points);
-            Assert.IsTrue(Player1.Points == 3);
-            Assert.IsTrue(Player2.Points == 3);
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player2.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 3);
+            Assert.IsTrue(Player2.BackendOwner.Points == 3);
         }
 
         
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase3()
         {
-            boardTile2.BackendTile.Directions[2].Figure = new Figure(Player2);
-            boardTile6.BackendTile.Directions[3].Figure = new Figure(Player1);
-            boardTile3.BackendTile.Directions[1].Figure = new Figure(Player1);
+            boardTile2.BackendTile.Directions[2].Figure = Player2.Figures[0];
+            boardTile6.BackendTile.Directions[3].Figure = Player1.Figures[0];
+            boardTile3.BackendTile.Directions[1].Figure = Player1.Figures[1];
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player2.Points);
-            Assert.IsTrue(Player1.Points == 6);
-            Assert.IsTrue(Player2.Points == 0);
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player2.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 6);
+            Assert.IsTrue(Player2.BackendOwner.Points == 0);
         }
         
         
         [TestMethod]
         public void CalculateRoad_RoadIsFinishedNotGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase4()
         {
-            boardTile8.BackendTile.Directions[3].Figure = new Figure(Player2);
+            boardTile8.BackendTile.Directions[3].Figure = Player2.Figures[0];
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player1.Points);
-            Console.WriteLine(@"Ennyi pontom van:    " + Player2.Points);
-            Assert.IsTrue(Player1.Points == 3);
-            Assert.IsTrue(Player2.Points == 3);
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false, _mainController.Utils);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
+            Console.WriteLine(@"Ennyi pontom van:    " + Player2.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 3);
+            Assert.IsTrue(Player2.BackendOwner.Points == 3);
         }
         
         [TestMethod]
         public void CalculateRoad_RoadIsNotFinishedGameover_CalledWithNotEndofroad_ShouldReturnNumberOfTiles_ShouldDistributePoints_TestCase1()
         {
-            boardTile8.BackendTile.Directions[3].Figure = new Figure(Player2);
-            boardTile7.BackendTile.Directions[3].Figure = new Figure(Player1);
-            MainController.PlacedBoardTiles.RemoveAndGet(1);
-            MainController.PlacedBoardTiles.RemoveAndGet(0);
+            boardTile8.BackendTile.Directions[3].Figure = Player2.Figures[0];
+            boardTile7.BackendTile.Directions[3].Figure = Player1.Figures[0];
+            _mainController.PlacedBoardTiles.RemoveAndGet(1);
+            _mainController.PlacedBoardTiles.RemoveAndGet(0);
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  true);
-            Console.WriteLine(@"Player1 pont:    " + Player1.Points);
-            Console.WriteLine(@"Player2 pont:    " + Player2.Points);
-            Assert.IsTrue(Player1.Points == 2);
-            Assert.IsTrue(Player2.Points == 2);
+            boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  true, _mainController.Utils);
+            Console.WriteLine(@"Player1 pont:    " + Player1.BackendOwner.Points);
+            Console.WriteLine(@"Player2 pont:    " + Player2.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 2);
+            Assert.IsTrue(Player2.BackendOwner.Points == 2);
         }
         
         [TestMethod]
@@ -494,22 +506,22 @@ namespace EvoCarcassonneUnitTests
 
             var directions = new List<IDirection>();
             directions.Add(new Direction(new Road(), null));
-            directions.Add(new Direction(new Road(), new Figure(Player2)));
-            directions.Add(new Direction(new Road(), new Figure(Player3)));
+            directions.Add(new Direction(new Road(), Player2.Figures[0]));
+            directions.Add(new Direction(new Road(), Player3.Figures[0]));
             directions.Add(new Direction(new Castle(), null));
             var specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
             boardTile3.BackendTile = new Tile(directions, specialities);
             #endregion
-            boardTile4.BackendTile.Directions[0].Figure = new Figure(Player3);
+            boardTile4.BackendTile.Directions[0].Figure = Player3.Figures[0];
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile3.BackendTile.Directions[0].Landscape.calculate(boardTile3,  false);
-            Console.WriteLine(@"Player1 pont:    " + Player1.Points);
-            Console.WriteLine(@"Player2 pont:    " + Player2.Points);
-            Console.WriteLine(@"Player3 pont:    " + Player3.Points);
-            Assert.IsTrue(Player1.Points == 3);
-            Assert.IsTrue(Player2.Points == 4);
-            Assert.IsTrue(Player3.Points == 3);
+            boardTile3.BackendTile.Directions[0].Landscape.calculate(boardTile3,  false, _mainController.Utils);
+            Console.WriteLine(@"Player1 pont:    " + Player1.BackendOwner.Points);
+            Console.WriteLine(@"Player2 pont:    " + Player2.BackendOwner.Points);
+            Console.WriteLine(@"Player3 pont:    " + Player3.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 3);
+            Assert.IsTrue(Player2.BackendOwner.Points == 4);
+            Assert.IsTrue(Player3.BackendOwner.Points == 3);
         }
         
         [TestMethod]
@@ -519,24 +531,24 @@ namespace EvoCarcassonneUnitTests
 
             var directions = new List<IDirection>();
             directions.Add(new Direction(new Road(), null));
-            directions.Add(new Direction(new Road(), new Figure(Player2)));
-            directions.Add(new Direction(new Road(), new Figure(Player3)));
+            directions.Add(new Direction(new Road(), Player2.Figures[0]));
+            directions.Add(new Direction(new Road(), Player3.Figures[0]));
             directions.Add(new Direction(new Castle(), null));
             var specialities = new List<Speciality>();
             specialities.Add(Speciality.EndOfRoad);
             boardTile3.BackendTile = new Tile(directions, specialities);
-            boardTile4.BackendTile.Directions[0].Figure = new Figure(Player3);
-            MainController.PlacedBoardTiles.RemoveAndGet(0);
+            boardTile4.BackendTile.Directions[0].Figure = Player3.Figures[1];
+            _mainController.PlacedBoardTiles.RemoveAndGet(0);
             #endregion
             
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile3.BackendTile.Directions[0].Landscape.calculate(boardTile3,  false);
-            Console.WriteLine(@"Player1 pont:    " + Player1.Points);
-            Console.WriteLine(@"Player2 pont:    " + Player2.Points);
-            Console.WriteLine(@"Player3 pont:    " + Player3.Points);
-            Assert.IsTrue(Player1.Points == 0);
-            Assert.IsTrue(Player2.Points == 4);
-            Assert.IsTrue(Player3.Points == 3);
+            boardTile3.BackendTile.Directions[0].Landscape.calculate(boardTile3,  false, _mainController.Utils);
+            Console.WriteLine(@"Player1 pont:    " + Player1.BackendOwner.Points);
+            Console.WriteLine(@"Player2 pont:    " + Player2.BackendOwner.Points);
+            Console.WriteLine(@"Player3 pont:    " + Player3.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 0);
+            Assert.IsTrue(Player2.BackendOwner.Points == 4);
+            Assert.IsTrue(Player3.BackendOwner.Points == 3);
         }
         
         [TestMethod]
@@ -553,9 +565,9 @@ namespace EvoCarcassonneUnitTests
             specialities.Add(Speciality.EndOfRoad);
             specialities.Add(Speciality.Colostor);
             boardTile3.BackendTile = new Church(directions, specialities);
-            boardTile3.BackendTile.CenterFigure = new Figure(Player1);
+            boardTile3.BackendTile.CenterFigure = Player1.Figures[3];
             boardTile4.BackendTile = new Church(directions, specialities);
-            boardTile4.BackendTile.CenterFigure = new Figure(Player1);
+            boardTile4.BackendTile.CenterFigure = Player1.Figures[5];
             boardTile5.BackendTile.Directions[3].Figure = null;
             directions = new List<IDirection>();
             directions.Add(new Direction(new Castle(), null));
@@ -566,16 +578,16 @@ namespace EvoCarcassonneUnitTests
             specialities.Add(Speciality.EndOfRoad);
             specialities.Add(Speciality.Shield);
             boardTile8.BackendTile = new Tile(directions, specialities);
-            MainController.PlacedBoardTiles.RemoveAndGet(0);
+            _mainController.PlacedBoardTiles.RemoveAndGet(0);
             #endregion
             
             Console.WriteLine(@"Route to the other end of road:");
-            boardTile3.BackendTile.Directions[1].Landscape.calculate(boardTile6,  false);
-            Console.WriteLine(@"Player1 pont:    " + Player1.Points);
+            boardTile3.BackendTile.Directions[1].Landscape.calculate(boardTile6,  false, _mainController.Utils);
+            Console.WriteLine(@"Player1 pont:    " + Player1.BackendOwner.Points);
             
-            boardTile4.BackendTile.Directions[1].Landscape.calculate(boardTile4, false);
-            Console.WriteLine(@"Player1 pont:    " + Player1.Points);
-            Assert.IsTrue(Player1.Points == 6);
+            boardTile4.BackendTile.Directions[1].Landscape.calculate(boardTile4, false, _mainController.Utils);
+            Console.WriteLine(@"Player1 pont:    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 6);
         }   
     }
 }

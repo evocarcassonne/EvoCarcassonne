@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Media;
 using EvoCarcassonne.Backend;
-using EvoCarcassonne.Controller;
-using EvoCarcassonne.Model;
+using EvoCarcassonne.Models;
+using EvoCarcassonne.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EvoCarcassonneUnitTests
@@ -21,7 +23,7 @@ namespace EvoCarcassonneUnitTests
         private BoardTile boardTile7 = new BoardTile();
         private BoardTile boardTile8 = new BoardTile();
         private BoardTile boardTile9 = new BoardTile();
-
+        private MainController _mainController = new MainController();
         #endregion
 
         [TestInitialize]
@@ -29,8 +31,11 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
-            var figure = new Figure(new Owner("Krisztian"));
-
+            IEnumerable<Player> players = new List<Player>();
+            Player Player1 = new Player("Krisz", Brushes.Red);
+            players.Append(Player1);
+            _mainController.Players.Add(Player1);
+            var figure = new Figure(Player1.BackendOwner);
 
             boardTile1.Coordinates = new Coordinates(0, 0);
             boardTile2.Coordinates = new Coordinates(1, 0);
@@ -115,13 +120,13 @@ namespace EvoCarcassonneUnitTests
         public void CheckFitOfTile_TileCanFit_ReturnsTrue_TestCase1()
         {
             
-            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
-            MainController.PlacedBoardTiles.Add(boardTile1);
-            MainController.PlacedBoardTiles.Add(boardTile2);
-            MainController.PlacedBoardTiles.Add(boardTile3);
-            MainController.PlacedBoardTiles.Add(boardTile4);
+            _mainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            _mainController.PlacedBoardTiles.Add(boardTile1);
+            _mainController.PlacedBoardTiles.Add(boardTile2);
+            _mainController.PlacedBoardTiles.Add(boardTile3);
+            _mainController.PlacedBoardTiles.Add(boardTile4);
 
-            Assert.IsTrue(Utils.CheckFitOfTile(boardTile3));
+            Assert.IsTrue(_mainController.Utils.CheckFitOfTile(boardTile3));
         }
 
         [TestMethod]
@@ -138,15 +143,15 @@ namespace EvoCarcassonneUnitTests
             directions.Add(new Direction(new Castle(), figure));
             boardTile3.BackendTile = new Tile(directions, specialities);
 
-            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
-            MainController.PlacedBoardTiles.Add(boardTile1);
-            MainController.PlacedBoardTiles.Add(boardTile2);
-            MainController.PlacedBoardTiles.Add(boardTile3);
-            MainController.PlacedBoardTiles.Add(boardTile5);
-            MainController.PlacedBoardTiles.Add(boardTile6);
-            MainController.PlacedBoardTiles.Add(boardTile7);
+            _mainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            _mainController.PlacedBoardTiles.Add(boardTile1);
+            _mainController.PlacedBoardTiles.Add(boardTile2);
+            _mainController.PlacedBoardTiles.Add(boardTile3);
+            _mainController.PlacedBoardTiles.Add(boardTile5);
+            _mainController.PlacedBoardTiles.Add(boardTile6);
+            _mainController.PlacedBoardTiles.Add(boardTile7);
 
-            Assert.IsTrue(Utils.CheckFitOfTile(boardTile6));
+            Assert.IsTrue(_mainController.Utils.CheckFitOfTile(boardTile6));
         }
 
         [TestMethod]
@@ -163,31 +168,31 @@ namespace EvoCarcassonneUnitTests
             directions.Add(new Direction(new Castle(), figure));
             boardTile3.BackendTile = new Tile(directions, specialities);
 
-            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
-            MainController.PlacedBoardTiles.Add(boardTile1);
-            MainController.PlacedBoardTiles.Add(boardTile2);
-            MainController.PlacedBoardTiles.Add(boardTile3);
-            MainController.PlacedBoardTiles.Add(boardTile5);
-            MainController.PlacedBoardTiles.Add(boardTile6);
-            MainController.PlacedBoardTiles.Add(boardTile7);
+            _mainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            _mainController.PlacedBoardTiles.Add(boardTile1);
+            _mainController.PlacedBoardTiles.Add(boardTile2);
+            _mainController.PlacedBoardTiles.Add(boardTile3);
+            _mainController.PlacedBoardTiles.Add(boardTile5);
+            _mainController.PlacedBoardTiles.Add(boardTile6);
+            _mainController.PlacedBoardTiles.Add(boardTile7);
 
-            Assert.IsFalse(Utils.CheckFitOfTile(boardTile6));
+            Assert.IsFalse(_mainController.Utils.CheckFitOfTile(boardTile6));
         }
 
         [TestMethod]
         public void CheckFitOfTile_TileCanFit_ReturnsFalse_TestCase2()
         {
             
-            MainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
-            MainController.PlacedBoardTiles.Add(boardTile1);
-            MainController.PlacedBoardTiles.Add(boardTile2);
-            MainController.PlacedBoardTiles.Add(boardTile3);
-            MainController.PlacedBoardTiles.Add(boardTile5);
-            MainController.PlacedBoardTiles.Add(boardTile6);
-            MainController.PlacedBoardTiles.Add(boardTile7);
-            MainController.PlacedBoardTiles.Add(boardTile8);
+            _mainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            _mainController.PlacedBoardTiles.Add(boardTile1);
+            _mainController.PlacedBoardTiles.Add(boardTile2);
+            _mainController.PlacedBoardTiles.Add(boardTile3);
+            _mainController.PlacedBoardTiles.Add(boardTile5);
+            _mainController.PlacedBoardTiles.Add(boardTile6);
+            _mainController.PlacedBoardTiles.Add(boardTile7);
+            _mainController.PlacedBoardTiles.Add(boardTile8);
 
-            Assert.IsTrue(Utils.CheckFitOfTile(boardTile8));
+            Assert.IsTrue(_mainController.Utils.CheckFitOfTile(boardTile8));
         }
 
     }
