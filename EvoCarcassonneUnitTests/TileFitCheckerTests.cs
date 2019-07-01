@@ -24,6 +24,7 @@ namespace EvoCarcassonneUnitTests
         private BoardTile boardTile8 = new BoardTile();
         private BoardTile boardTile9 = new BoardTile();
         private MainController _mainController = new MainController();
+        private Utils _utils;
         #endregion
 
         [TestInitialize]
@@ -31,6 +32,7 @@ namespace EvoCarcassonneUnitTests
         {
             #region InitializeValues
 
+            _utils = new Utils(_mainController);
             IEnumerable<Player> players = new List<Player>();
             Player Player1 = new Player("Krisz", Brushes.Red);
             players.Append(Player1);
@@ -126,7 +128,7 @@ namespace EvoCarcassonneUnitTests
             _mainController.PlacedBoardTiles.Add(boardTile3);
             _mainController.PlacedBoardTiles.Add(boardTile4);
 
-            Assert.IsTrue(_mainController.Utils.CheckFitOfTile(boardTile3));
+            Assert.IsTrue(_utils.CheckFitOfTile(boardTile3));
         }
 
         [TestMethod]
@@ -151,7 +153,7 @@ namespace EvoCarcassonneUnitTests
             _mainController.PlacedBoardTiles.Add(boardTile6);
             _mainController.PlacedBoardTiles.Add(boardTile7);
 
-            Assert.IsTrue(_mainController.Utils.CheckFitOfTile(boardTile6));
+            Assert.IsTrue(_utils.CheckFitOfTile(boardTile6));
         }
 
         [TestMethod]
@@ -176,7 +178,7 @@ namespace EvoCarcassonneUnitTests
             _mainController.PlacedBoardTiles.Add(boardTile6);
             _mainController.PlacedBoardTiles.Add(boardTile7);
 
-            Assert.IsFalse(_mainController.Utils.CheckFitOfTile(boardTile6));
+            Assert.IsFalse(_utils.CheckFitOfTile(boardTile6));
         }
 
         [TestMethod]
@@ -192,7 +194,7 @@ namespace EvoCarcassonneUnitTests
             _mainController.PlacedBoardTiles.Add(boardTile7);
             _mainController.PlacedBoardTiles.Add(boardTile8);
 
-            Assert.IsTrue(_mainController.Utils.CheckFitOfTile(boardTile8));
+            Assert.IsTrue(_utils.CheckFitOfTile(boardTile8));
         }
 
     }

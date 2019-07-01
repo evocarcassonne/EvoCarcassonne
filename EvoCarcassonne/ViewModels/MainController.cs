@@ -29,7 +29,7 @@ namespace EvoCarcassonne.ViewModels
         /// </summary>
         public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
 
-        public Utils Utils { get; set; }
+        private Utils Utils { get; set; }
 
         /// <summary>
         /// Gets or sets the current round number
@@ -109,7 +109,8 @@ namespace EvoCarcassonne.ViewModels
         private bool _tileIsDown;
         private bool _hasCurrentTile;
         private bool _alreadyCalculated;
-
+        private int _currentSideForFigure = -1;
+        private bool _figureDown = false;
         #endregion
 
         #region Commands
@@ -255,6 +256,7 @@ namespace EvoCarcassonne.ViewModels
             PlacedBoardTiles.Last().CanPlaceFigure = false;
 
             CallCalculate();
+            _figureDown = false;
             CurrentRound++;
             CurrentPlayer = Players[(Players.IndexOf(CurrentPlayer) + 1) % Players.Count];
         }
@@ -348,7 +350,6 @@ namespace EvoCarcassonne.ViewModels
         /// <param name="button"></param>
         private void PlaceFigure(Button button)
         {
-           // Itt kéne kiszedni akkor a button-ból hogy hova kattintott stb, és aztán meghívni önmagát, csak a másik paraméterlistával.
            var directionIndex = int.Parse(button.Tag.ToString());
            var currentTile = PlacedBoardTiles.Last();
            PlaceFigure(currentTile, directionIndex);
@@ -361,45 +362,60 @@ namespace EvoCarcassonne.ViewModels
         /// <param name="side">Which side of tile should be the figure placed</param>
         private void PlaceFigure(BoardTile currentTile, int side)
         {
-            var playerFigure = CurrentPlayer.Figures.RemoveAndGet(0);
-
-            if (side == 4 && currentTile.BackendTile is Church church)
+            if (_figureDown)
             {
-                church.CenterFigure = playerFigure;
-                currentTile.BackendTile = church;
+                _figureDown = false;
+                _currentSideForFigure = -1;
+                currentTile.BackendTile.Directions[side].Figure = null;
+                Utils.GiveBackFigureToOwner(new Figure(currentTile.Player.BackendOwner));
             }
             else
             {
-                currentTile.BackendTile.Directions[side].Figure = playerFigure;
+                var playerFigure = CurrentPlayer.Figures.RemoveAndGet(0);
+                if (side == 4 && currentTile.BackendTile is Church)
+                {
+                    currentTile.BackendTile.CenterFigure = playerFigure;
+                }
+                else
+                {
+                    currentTile.BackendTile.Directions[side].Figure = playerFigure;
+                }
+
+                _figureDown = true;
+                _currentSideForFigure = side;
             }
         }
         
         private bool CanPlaceFigure(Button button)
         {
-            if (CurrentPlayer.Figures.Count == 0)
-            {
-                return false;
-            }
-
             var directionIndex = int.Parse(button.Tag.ToString());
-
             var tile = PlacedBoardTiles.Last();
-            if (tile.CanPlaceFigure)
+            
+            if (_figureDown)
             {
-                if (directionIndex == 4)
+                return directionIndex == _currentSideForFigure;
+            }
+            else{
+                if (CurrentPlayer.Figures.Count == 0)
                 {
-                    if (tile.BackendTile is Church backendTile)
-                    {
-                        return backendTile.CenterFigure == null;
-                    }
-
                     return false;
                 }
+                if (tile.CanPlaceFigure)
+                {
+                    if (directionIndex == 4)
+                    {
+                        if (tile.BackendTile is Church backendTile)
+                        {
+                            return backendTile.CenterFigure == null;
+                        }
 
-                return tile.BackendTile.Directions[directionIndex].Figure == null;
+                        return false;
+                    }
+
+                    return tile.BackendTile.Directions[directionIndex].Figure == null;
+                }
+                return false;
             }
-
-            return false;
         }
         #endregion
 
