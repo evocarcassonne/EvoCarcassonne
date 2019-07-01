@@ -101,9 +101,9 @@ namespace EvoCarcassonne.Backend
                     case '3':
                         speciality = Speciality.EndOfRoad;
                         break;
-                    /* case '4':
+                     case '4':
                         speciality = Speciality.EndOfCastle;
-                        break; */
+                        break; 
                 }
 
                 specialities.Add(speciality);

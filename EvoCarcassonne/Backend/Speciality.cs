@@ -5,6 +5,7 @@
         Colostor,
         Shield,
         EndOfRoad,
+        EndOfCastle,
         None
     }
 }
