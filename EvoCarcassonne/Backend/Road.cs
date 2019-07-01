@@ -265,7 +265,7 @@ namespace EvoCarcassonne.Backend
 
             if (players.Count!=0)
             {
-                playersToGetPoints.Add(players[maxIndex]);   
+                playersToGetPoints.Add(players[maxIndex]);
             }
             for (int i = 0; i < points.Count; i++)
             {
@@ -276,7 +276,7 @@ namespace EvoCarcassonne.Backend
             }
             foreach (var i in playersToGetPoints)
             {
-                i.Points += result / playersToGetPoints.Count;
+                i.Points += result;
             }
         }
         private void RemoveFiguresFromFinishedRoad(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
