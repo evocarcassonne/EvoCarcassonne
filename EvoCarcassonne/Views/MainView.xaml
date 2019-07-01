@@ -7,28 +7,20 @@
              mc:Ignorable="d"
              MinHeight="450" MinWidth="800">
     <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
         <!-- Current player module -->
-        <TextBlock Grid.Row="0" Grid.Column="0" Panel.ZIndex="1">
-            Jelenlegi játékos:    
-            <Run Foreground="{Binding Path=CurrentPlayer.Color}" Text="{Binding CurrentPlayer.Name}" FontWeight="Bold" />
-            Pontok:
-            <Run Text="{Binding CurrentPlayer.BackendOwner.Points}" FontWeight="Bold" />
-        </TextBlock>
+        <modules:PlayerListModule Panel.ZIndex="1" VerticalAlignment="Top" HorizontalAlignment="Left"></modules:PlayerListModule>
 
-        <!-- Game board module -->
-        <modules:BoardModule Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <!-- Tile control module -->
-        <modules:BottomControlModule Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
+            <!-- Game board module -->
+            <modules:BoardModule Grid.Row="0" />
+
+            <!-- Tile control module -->
+            <modules:BottomControlModule Grid.Row="1" />
+        </Grid>
     </Grid>
 </UserControl>

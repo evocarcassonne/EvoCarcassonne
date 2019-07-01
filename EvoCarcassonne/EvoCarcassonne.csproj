@@ -103,9 +103,16 @@
     <Compile Include="Backend\Speciality.cs" />
     <Compile Include="Backend\ILandscape.cs" />
     <Compile Include="Backend\Tile.cs" />
+    <Compile Include="Views\Modules\PlayerListModule.xaml.cs">
+      <DependentUpon>PlayerListModule.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PlayerEditorView.xaml.cs">
       <DependentUpon>PlayerEditorView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\PlayerListViewStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\SvgDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,6 +134,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Modules\BottomControlModule.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Modules\PlayerListModule.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
