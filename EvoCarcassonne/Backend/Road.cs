@@ -11,7 +11,7 @@ namespace EvoCarcassonne.Backend
         private bool Gameover { get; set; }
         private bool IsRoadFinished { get; set; } = true;
 
-        private Utils _utils;
+        private Utils Utils = null;
 
         private CardinalDirection _whereToGoAfterEndOfRoadFound;
        
@@ -23,7 +23,7 @@ namespace EvoCarcassonne.Backend
 
         public void calculate(BoardTile currentTile, bool gameover, Utils utils)
         {
-            _utils = utils;
+            Utils = utils;
             int result = 0;
             Gameover = gameover;
             FirstTile = currentTile;
@@ -131,8 +131,8 @@ namespace EvoCarcassonne.Backend
         {
             Console.WriteLine(currentTile);
             int result = 1;
-            Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = _utils.GetSurroundingTiles(currentTile);
-            BoardTile neighborTile = _utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
+            Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
+            BoardTile neighborTile = Utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
             
             for (int i = 0; i < 4; i++)
             {
@@ -151,12 +151,12 @@ namespace EvoCarcassonne.Backend
 
             if (IsEndOfRoad(neighborTile) || neighborTile.Coordinates.Equals(FirstTile.Coordinates))
             {
-                CheckFigureOnTile(neighborTile, (int)_utils.GetOppositeDirection(whereToGo));
+                CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
                 LastTile = neighborTile;
                 Console.WriteLine(neighborTile);
                 return result;
             }
-            return SearchInTilesSides(result, neighborTile, (int)_utils.GetOppositeDirection(whereToGo));
+            return SearchInTilesSides(result, neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
         }
 
         public override bool Equals(object obj)
@@ -171,6 +171,10 @@ namespace EvoCarcassonne.Backend
         /// <param name="onlySideToCheck">The side of tile to be examined</param>
         private void CheckFigureOnTile(BoardTile currentTile, int onlySideToCheck)
         {
+            if (currentTile.BackendTile.CenterFigure != null)
+            {
+                FiguresOnTiles.Add(currentTile.BackendTile.CenterFigure);
+            }
             if (currentTile.BackendTile.Directions[onlySideToCheck].Figure != null)
             {
                 Console.WriteLine(@"Ezt adom hozzá:    " + currentTile.BackendTile.Directions[onlySideToCheck].Figure.Owner.Name);
@@ -206,16 +210,16 @@ namespace EvoCarcassonne.Backend
         /// <returns>The end of road tile found in the given direction. Null if there is no end of road tile</returns>
         private BoardTile SearchEndOfRoadTileInGivenDirection(BoardTile currentTile, CardinalDirection whereToGo)
         {
-            BoardTile neighborTile = _utils.GetNeighborTile(_utils.GetSurroundingTiles(currentTile), whereToGo);
+            BoardTile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
             if (neighborTile == null || IsEndOfRoad(neighborTile) || FirstTile.Coordinates.Equals(neighborTile.Coordinates))
             {
-                _whereToGoAfterEndOfRoadFound = _utils.GetOppositeDirection(whereToGo);
+                _whereToGoAfterEndOfRoadFound = Utils.GetOppositeDirection(whereToGo);
                 return neighborTile;
             }
 
             for (var i = 0; i < 4; i++)
             {
-                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)_utils.GetOppositeDirection(whereToGo))
+                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
                 {
                     return SearchEndOfRoadTileInGivenDirection(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i));
                 }
@@ -265,7 +269,7 @@ namespace EvoCarcassonne.Backend
 
             if (players.Count!=0)
             {
-                playersToGetPoints.Add(players[maxIndex]);
+                playersToGetPoints.Add(players[maxIndex]);   
             }
             for (int i = 0; i < points.Count; i++)
             {
@@ -276,15 +280,14 @@ namespace EvoCarcassonne.Backend
             }
             foreach (var i in playersToGetPoints)
             {
-                i.Points += result;
+                i.Points += result / playersToGetPoints.Count;
             }
         }
         private void RemoveFiguresFromFinishedRoad(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
-            BoardTile neighborTile = _utils.GetNeighborTile(_utils.GetSurroundingTiles(currentTile), whereToGo);
+            BoardTile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
             if (firstCall)
             {
-                _utils.GiveBackFigureToOwner(currentTile.BackendTile.Directions[(int)whereToGo].Figure);
                 currentTile.BackendTile.Directions[(int)whereToGo].Figure = null;
             }
 
@@ -294,22 +297,20 @@ namespace EvoCarcassonne.Backend
             }
             if (IsEndOfRoad(neighborTile) || neighborTile.Coordinates.Equals(FirstTile.Coordinates))
             {
-                _utils.GiveBackFigureToOwner(neighborTile.BackendTile.Directions[(int)_utils.GetOppositeDirection(whereToGo)].Figure);
-                neighborTile.BackendTile.Directions[(int)_utils.GetOppositeDirection(whereToGo)].Figure = null;
+                neighborTile.BackendTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure = null;
                 return;
             }
             for (int i = 0; i < 4; i++)
             {
                 if (neighborTile.BackendTile.Directions[i].Figure != null && neighborTile.BackendTile.Directions[i].Landscape is Road)
                 {
-                    _utils.GiveBackFigureToOwner( neighborTile.BackendTile.Directions[i].Figure);
                     neighborTile.BackendTile.Directions[i].Figure = null;
                 }
             }
             
             for (int i = 0; i < 4; i++)
             {
-                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)_utils.GetOppositeDirection(whereToGo))
+                if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
                 {
                     RemoveFiguresFromFinishedRoad(neighborTile, (CardinalDirection)i, false);
                     break;

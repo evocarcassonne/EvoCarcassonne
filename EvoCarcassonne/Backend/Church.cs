@@ -99,7 +99,6 @@ namespace EvoCarcassonne.Backend
                     if (churchTile.CenterFigure != null)
                     {
                         churchTile.CenterFigure.Owner.Points += 9;
-                        utils.GiveBackFigureToOwner(churchTile.CenterFigure);
                         churchTile.CenterFigure = null;
                     }
                 }

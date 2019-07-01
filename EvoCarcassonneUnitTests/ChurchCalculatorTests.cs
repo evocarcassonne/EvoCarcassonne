@@ -23,12 +23,10 @@ namespace EvoCarcassonneUnitTests
         private BoardTile boardTile9 = new BoardTile();
         private MainController _mainController = new MainController();
         private Player player = new Player("Krisztian", Brushes.Red);
-        private Utils _utils;
         
         [TestInitialize]
         public void Init()
         {
-            _utils = new Utils(_mainController);
             IEnumerable<Player> players = new List<Player>();
             players.Append(player);
             foreach (var VARIABLE in players)
@@ -92,7 +90,7 @@ namespace EvoCarcassonneUnitTests
         public void ChurchCalculate_FinishedChurchNotGameover_ShouldReturn_9()
         {
             var church = (Church)boardTile5.BackendTile;
-            church.calculate(boardTile5, false, _utils);
+            church.calculate(boardTile5, false, _mainController.Utils);
             Assert.AreEqual(9, player.BackendOwner.Points);
         }
         
@@ -105,7 +103,7 @@ namespace EvoCarcassonneUnitTests
             _mainController.PlacedBoardTiles.RemoveAndGet(6);
             _mainController.PlacedBoardTiles.RemoveAndGet(5);
             _mainController.PlacedBoardTiles.RemoveAndGet(3);
-            church.calculate(boardTile5, true, _utils);
+            church.calculate(boardTile5, true, _mainController.Utils);
             Assert.AreEqual(3, player.BackendOwner.Points);
         }
         
@@ -114,7 +112,7 @@ namespace EvoCarcassonneUnitTests
         {
             var church = (Church)boardTile5.BackendTile;
             _mainController.PlacedBoardTiles.RemoveAndGet(8);
-            church.calculate(boardTile5, false, _utils);
+            church.calculate(boardTile5, false, _mainController.Utils);
             Assert.AreEqual(0, player.BackendOwner.Points);
         }
     }

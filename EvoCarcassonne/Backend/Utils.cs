@@ -128,20 +128,5 @@ namespace EvoCarcassonne.Backend
             return currentTile.Coordinates.X + diffX == neighborTile.Coordinates.X &&
                 currentTile.Coordinates.Y + diffY == neighborTile.Coordinates.Y;
         }
-
-        public void GiveBackFigureToOwner(IFigure figure)
-        {
-            if (figure != null)
-            {
-                foreach (var player in _mainController.Players)
-                {
-                    if (player.BackendOwner.Equals(figure.Owner))
-                    {
-                        player.Figures.Add(new Figure(figure.Owner));
-                    }
-                }
-                
-            }
-        }
     }
 }

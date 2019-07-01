@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using EvoCarcassonne.Backend;
 using EvoCarcassonne.Models;
 using Newtonsoft.Json;
@@ -23,13 +23,8 @@ namespace EvoCarcassonne.ViewModels
         public ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
         public ObservableCollection<BoardTile> BoardTiles { get; set; }
         public ObservableCollection<BoardTile> TileStack { get; set; }
-
-        /// <summary>
-        /// Contains the players
-        /// </summary>
-        public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
-
-        private Utils Utils { get; set; }
+        
+        public Utils Utils { get; set; }
 
         /// <summary>
         /// Gets or sets the current round number
@@ -67,6 +62,9 @@ namespace EvoCarcassonne.ViewModels
                 }
             }
         }
+
+        // The players
+        public ObservableCollection<Player> Players = new ObservableCollection<Player>();
 
         /// <summary>
         /// The current player
@@ -109,8 +107,7 @@ namespace EvoCarcassonne.ViewModels
         private bool _tileIsDown;
         private bool _hasCurrentTile;
         private bool _alreadyCalculated;
-        private int _currentSideForFigure = -1;
-        private bool _figureDown = false;
+
         #endregion
 
         #region Commands
@@ -256,7 +253,6 @@ namespace EvoCarcassonne.ViewModels
             PlacedBoardTiles.Last().CanPlaceFigure = false;
 
             CallCalculate();
-            _figureDown = false;
             CurrentRound++;
             CurrentPlayer = Players[(Players.IndexOf(CurrentPlayer) + 1) % Players.Count];
         }
@@ -350,6 +346,7 @@ namespace EvoCarcassonne.ViewModels
         /// <param name="button"></param>
         private void PlaceFigure(Button button)
         {
+           // Itt kéne kiszedni akkor a button-ból hogy hova kattintott stb, és aztán meghívni önmagát, csak a másik paraméterlistával.
            var directionIndex = int.Parse(button.Tag.ToString());
            var currentTile = PlacedBoardTiles.Last();
            PlaceFigure(currentTile, directionIndex);
@@ -362,69 +359,45 @@ namespace EvoCarcassonne.ViewModels
         /// <param name="side">Which side of tile should be the figure placed</param>
         private void PlaceFigure(BoardTile currentTile, int side)
         {
-            if (_figureDown)
+            var playerFigure = CurrentPlayer.Figures.RemoveAndGet(0);
+
+            if (side == 4 && currentTile.BackendTile is Church church)
             {
-                _figureDown = false;
-                _currentSideForFigure = -1;
-
-                if (side == 4 && currentTile.BackendTile is Church)
-                {
-                    currentTile.BackendTile.CenterFigure = null;
-                }
-                else
-                {
-                    currentTile.BackendTile.Directions[side].Figure = null;
-                }
-
-                Utils.GiveBackFigureToOwner(new Figure(currentTile.Player.BackendOwner));
+                church.CenterFigure = playerFigure;
+                currentTile.BackendTile = church;
             }
             else
             {
-                var playerFigure = CurrentPlayer.Figures.RemoveAndGet(0);
-                if (side == 4 && currentTile.BackendTile is Church)
-                {
-                    currentTile.BackendTile.CenterFigure = playerFigure;
-                }
-                else
-                {
-                    currentTile.BackendTile.Directions[side].Figure = playerFigure;
-                }
-
-                _figureDown = true;
-                _currentSideForFigure = side;
+                currentTile.BackendTile.Directions[side].Figure = playerFigure;
             }
         }
         
         private bool CanPlaceFigure(Button button)
         {
-            var directionIndex = int.Parse(button.Tag.ToString());
-            var tile = PlacedBoardTiles.Last();
-            
-            if (_figureDown)
+            if (CurrentPlayer.Figures.Count == 0)
             {
-                return directionIndex == _currentSideForFigure;
-            }
-            else{
-                if (CurrentPlayer.Figures.Count == 0)
-                {
-                    return false;
-                }
-                if (tile.CanPlaceFigure)
-                {
-                    if (directionIndex == 4)
-                    {
-                        if (tile.BackendTile is Church backendTile)
-                        {
-                            return backendTile.CenterFigure == null;
-                        }
-
-                        return false;
-                    }
-
-                    return tile.BackendTile.Directions[directionIndex].Figure == null;
-                }
                 return false;
             }
+
+            var directionIndex = int.Parse(button.Tag.ToString());
+
+            var tile = PlacedBoardTiles.Last();
+            if (tile.CanPlaceFigure)
+            {
+                if (directionIndex == 4)
+                {
+                    if (tile.BackendTile is Church backendTile)
+                    {
+                        return backendTile.CenterFigure == null;
+                    }
+
+                    return false;
+                }
+
+                return tile.BackendTile.Directions[directionIndex].Figure == null;
+            }
+
+            return false;
         }
         #endregion
 

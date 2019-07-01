@@ -1,4 +1,6 @@
-﻿namespace EvoCarcassonne.Backend
+﻿using System;
+
+namespace EvoCarcassonne.Backend
 {
     public interface IOwner
     {
