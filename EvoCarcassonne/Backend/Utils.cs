@@ -123,7 +123,7 @@ namespace EvoCarcassonne.Backend
             return null;
         }
 
-        private  bool IsOnTheGivenSide(BoardTile currentTile, BoardTile neighborTile, int diffX, int diffY)
+        private bool IsOnTheGivenSide(BoardTile currentTile, BoardTile neighborTile, int diffX, int diffY)
         {
             return currentTile.Coordinates.X + diffX == neighborTile.Coordinates.X &&
                 currentTile.Coordinates.Y + diffY == neighborTile.Coordinates.Y;
@@ -140,7 +140,53 @@ namespace EvoCarcassonne.Backend
                         player.Figures.Add(new Figure(figure.Owner));
                     }
                 }
-                
+            }
+        }
+        
+        public void DistributePoints(int result, List<IFigure> FiguresOnTiles)
+        {
+            var points = new List<int>();
+            var players = new List<IOwner>();
+            var playersToGetPoints = new List<IOwner>();
+            foreach (var i in FiguresOnTiles)
+            {
+                if (!players.Contains(i.Owner))
+                {
+                    players.Add(i.Owner);
+                }
+            }
+            int maxIndex = 0;
+            for (int i = 0; i < players.Count; i++)
+            {
+                int currentCount = 0;
+                for (int j = 0; j < FiguresOnTiles.Count; j++)
+                {
+                    if (players[i].Equals(FiguresOnTiles[j].Owner))
+                    {
+                        currentCount++;
+                    }
+                }
+                points.Add(currentCount);
+                if (points[i] > points[maxIndex])
+                {
+                    maxIndex = i;
+                }
+            }
+
+            if (players.Count!=0)
+            {
+                playersToGetPoints.Add(players[maxIndex]);
+            }
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i] == points[maxIndex] && i != maxIndex)
+                {
+                    playersToGetPoints.Add(players[i]);
+                }
+            }
+            foreach (var i in playersToGetPoints)
+            {
+                i.Points += result;
             }
         }
     }

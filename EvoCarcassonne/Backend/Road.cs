@@ -51,7 +51,7 @@ namespace EvoCarcassonne.Backend
                         {
                             RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection)i, true);
                         }
-                        DistributePoints(result);
+                        _utils.DistributePoints(result, FiguresOnTiles);
                         result = 0;
                         FiguresOnTiles = new List<IFigure>();
                     }
@@ -60,7 +60,7 @@ namespace EvoCarcassonne.Backend
                 {
                     result += 1;
                 }
-                DistributePoints(result);
+                _utils.DistributePoints(result, FiguresOnTiles);
             }
             else
             {
@@ -84,7 +84,7 @@ namespace EvoCarcassonne.Backend
                             RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection) i, true);
                         }
                         IsRoadFinished = true;
-                        DistributePoints(result);
+                        _utils.DistributePoints(result, FiguresOnTiles);
                         LastTile = null;
                         FiguresOnTiles = new List<IFigure>();
                         result = 0;
@@ -110,7 +110,7 @@ namespace EvoCarcassonne.Backend
                         {
                             RemoveFiguresFromFinishedRoad(FirstTile, _whereToGoAfterEndOfRoadFound, true);
                         }
-                        DistributePoints(result);
+                        _utils.DistributePoints(result, FiguresOnTiles);
                         break;
                     }   
                 }
@@ -233,52 +233,6 @@ namespace EvoCarcassonne.Backend
             return currentTile.BackendTile.Speciality.Contains(Speciality.EndOfRoad);
         }
         
-        private void DistributePoints(int result)
-        {
-            var points = new List<int>();
-            var players = new List<IOwner>();
-            var playersToGetPoints = new List<IOwner>();
-            foreach (var i in FiguresOnTiles)
-            {
-                if (!players.Contains(i.Owner))
-                {
-                    players.Add(i.Owner);
-                }
-            }
-            int maxIndex = 0;
-            for (int i = 0; i < players.Count; i++)
-            {
-                int currentCount = 0;
-                for (int j = 0; j < FiguresOnTiles.Count; j++)
-                {
-                    if (players[i].Equals(FiguresOnTiles[j].Owner))
-                    {
-                        currentCount++;
-                    }
-                }
-                points.Add(currentCount);
-                if (points[i] > points[maxIndex])
-                {
-                    maxIndex = i;
-                }
-            }
-
-            if (players.Count!=0)
-            {
-                playersToGetPoints.Add(players[maxIndex]);
-            }
-            for (int i = 0; i < points.Count; i++)
-            {
-                if (points[i] == points[maxIndex] && i != maxIndex)
-                {
-                    playersToGetPoints.Add(players[i]);
-                }
-            }
-            foreach (var i in playersToGetPoints)
-            {
-                i.Points += result;
-            }
-        }
         private void RemoveFiguresFromFinishedRoad(BoardTile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             BoardTile neighborTile = _utils.GetNeighborTile(_utils.GetSurroundingTiles(currentTile), whereToGo);
