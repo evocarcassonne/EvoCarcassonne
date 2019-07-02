@@ -187,31 +187,5 @@
   <ItemGroup>
     <Resource Include="Resources\Fonts\Lindsay Becker Regular.ttf" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Tiles\S321014.png" />
-    <Resource Include="Resources\Tiles\T102020.png" />
-    <Resource Include="Resources\Tiles\T111113.png" />
-    <Resource Include="Resources\Tiles\T122021.png" />
-    <Resource Include="Resources\Tiles\T122123.png" />
-    <Resource Include="Resources\Tiles\T122221.png" />
-    <Resource Include="Resources\Tiles\T2001023.png" />
-    <Resource Include="Resources\Tiles\T202021.png" />
-    <Resource Include="Resources\Tiles\T220021.png" />
-    <Resource Include="Resources\Tiles\T221121.png" />
-    <Resource Include="Resources\Tiles\T222004.png" />
-    <Resource Include="Resources\Tiles\T2221213.png" />
-    <Resource Include="Resources\Tiles\T302024.png" />
-    <Resource Include="Resources\Tiles\T320020.png" />
-    <Resource Include="Resources\Tiles\T320114.png" />
-    <Resource Include="Resources\Tiles\T321104.png" />
-    <Resource Include="Resources\Tiles\T3211134.png" />
-    <Resource Include="Resources\Tiles\T321120.png" />
-    <Resource Include="Resources\Tiles\T322020.png" />
-    <Resource Include="Resources\Tiles\T400002.png" />
-    <Resource Include="Resources\Tiles\T401113.png" />
-    <Resource Include="Resources\Tiles\T520004.png" />
-    <Resource Include="Resources\Tiles\T810100.png" />
-    <Resource Include="Resources\Tiles\T900110.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

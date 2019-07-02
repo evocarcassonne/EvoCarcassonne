@@ -3,20 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using EvoCarcassonne.Models;
-using EvoCarcassonne.Backend;
 
 namespace EvoCarcassonne.Backend
 {
     /*
      * file name format: tileLevel; count; landscape[North,East,South,West]; speciality... .png
      *
-     * tileLevel: 0 - normal tile, S - starter tile
+     * tileLevel: T - normal tile, S - starter tile
      * count: 1 - 9
      * landscape: 0 - field, 1 - road, 2 - castle, 3 - church
      * speciality: 0 - none, 1 - shield, 2 - colostor, 3 - endOfRoad, 4 - endOfCastle
