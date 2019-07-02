@@ -441,9 +441,9 @@ namespace EvoCarcassonneUnitTests
             Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
             Console.WriteLine(@"Ennyi pontom van:    " + Player2.BackendOwner.Points);
             Console.WriteLine(@"Ennyi pontom van:    " + Player3.BackendOwner.Points);
-            Assert.IsTrue(Player1.BackendOwner.Points == 2);
-            Assert.IsTrue(Player2.BackendOwner.Points == 2);
-            Assert.IsTrue(Player3.BackendOwner.Points == 2);
+            Assert.IsTrue(Player1.BackendOwner.Points == 6);
+            Assert.IsTrue(Player2.BackendOwner.Points == 6);
+            Assert.IsTrue(Player3.BackendOwner.Points == 6);
         }
         
         [TestMethod]
@@ -454,8 +454,8 @@ namespace EvoCarcassonneUnitTests
             boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false, _utils);
             Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
             Console.WriteLine(@"Ennyi pontom van:    " + Player2.BackendOwner.Points);
-            Assert.IsTrue(Player1.BackendOwner.Points == 3);
-            Assert.IsTrue(Player2.BackendOwner.Points == 3);
+            Assert.IsTrue(Player1.BackendOwner.Points == 6);
+            Assert.IsTrue(Player2.BackendOwner.Points == 6);
         }
 
         
@@ -482,8 +482,8 @@ namespace EvoCarcassonneUnitTests
             boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  false, _utils);
             Console.WriteLine(@"Ennyi pontom van:    " + Player1.BackendOwner.Points);
             Console.WriteLine(@"Ennyi pontom van:    " + Player2.BackendOwner.Points);
-            Assert.IsTrue(Player1.BackendOwner.Points == 3);
-            Assert.IsTrue(Player2.BackendOwner.Points == 3);
+            Assert.IsTrue(Player1.BackendOwner.Points == 6);
+            Assert.IsTrue(Player2.BackendOwner.Points == 6);
         }
         
         [TestMethod]
@@ -497,8 +497,8 @@ namespace EvoCarcassonneUnitTests
             boardTile7.BackendTile.Directions[1].Landscape.calculate(boardTile7,  true, _utils);
             Console.WriteLine(@"Player1 pont:    " + Player1.BackendOwner.Points);
             Console.WriteLine(@"Player2 pont:    " + Player2.BackendOwner.Points);
-            Assert.IsTrue(Player1.BackendOwner.Points == 2);
-            Assert.IsTrue(Player2.BackendOwner.Points == 2);
+            Assert.IsTrue(Player1.BackendOwner.Points == 4);
+            Assert.IsTrue(Player2.BackendOwner.Points == 4);
         }
         
         [TestMethod]
