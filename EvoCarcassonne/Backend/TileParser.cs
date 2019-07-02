@@ -2,10 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Windows.Media.Imaging;
 using EvoCarcassonne.Models;
+using EvoCarcassonne.Backend;
 
 namespace EvoCarcassonne.Backend
 {
@@ -18,35 +22,46 @@ namespace EvoCarcassonne.Backend
      * speciality: 0 - none, 1 - shield, 2 - colostor, 3 - endOfRoad, 4 - endOfCastle
      */
 
-    public static class TileParser
+    public class TileParser
     {
-        public static ObservableCollection<BoardTile> GetTileStack(Utils utils)
+        public ObservableCollection<BoardTile> TileStack { get; }
+
+        private Utils Utils { get; set; }
+
+        public TileParser(Utils utils)
         {
+            Utils = utils;
+            TileStack = GetTileStack();
+        }
+
+        private ObservableCollection<BoardTile> GetTileStack()
+        {
+            var tileDictionary = GetTileDictionary();
             var tileStack = new ObservableCollection<BoardTile>();
-            var tileResourcePathList = utils.GetResourceNames(@"tiles");
 
-            AddTile(tileStack, tileResourcePathList.Find(t => Path.GetFileNameWithoutExtension(t).StartsWith("s")));
+            AddTile(tileStack, tileDictionary.FirstOrDefault(entry => entry.Key.StartsWith("S")));
 
-            foreach (var resourcePath in tileResourcePathList)
+            foreach (var entry in tileDictionary)
             {
-                var tileName = Path.GetFileNameWithoutExtension(resourcePath);
+                var tileName = entry.Key;
 
                 for (var i = 0; i < ParseTileCount(tileName); i++)
                 {
-                    AddTile(tileStack, resourcePath);
+                    AddTile(tileStack, entry);
                 }
+            }
+
+            if (tileStack.Count != 72)
+            {
+                throw new InvalidOperationException();
             }
 
             return tileStack;
         }
 
-        #region Private methods
-
-       
-        
-        private static void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
+        private void AddTile(ICollection<BoardTile> tileStack, KeyValuePair<string, BitmapImage> entry)
         {
-            var tileName = Path.GetFileNameWithoutExtension(resourcePath);
+            var tileName = entry.Key;
             var tileSpecialities = ParseTileSpecialities(tileName);
 
             ITile backendTile;
@@ -59,17 +74,17 @@ namespace EvoCarcassonne.Backend
                 backendTile = new Tile(ParseTileDirections(tileName), tileSpecialities);
             }
 
-            var tile = new BoardTile(0, null, null, resourcePath, backendTile);
+            var tile = new BoardTile(0, null, null, entry.Value, backendTile);
 
             tileStack.Add(tile);
         }
 
-        private static int ParseTileCount(string tileName)
+        private int ParseTileCount(string tileName)
         {
             return Convert.ToInt32(tileName[1].ToString());
         }
 
-        private static List<IDirection> ParseTileDirections(string tileName)
+        private List<IDirection> ParseTileDirections(string tileName)
         {
             var directions = new List<IDirection>();
 
@@ -83,7 +98,7 @@ namespace EvoCarcassonne.Backend
             return directions;
         }
 
-        private static List<Speciality> ParseTileSpecialities(string tileName)
+        private List<Speciality> ParseTileSpecialities(string tileName)
         {
             var specialities = new List<Speciality>();
             var specialitySubstring = tileName.Substring(6);
@@ -117,7 +132,7 @@ namespace EvoCarcassonne.Backend
             return specialities;
         }
 
-        private static ILandscape ParseLandscape(char landscapeCharacter)
+        private ILandscape ParseLandscape(char landscapeCharacter)
         {
             ILandscape landscape;
 
@@ -132,15 +147,29 @@ namespace EvoCarcassonne.Backend
                 case '2':
                     landscape = new Castle();
                     break;
-                /* case '3':
-                    landscape = new Church();
-                    break; */
             }
 
             return landscape;
         }
 
-        #endregion
+        private Dictionary<string, BitmapImage> GetTileDictionary()
+        {
+            var output = new Dictionary<string, BitmapImage>();
 
+            using (var resourceSet = Resources.Tiles.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, true))
+            {
+                foreach (DictionaryEntry entry in resourceSet)
+                {
+                    output.Add((string) entry.Key, ((Bitmap)entry.Value).ToBitmapImage());
+                }
+            }
+
+            if (output.Count != 24)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return output;
+        }
     }
 }
