@@ -5,12 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="100" d:DesignWidth="800" Height="100">
+             d:DesignWidth="800" MaxHeight="320">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Resources/SvgDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="RotateButton" TargetType="Button">
+                <Setter Property="Width" Value="35" />
+                <Setter Property="Height" Value="35" />
+                <Setter Property="Margin" Value="35,0" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -24,17 +32,14 @@
         </Grid.ColumnDefinitions>
 
         <Button Content="Lapkérés" Command="{Binding GetNewTileCommand}" Width="100" Height="35" Grid.Column="0" />
-        <Button CommandParameter="-90" Command="{Binding Path=RotateLeftCommand}" Width="35" Height="35"
-                Grid.Column="1"
-                Background="Transparent" BorderBrush="Transparent" Margin="35,0">
+        <Button Command="{Binding Path=RotateLeftCommand}" Grid.Column="1" Style="{StaticResource RotateButton}">
             <Viewbox Width="24" Height="24">
                 <Canvas Width="24" Height="24">
-                    <Path Data="{StaticResource RotateLeftSvg}" Fill="Black" />
+                    <Path Data="{StaticResource RotateLeftSvg}" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
                 </Canvas>
             </Viewbox>
         </Button>
-        <Button x:Name="CurrentTileBtn" Content="" Grid.Column="2"
-                Height="{Binding ElementName=CurrentTileBtn,Path=ActualWidth}" MaxWidth="90" MaxHeight="90">
+        <Button x:Name="CurrentTileBtn" Grid.Column="2" Height="{Binding ElementName=CurrentTileBtn,Path=ActualWidth}" MaxWidth="300" MaxHeight="300" Margin="10">
             <Button.Background>
                 <ImageBrush ImageSource="{Binding CurrentBoardTile.Image}" Stretch="UniformToFill">
                     <ImageBrush.RelativeTransform>
@@ -65,18 +70,18 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Button CommandParameter="90" Command="{Binding Path=RotateRightCommand}" Width="35" Height="35"
-                Grid.Column="3"
-                Background="Transparent" BorderBrush="Transparent" Margin="35,0">
+        <Button Command="{Binding Path=RotateRightCommand}" Grid.Column="3" Style="{StaticResource RotateButton}">
             <Viewbox Width="24" Height="24">
                 <Canvas Width="24" Height="24">
-                    <Path Data="{StaticResource RotateRightSvg}" Fill="Black" />
+                    <Path Data="{StaticResource RotateRightSvg}" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
                 </Canvas>
             </Viewbox>
         </Button>
         <StackPanel Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-            <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Margin="0,0,15,0"/>
-            <Button Content="Vissza a menübe" Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.GotoMenuCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Width="100" Height="35" />
+            <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Margin="0,0,15,0" />
+            <Button Content="Vissza a menübe"
+                    Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.GotoMenuCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Width="100" Height="35" />
         </StackPanel>
     </Grid>
 </UserControl>

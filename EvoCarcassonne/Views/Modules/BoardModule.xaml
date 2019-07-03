@@ -4,8 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:evoCarcassonne="clr-namespace:EvoCarcassonne"
-             mc:Ignorable="d"
-             d:DesignHeight="990" d:DesignWidth="990" MaxHeight="990" MaxWidth="990">
+             mc:Ignorable="d" MaxWidth="3000" MaxHeight="3000">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,13 +13,17 @@
             <evoCarcassonne:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <evoCarcassonne:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <Style TargetType="Button" x:Key="FigurePlaceButton">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderThickness" Value="2" />
                 <Style.Triggers>
                     <Trigger Property="IsEnabled" Value="False">
                         <Setter Property="Visibility" Value="Collapsed" />
                     </Trigger>
                 </Style.Triggers>
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="Command"
+                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}" />
+                <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}}" />
+                <Setter Property="BorderBrush" Value="{Binding Path=Player.Color}" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -51,31 +54,11 @@
                                 <ColumnDefinition Width="0.5*" />
                             </Grid.ColumnDefinitions>
 
-                            <Button BorderBrush="{Binding Path=Player.Color}"
-                                    Style="{StaticResource FigurePlaceButton}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="0" x:Name="FigurePlaceNorth" Grid.Row="0" Grid.Column="1" />
-                            <Button BorderBrush="{Binding Path=Player.Color}"
-                                    Style="{StaticResource FigurePlaceButton}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="1" x:Name="FigurePlaceEast" Grid.Row="1" Grid.Column="2" />
-                            <Button BorderBrush="{Binding Path=Player.Color}"
-                                    Style="{StaticResource FigurePlaceButton}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="2" x:Name="FigurePlaceSouth" Grid.Row="2" Grid.Column="1" />
-                            <Button BorderBrush="{Binding Path=Player.Color}"
-                                    Style="{StaticResource FigurePlaceButton}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="3" x:Name="FigurePlaceWest" Grid.Row="1" Grid.Column="0" />
-                            <Button BorderBrush="{Binding Path=Player.Color}"
-                                    Style="{StaticResource FigurePlaceButton}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.PlaceFigureCommand}"
-                                    Tag="4" x:Name="FigurePlaceCenter" Grid.Row="1" Grid.Column="1" />
+                            <Button Style="{StaticResource FigurePlaceButton}" Tag="0" Grid.Row="0" Grid.Column="1" />
+                            <Button Style="{StaticResource FigurePlaceButton}" Tag="1" Grid.Row="1" Grid.Column="2" />
+                            <Button Style="{StaticResource FigurePlaceButton}" Tag="2" Grid.Row="2" Grid.Column="1" />
+                            <Button Style="{StaticResource FigurePlaceButton}" Tag="3" Grid.Row="1" Grid.Column="0" />
+                            <Button Style="{StaticResource FigurePlaceButton}" Tag="4" Grid.Row="1" Grid.Column="1" />
                         </Grid>
 
                         <!-- Figure images -->
