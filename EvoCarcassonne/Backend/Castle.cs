@@ -12,10 +12,16 @@ namespace EvoCarcassonne.Backend
         private int Points { get; set; }
         private BoardTile CurrentBoardTile { get; set; }
         private List<BoardTile> BoardTileList { get; set; } = new List<BoardTile>();
-        private int Count { get; set; } = 0;
         private bool firstCall { get; set; } = true;
         private List<IFigure> FiguresOnTiles { get; set; } = new List<IFigure>();
         private int DeleteDirection { get; set; }
+        private BoardTile StarterTile { get; set; } = null;
+        private BoardTile LastTile { get; set; } = null;
+        private CardinalDirection StarterWhereToGo { get; set; }
+        private bool DeleteFigures { get; set; } = false;
+        private List<BoardTile> PlacedCastleTiles { get; set; } = new List<BoardTile>();
+        private bool Gameover { get; set; }
+
         public int calculate()
         {
             throw new System.NotImplementedException();
@@ -27,91 +33,142 @@ namespace EvoCarcassonne.Backend
 
         public void calculate(BoardTile currentTile, bool gameover)
         {
-            // Check if the castle is not finished         
-            if (!FinishedCastle)
-                return;
+            Gameover = gameover;
+            PlacedCastleTiles.Clear();
 
-            // Get the CurrentTile's coordinate
-            var x = currentTile.Coordinates.X;
-            var y = currentTile.Coordinates.Y;
-            var index = x + (y * 10);
+            int result = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if (CheckEndOfCastle(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Castle)
+                {
+                    firstCall = true;
+                    DeleteFigures = false;
+                    result += CalculateWithDirections(currentTile, (CardinalDirection)i);
+
+                    firstCall = true;
+                    DistributePoints(result);
+                    FiguresOnTiles = new List<IFigure>();
+                    if (result > 0)
+                    {
+                        DeleteFigures = true;
+                        CalculateWithDirections(currentTile, (CardinalDirection)i);
+                    }
+                    result = 0;
+
+                }
+                else if (!CheckEndOfCastle(currentTile))
+                {
+
+                    firstCall = true;
+                    result += CalculateCastle(currentTile, false);
+
+                    firstCall = true;
+                    DistributePoints(result);
+                    FiguresOnTiles = new List<IFigure>();
+                    if (result > 0)
+                    {
+                        DeleteFigures = true;
+                        CalculateCastle(FirstTile, false);
+                    }
+                    result = 0;
+
+                    break;
+                }
+            }
+        }
 
 
-
+        private int CalculateWithDirections(BoardTile currentTile, CardinalDirection whereToGo)
+        {
             // If it is the first tile, reset the properties...
             if (firstCall)
             {
-                firstCall = false;
                 FirstTile = currentTile;
                 CurrentBoardTile = currentTile;
                 FirstTile = currentTile;
                 Points = 0;
                 FinishedCastle = true;
                 BoardTileList.Clear();
-                Count = 0;
                 FiguresOnTiles.Clear();
+                StarterWhereToGo = whereToGo;
+            }
 
-            }           
+
+            // Check if the castle is not finished         
+            if (!FinishedCastle && !Gameover)
+                return 0;
+
+            // Get the CurrentTile's coordinate
+            var x = currentTile.Coordinates.X;
+            var y = currentTile.Coordinates.Y;
+            var index = x + (y * 10);
+
+            if (x < 0 || y < 0 || x > 9 || y > 9)
+                return 0;
+
 
 
             if (IsChecked(CurrentBoardTile, BoardTileList))
-                return;
+                return 0;
 
 
             if (CurrentBoardTile.BackendTile.Directions == null)
             {
-                
-                if (CheckEndOfCastle(FirstTile) && CountEndOfCastleSides(FirstTile) == 2 && BoardTileList.Count > 2 && Count == 0)
-                {
+                if (!Gameover)
                     FinishedCastle = false;
-                    return;
-                }
-            }
-
-            // If it is an empty tile...
-            if (CurrentBoardTile.BackendTile.Directions == null)
-            {
-                // ... then check if it has double EndOfCastle sides
-                if (CheckEndOfCastle(FirstTile) && CountEndOfCastleSides(FirstTile) == 2 && Count == 0)
-                {
-                    Count++;
-                    FinishedCastle = true;
-                    return;
-                }
-                else
-                {
-                    FinishedCastle = false;
-                    return;
-                }
+                return 0;
             }
 
             // If it is an EndOfCastle tile and it isn't the first tile...
             if (CheckEndOfCastle(CurrentBoardTile) && FirstTile != CurrentBoardTile)
             {
-                if (CurrentBoardTile.BackendTile.Directions[getFromDirection(whereToGo)].Figure != null)
-                    FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[getFromDirection(whereToGo)].Figure);
+                if (CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
+                    FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure);
+
+                if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
+                    CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure = null;
 
                 Points++;
-                return;
+                return 0;
             }
 
-            
+
 
 
             for (int i = 0; i < 4; i++)
             {
                 if (CurrentBoardTile.BackendTile.Directions[i].Landscape is Castle)
                 {
-                    if (CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                    if (firstCall && i != (int)StarterWhereToGo)
                     {
-                        FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[i].Figure);
+                    }
+                    else
+                    {
+                        if (CurrentBoardTile == FirstTile && (int)StarterWhereToGo == getFromDirection((int)whereToGo) && !firstCall)
+                            return 0;
+
+                        if (CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                        {
+                            FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[i].Figure);
+                        }
+
+                        if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                            CurrentBoardTile.BackendTile.Directions[i].Figure = null;
+
+                        whereToGo = (CardinalDirection)i;
+
+                        BoardTileList.Add(CurrentBoardTile);
+                        PlacedCastleTiles.Add(CurrentBoardTile);
+                        firstCall = false;
+                        CurrentBoardTile = MainController.BoardTiles[GetIndex(i, index)];
+                        CalculateWithDirections(CurrentBoardTile, (CardinalDirection)i);
+                        CurrentBoardTile = currentTile;
+
+                        if (CurrentBoardTile == FirstTile)
+                            break;
                     }
 
-                    whereToGo = i;
-                    BoardTileList.Add(CurrentBoardTile);
-                    CurrentBoardTile = MainController.BoardTiles[GetIndex(i,index)];
-                    calculate(CurrentBoardTile, false);
-                    CurrentBoardTile = currentTile;
+
                 }
             }
 
@@ -121,29 +178,23 @@ namespace EvoCarcassonne.Backend
             else
                 Points = 0;
 
+            if (DeleteFigures)
+                Points = 0;
 
             if (FirstTile == CurrentBoardTile && Points == 1)
                 Points = 0;
 
-            if (CheckEndOfCastle(FirstTile) && CountEndOfCastleSides(FirstTile) == 2 && CurrentBoardTile == FirstTile && Count == 0 && FinishedCastle)
-                Points++;
 
-            if (FirstTile == CurrentBoardTile && FinishedCastle && Points != 0)
-                DistributePoints(Points);
-             
-
-           
-
-            return;
-        }      
+            return Points;
+        }
 
 
 
         private void DistributePoints(int result)
         {
-            var playerone = 0;
-            var playertwo = 0;
+            var points = new List<int>();
             var players = new List<IOwner>();
+            var playersToGetPoints = new List<IOwner>();
             foreach (var i in FiguresOnTiles)
             {
                 if (!players.Contains(i.Owner))
@@ -151,31 +202,39 @@ namespace EvoCarcassonne.Backend
                     players.Add(i.Owner);
                 }
             }
-
-            for (int j = 0; j < FiguresOnTiles.Count; j++)
+            int maxIndex = 0;
+            for (int i = 0; i < players.Count; i++)
             {
-                if (players[0].Equals(FiguresOnTiles[j].Owner))
+                int currentCount = 0;
+                for (int j = 0; j < FiguresOnTiles.Count; j++)
                 {
-                    playerone++;
+                    if (players[i].Equals(FiguresOnTiles[j].Owner))
+                    {
+                        currentCount++;
+                    }
                 }
-                else
+                points.Add(currentCount);
+                if (points[i] > points[maxIndex])
                 {
-                    playertwo++;
+                    maxIndex = i;
                 }
             }
 
-            if (playerone > playertwo)
-                players[0].Points += result;
-            else if (playerone == 0 && playertwo == 0)
-                return;
-            else if (playertwo > playerone)
-                players[1].Points += result;
-            else if (playertwo == playerone)
+            if (players.Count != 0)
             {
-                players[0].Points += (result / 2);
-                players[1].Points += (result / 2);
+                playersToGetPoints.Add(players[maxIndex]);
             }
-            
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i] == points[maxIndex] && i != maxIndex)
+                {
+                    playersToGetPoints.Add(players[i]);
+                }
+            }
+            foreach (var i in playersToGetPoints)
+            {
+                i.Points += result;
+            }
         }
 
 
@@ -219,24 +278,10 @@ namespace EvoCarcassonne.Backend
         }
 
 
-        private int CountEndOfCastleSides(BoardTile currentTile)
-        {
-            if (currentTile.BackendTile.Directions == null)
-                return 0;
-
-            var a = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                if (currentTile.BackendTile.Directions[i].Landscape is Castle)
-                    a++;
-            }
-            return a;
-        }
-
 
         private int GetIndex(int side, int index)
         {
-            switch(side)
+            switch (side)
             {
                 case 0:
                     return index - 10;
@@ -253,6 +298,105 @@ namespace EvoCarcassonne.Backend
         public override bool Equals(object obj)
         {
             return obj is Castle;
+        }
+
+        // If the current tile doesn't have endofcastle speciality 
+        private int CalculateCastle(BoardTile currentTile, bool gameover)
+        {
+            // Check if the castle is not finished         
+            if (!FinishedCastle && !Gameover)
+                return 0;
+
+            // Get the CurrentTile's coordinate
+            var x = currentTile.Coordinates.X;
+            var y = currentTile.Coordinates.Y;
+            var index = x + (y * 10);
+
+            if (x < 0 || y < 0 || x > 9 || y > 9)
+                return 0;
+
+
+            // If it is the first tile, reset the properties...
+            if (firstCall)
+            {
+                firstCall = false;
+                FirstTile = currentTile;
+                CurrentBoardTile = currentTile;
+                FirstTile = currentTile;
+                Points = 0;
+                FinishedCastle = true;
+                BoardTileList.Clear();
+                FiguresOnTiles.Clear();
+
+            }
+
+
+            if (IsChecked(CurrentBoardTile, BoardTileList))
+                return 0;
+
+
+            if (CurrentBoardTile.BackendTile.Directions == null)
+            {
+                if (!Gameover)
+                    FinishedCastle = false;
+
+                return 0;
+            }
+
+
+            // If it is an EndOfCastle tile and it isn't the first tile...
+            if (CheckEndOfCastle(CurrentBoardTile) && FirstTile != CurrentBoardTile)
+            {
+                if (CurrentBoardTile.BackendTile.Directions[getFromDirection(whereToGo)].Figure != null)
+                    FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[getFromDirection(whereToGo)].Figure);
+
+                if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
+                    CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure = null;
+
+                Points++;
+                return 0;
+            }
+
+
+
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (CurrentBoardTile.BackendTile.Directions[i].Landscape is Castle)
+                {
+                    if (CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                    {
+                        FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[i].Figure);
+                    }
+
+                    if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                        CurrentBoardTile.BackendTile.Directions[i].Figure = null;
+
+                    whereToGo = i;
+                    BoardTileList.Add(CurrentBoardTile);
+                    CurrentBoardTile = MainController.BoardTiles[GetIndex(i, index)];
+                    CalculateCastle(CurrentBoardTile, false);
+                    CurrentBoardTile = currentTile;
+                }
+            }
+
+
+            if (FinishedCastle)
+                Points++;
+            else
+                Points = 0;
+
+            if (DeleteFigures)
+                Points = 0;
+
+
+            if (FirstTile == CurrentBoardTile && Points == 1)
+                Points = 0;
+
+
+
+
+            return Points;
         }
     }
 }

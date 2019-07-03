@@ -272,10 +272,15 @@ namespace EvoCarcassonne.Controller
                 }
             }
 
-                var castle = new Castle();
-                castle.calculate(PlacedBoardTiles.Last(), false);
-
-
+            //Searching for castle sides, paying attention to be called only once
+            foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
+            {
+                if (i.Landscape is Castle)
+                {
+                    i.Landscape.calculate(PlacedBoardTiles.Last(), false);
+                    break;
+                }
+            }
             //Searching for road sides, paying attention to be called only once
             foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
             {
@@ -285,9 +290,6 @@ namespace EvoCarcassonne.Controller
                     break;
                 }
             }
-
-            // ITT KELL
-
            
 
             _alreadyCalculated = true;
