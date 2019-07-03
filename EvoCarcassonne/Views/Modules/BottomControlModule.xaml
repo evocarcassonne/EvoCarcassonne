@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignWidth="800" MaxHeight="320">
     <UserControl.Resources>
@@ -11,77 +12,62 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Resources/SvgDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <Style x:Key="RotateButton" TargetType="Button">
-                <Setter Property="Width" Value="35" />
-                <Setter Property="Height" Value="35" />
-                <Setter Property="Margin" Value="35,0" />
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderBrush" Value="Transparent" />
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition MaxWidth="100" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <materialDesign:Card Margin="-5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition MaxWidth="100" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Button Content="Lapkérés" Command="{Binding GetNewTileCommand}" Width="100" Height="35" Grid.Column="0" />
-        <Button Command="{Binding Path=RotateLeftCommand}" Grid.Column="1" Style="{StaticResource RotateButton}">
-            <Viewbox Width="24" Height="24">
-                <Canvas Width="24" Height="24">
-                    <Path Data="{StaticResource RotateLeftSvg}" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
-                </Canvas>
-            </Viewbox>
-        </Button>
-        <Button x:Name="CurrentTileBtn" Grid.Column="2" Height="{Binding ElementName=CurrentTileBtn,Path=ActualWidth}" MaxWidth="300" MaxHeight="300" Margin="10">
-            <Button.Background>
-                <ImageBrush ImageSource="{Binding CurrentBoardTile.Image}" Stretch="UniformToFill">
-                    <ImageBrush.RelativeTransform>
-                        <TransformGroup>
-                            <RotateTransform Angle="{Binding CurrentBoardTile.Angle}" CenterY="0.5" CenterX="0.5" />
-                        </TransformGroup>
-                    </ImageBrush.RelativeTransform>
-                </ImageBrush>
-            </Button.Background>
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="OverridesDefaultStyle" Value="True" />
-                    <Setter Property="Cursor" Value="Hand" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Border Background="{TemplateBinding Background}">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Opacity" Value="0.5" />
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Button.Style>
-        </Button>
-        <Button Command="{Binding Path=RotateRightCommand}" Grid.Column="3" Style="{StaticResource RotateButton}">
-            <Viewbox Width="24" Height="24">
-                <Canvas Width="24" Height="24">
-                    <Path Data="{StaticResource RotateRightSvg}" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
-                </Canvas>
-            </Viewbox>
-        </Button>
-        <StackPanel Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-            <Button Content="Kör vége" Command="{Binding EndTurnCommand}" Width="100" Height="35" Margin="0,0,15,0" />
-            <Button Content="Vissza a menübe"
+            <Button Width="100" Content="Lapkérés" Command="{Binding GetNewTileCommand}" HorizontalAlignment="Center" Grid.Column="0" />
+            <Button Height="35" Width="35" Margin="35,0"
+            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+            Grid.Column="1" 
+            Command="{Binding Path=RotateLeftCommand}">
+                <materialDesign:PackIcon
+                Kind="RotateLeft"
+                Height="24"
+                Width="24" />
+            </Button>
+
+            <materialDesign:Card Grid.Column="2" Margin="10" Padding="-0.25">
+                <Grid>
+                    <Image Panel.ZIndex="1" Source="{Binding CurrentBoardTile.Image}">
+                        <Image.LayoutTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="{Binding CurrentBoardTile.Angle}"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Image.LayoutTransform>
+                    </Image>
+                    <Image Panel.ZIndex="-1" Source="/EvoCarcassonne;component/Resources/backtile.png"></Image>
+                </Grid>
+            </materialDesign:Card>
+
+
+            <Button Margin="35,0"
+                Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                Grid.Column="3" 
+                Command="{Binding Path=RotateRightCommand}">
+                <materialDesign:PackIcon
+                Kind="RotateRight"
+                Height="24"
+                Width="24" />
+            </Button>
+            <StackPanel Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                <Button Width="100" Content="Kör vége" Command="{Binding EndTurnCommand}" HorizontalAlignment="Center" Margin="0,0,15,0" />
+                <Button Width="100" Content="Menü" Style="{StaticResource MaterialDesignFlatButton}"
                     Command="{Binding Path=DataContext.(viewModels:ApplicationViewModel.GotoMenuCommand), RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                    Width="100" Height="35" />
-        </StackPanel>
-    </Grid>
+                    HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </materialDesign:Card>
 </UserControl>
