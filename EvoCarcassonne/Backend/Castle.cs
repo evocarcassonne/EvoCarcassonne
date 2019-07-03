@@ -128,7 +128,7 @@ namespace EvoCarcassonne.Backend
                 if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
                     CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure = null;
 
-                Points++;
+                Points += 2;
                 return 0;
             }
 
@@ -174,7 +174,11 @@ namespace EvoCarcassonne.Backend
 
 
             if (FinishedCastle)
-                Points++;
+            {
+                Points += 2;
+                if (CheckShield(CurrentBoardTile))
+                    Points += 2;
+            }                
             else
                 Points = 0;
 
@@ -188,7 +192,16 @@ namespace EvoCarcassonne.Backend
             return Points;
         }
 
+        private bool CheckShield(BoardTile bt)
+        {
+            foreach (var item in bt.BackendTile.Speciality)
+            {
+                if (item == Speciality.Shield)
+                    return true;
+            }
 
+            return false;
+        }
 
         private void DistributePoints(int result)
         {
@@ -353,7 +366,7 @@ namespace EvoCarcassonne.Backend
                 if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
                     CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure = null;
 
-                Points++;
+                Points += 2;
                 return 0;
             }
 
@@ -382,7 +395,11 @@ namespace EvoCarcassonne.Backend
 
 
             if (FinishedCastle)
-                Points++;
+            {
+                Points += 2;
+                if (CheckShield(CurrentBoardTile))
+                    Points += 2;
+            }                
             else
                 Points = 0;
 
