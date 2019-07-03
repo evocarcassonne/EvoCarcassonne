@@ -5,6 +5,7 @@
              xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- ViewModel-View pairing -->
             <DataTemplate DataType="{x:Type viewModels:MenuViewModel}">
                 <views:MenuView />
             </DataTemplate>
@@ -15,6 +16,7 @@
                 <views:PlayerEditorView />
             </DataTemplate>
 
+            <!-- Material Design -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
