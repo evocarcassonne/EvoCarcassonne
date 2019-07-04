@@ -85,7 +85,7 @@ namespace EvoCarcassonne.Backend
         {
             var directions = new List<IDirection>();
 
-            foreach (var c in tileName.Substring(2,4))
+            foreach (var c in tileName.Substring(2, 4))
             {
                 var direction = new Direction(ParseLandscape(c), null);
 
@@ -118,9 +118,9 @@ namespace EvoCarcassonne.Backend
                     case '3':
                         speciality = Speciality.EndOfRoad;
                         break;
-                     case '4':
+                    case '4':
                         speciality = Speciality.EndOfCastle;
-                        break; 
+                        break;
                 }
 
                 specialities.Add(speciality);
@@ -153,12 +153,10 @@ namespace EvoCarcassonne.Backend
         {
             var output = new Dictionary<string, BitmapImage>();
 
-            using (var resourceSet = Resources.Tiles.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, true))
+            var resourceSet = Resources.Tiles.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, true);
+            foreach (DictionaryEntry entry in resourceSet)
             {
-                foreach (DictionaryEntry entry in resourceSet)
-                {
-                    output.Add((string) entry.Key, ((Bitmap)entry.Value).ToBitmapImage());
-                }
+                output.Add((string)entry.Key, ((Bitmap)entry.Value).ToBitmapImage());
             }
 
             if (output.Count != 24)

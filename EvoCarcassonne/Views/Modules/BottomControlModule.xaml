@@ -53,7 +53,7 @@
             </materialDesign:Card>
 
 
-            <Button Margin="35,0"
+            <Button Margin="35,0" Height="35" Width="35"
                 Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                 Grid.Column="3" 
                 Command="{Binding Path=RotateRightCommand}">
