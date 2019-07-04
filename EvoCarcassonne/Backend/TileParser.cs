@@ -12,20 +12,28 @@ namespace EvoCarcassonne.Backend
     /*
      * file name format: tileLevel; count; landscape[North,East,South,West]; speciality... .png
      *
-     * tileLevel: 0 - normal tile, S - starter tile
+     * tileLevel: T - normal tile, S - starter tile
      * count: 1 - 9
      * landscape: 0 - field, 1 - road, 2 - castle, 3 - church
      * speciality: 0 - none, 1 - shield, 2 - colostor, 3 - endOfRoad, 4 - endOfCastle
      */
 
-    public static class TileParser
+    public class TileParser
     {
-        public static ObservableCollection<BoardTile> GetTileStack(Utils utils)
+        public ObservableCollection<BoardTile> TileStack { get; }
+
+        public TileParser()
+        {
+            TileStack = GetTileStack();
+        }
+
+        private ObservableCollection<BoardTile> GetTileStack()
         {
             var tileStack = new ObservableCollection<BoardTile>();
-            var tileResourcePathList = utils.GetResourceNames(@"tiles");
+            var tileResourcePathList = GetResourceNames("tiles");
 
-            AddTile(tileStack, tileResourcePathList.Find(t => Path.GetFileNameWithoutExtension(t).StartsWith("s")));
+            AddTile(tileStack,
+                tileResourcePathList.Find(name => Path.GetFileNameWithoutExtension(name).StartsWith("s")));
 
             foreach (var resourcePath in tileResourcePathList)
             {
@@ -37,13 +45,14 @@ namespace EvoCarcassonne.Backend
                 }
             }
 
+            if (tileStack.Count != 72)
+            {
+                throw new InvalidOperationException();
+            }
+
             return tileStack;
         }
 
-        #region Private methods
-
-       
-        
         private static void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
         {
             var tileName = Path.GetFileNameWithoutExtension(resourcePath);
@@ -73,7 +82,7 @@ namespace EvoCarcassonne.Backend
         {
             var directions = new List<IDirection>();
 
-            foreach (var c in tileName.Substring(2,4))
+            foreach (var c in tileName.Substring(2, 4))
             {
                 var direction = new Direction(ParseLandscape(c), null);
 
@@ -106,9 +115,9 @@ namespace EvoCarcassonne.Backend
                     case '3':
                         speciality = Speciality.EndOfRoad;
                         break;
-                     case '4':
+                    case '4':
                         speciality = Speciality.EndOfCastle;
-                        break; 
+                        break;
                 }
 
                 specialities.Add(speciality);
@@ -132,15 +141,21 @@ namespace EvoCarcassonne.Backend
                 case '2':
                     landscape = new Castle();
                     break;
-                /* case '3':
-                    landscape = new Church();
-                    break; */
             }
 
             return landscape;
         }
 
-        #endregion
-
+        public List<string> GetResourceNames(string condition)
+        {
+            var asm = Assembly.GetEntryAssembly();
+            var resName = asm.GetName().Name + ".g.resources";
+            using (var stream = asm.GetManifestResourceStream(resName))
+            using (var reader = new System.Resources.ResourceReader(stream ?? throw new InvalidOperationException()))
+            {
+                return reader.Cast<DictionaryEntry>().Select(entry => "/" + (string)entry.Key)
+                    .Where(x => x.Contains(condition)).ToList();
+            }
+        }
     }
 }

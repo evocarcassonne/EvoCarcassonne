@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using EvoCarcassonne.Models;
 using EvoCarcassonne.ViewModels;
 
@@ -18,18 +14,6 @@ namespace EvoCarcassonne.Backend
             _mainController = mainController;
         }
 
-        public List<string> GetResourceNames(string condition)
-        {
-            var asm = Assembly.GetEntryAssembly();
-            var resName = asm.GetName().Name + ".g.resources";
-            using (var stream = asm.GetManifestResourceStream(resName))
-            using (var reader = new System.Resources.ResourceReader(stream ?? throw new InvalidOperationException()))
-            {
-                return reader.Cast<DictionaryEntry>().Select(entry => (string)entry.Key)
-                    .Where(x => x.Contains(condition)).ToList();
-            }
-        }
-        
         public  bool CheckFitOfTile(BoardTile boardTile)
         {
             Dictionary<CardinalDirection, BoardTile> surroundingTiles = GetSurroundingTiles(boardTile);

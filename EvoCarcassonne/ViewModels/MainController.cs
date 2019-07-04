@@ -183,7 +183,7 @@ namespace EvoCarcassonne.ViewModels
         /// </summary>
         private void LoadTiles()
         {
-            TileStack = TileParser.GetTileStack(Utils);
+            TileStack = new TileParser().TileStack;
             var boardTiles = new ObservableCollection<BoardTile>();
 
             var nullSpecialty = new List<Speciality> { Speciality.None };
@@ -210,7 +210,6 @@ namespace EvoCarcassonne.ViewModels
                         emptyBoardTile.CanPlaceFigure = false;
                         boardTiles.Add(emptyBoardTile);
                     }
-
                 }
             }
 

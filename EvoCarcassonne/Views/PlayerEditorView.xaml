@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance viewModels:PlayerEditorViewModel, IsDesignTimeCreatable=True}"
              Background="White">
@@ -11,10 +12,6 @@
         <ResourceDictionary Source="../Resources/SvgDictionary.xaml" />
     </UserControl.Resources>
     <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="25" />
             <RowDefinition Height="Auto" />
@@ -22,31 +19,35 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="0,0,0,10"
-                   FontWeight="Bold">
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 5"
+                   Style="{StaticResource MaterialDesignTitleTextBlock}">
             Játékosok hozzáadása
         </TextBlock>
 
-        <Grid Grid.Row="1" Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <UniformGrid Grid.Row="1" Rows="1">
+            <TextBox Margin="0,0,10,0" Text="{Binding Path=PlayerName, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <materialDesign:HintAssist.Hint>
+                    <StackPanel
+                    Orientation="Horizontal"
+                    Margin="-2 0 0 0">
+                        <materialDesign:PackIcon Kind="Account" />
+                        <TextBlock>Név</TextBlock>
+                    </StackPanel>
+                </materialDesign:HintAssist.Hint>
+            </TextBox>
 
-            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">Név:</TextBlock>
-            <TextBox MinWidth="150" Grid.Column="1"
-                     Text="{Binding Path=PlayerName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" />
-        </Grid>
-
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">Szín:</TextBlock>
-            <ComboBox MinWidth="150" Grid.Column="1" ItemsSource="{Binding Path=Brushes}"
-                      SelectedItem="{Binding Path=SelectedBrush}" HorizontalAlignment="Stretch">
+            <ComboBox ItemsSource="{Binding Path=Brushes}"
+                  SelectedItem="{Binding Path=SelectedBrush}" HorizontalAlignment="Stretch"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <materialDesign:HintAssist.Hint>
+                    <StackPanel
+                    Orientation="Horizontal"
+                    Margin="-2 0 0 0">
+                        <materialDesign:PackIcon Kind="ColorLens" />
+                        <TextBlock Text="{Binding Path=PlayerName, UpdateSourceTrigger=PropertyChanged}">Szín</TextBlock>
+                    </StackPanel>
+                </materialDesign:HintAssist.Hint>
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -64,9 +65,9 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-        </Grid>
+        </UniformGrid>
 
-        <UniformGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Rows="1" Margin="0,10">
+        <UniformGrid Grid.Row="2" Rows="1" Margin="0,10">
             <Button Command="{Binding AddPlayerCommand}" Margin="0,0,10,0">Hozzáadás</Button>
             <Button Command="{Binding RemovePlayerCommand}" Margin="0,0,10,0">Eltávolítás</Button>
             <Button IsEnabled="{Binding Path=CanSavePlayers}" CommandParameter="{Binding Players}"
@@ -80,7 +81,7 @@
             </Button>
         </UniformGrid>
 
-        <ListView MinHeight="100" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Players}"
+        <ListView MinHeight="150" Grid.Row="3" Grid.Column="0" ItemsSource="{Binding Path=Players}"
                   SelectedItem="{Binding SelectedPlayer}">
             <ListView.ItemTemplate>
                 <DataTemplate>
