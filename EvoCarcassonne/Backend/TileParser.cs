@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Windows.Media.Imaging;
+using System.Reflection;
 using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
@@ -23,28 +22,26 @@ namespace EvoCarcassonne.Backend
     {
         public ObservableCollection<BoardTile> TileStack { get; }
 
-        private Utils Utils { get; set; }
-
-        public TileParser(Utils utils)
+        public TileParser()
         {
-            Utils = utils;
             TileStack = GetTileStack();
         }
 
         private ObservableCollection<BoardTile> GetTileStack()
         {
-            var tileDictionary = GetTileDictionary();
             var tileStack = new ObservableCollection<BoardTile>();
+            var tileResourcePathList = GetResourceNames("tiles");
 
-            AddTile(tileStack, tileDictionary.FirstOrDefault(entry => entry.Key.StartsWith("S")));
+            AddTile(tileStack,
+                tileResourcePathList.Find(name => Path.GetFileNameWithoutExtension(name).StartsWith("s")));
 
-            foreach (var entry in tileDictionary)
+            foreach (var resourcePath in tileResourcePathList)
             {
-                var tileName = entry.Key;
+                var tileName = Path.GetFileNameWithoutExtension(resourcePath);
 
                 for (var i = 0; i < ParseTileCount(tileName); i++)
                 {
-                    AddTile(tileStack, entry);
+                    AddTile(tileStack, resourcePath);
                 }
             }
 
@@ -56,9 +53,9 @@ namespace EvoCarcassonne.Backend
             return tileStack;
         }
 
-        private void AddTile(ICollection<BoardTile> tileStack, KeyValuePair<string, BitmapImage> entry)
+        private static void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
         {
-            var tileName = entry.Key;
+            var tileName = Path.GetFileNameWithoutExtension(resourcePath);
             var tileSpecialities = ParseTileSpecialities(tileName);
 
             ITile backendTile;
@@ -71,17 +68,17 @@ namespace EvoCarcassonne.Backend
                 backendTile = new Tile(ParseTileDirections(tileName), tileSpecialities);
             }
 
-            var tile = new BoardTile(0, null, null, entry.Value, backendTile);
+            var tile = new BoardTile(0, null, null, resourcePath, backendTile);
 
             tileStack.Add(tile);
         }
 
-        private int ParseTileCount(string tileName)
+        private static int ParseTileCount(string tileName)
         {
             return Convert.ToInt32(tileName[1].ToString());
         }
 
-        private List<IDirection> ParseTileDirections(string tileName)
+        private static List<IDirection> ParseTileDirections(string tileName)
         {
             var directions = new List<IDirection>();
 
@@ -95,7 +92,7 @@ namespace EvoCarcassonne.Backend
             return directions;
         }
 
-        private List<Speciality> ParseTileSpecialities(string tileName)
+        private static List<Speciality> ParseTileSpecialities(string tileName)
         {
             var specialities = new List<Speciality>();
             var specialitySubstring = tileName.Substring(6);
@@ -129,7 +126,7 @@ namespace EvoCarcassonne.Backend
             return specialities;
         }
 
-        private ILandscape ParseLandscape(char landscapeCharacter)
+        private static ILandscape ParseLandscape(char landscapeCharacter)
         {
             ILandscape landscape;
 
@@ -149,22 +146,16 @@ namespace EvoCarcassonne.Backend
             return landscape;
         }
 
-        private Dictionary<string, BitmapImage> GetTileDictionary()
+        public List<string> GetResourceNames(string condition)
         {
-            var output = new Dictionary<string, BitmapImage>();
-
-            var resourceSet = Resources.Tiles.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, true);
-            foreach (DictionaryEntry entry in resourceSet)
+            var asm = Assembly.GetEntryAssembly();
+            var resName = asm.GetName().Name + ".g.resources";
+            using (var stream = asm.GetManifestResourceStream(resName))
+            using (var reader = new System.Resources.ResourceReader(stream ?? throw new InvalidOperationException()))
             {
-                output.Add((string)entry.Key, ((Bitmap)entry.Value).ToBitmapImage());
+                return reader.Cast<DictionaryEntry>().Select(entry => "/" + (string)entry.Key)
+                    .Where(x => x.Contains(condition)).ToList();
             }
-
-            if (output.Count != 24)
-            {
-                throw new InvalidOperationException();
-            }
-
-            return output;
         }
     }
 }

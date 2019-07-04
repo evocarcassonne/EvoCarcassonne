@@ -8,7 +8,7 @@ namespace EvoCarcassonne.Models
     {
         public Coordinates Coordinates { get; set; }
         public string Tag { get; set; }
-        public BitmapImage Image { get; set; }
+        public string Image { get; set; }
         private double _angle;
         private bool _canPlaceFigure;
         private ITile _backendTile;
@@ -58,7 +58,7 @@ namespace EvoCarcassonne.Models
                    "BackEndTile    " + BackendTile;
         }
 
-        public BoardTile(double angle, Coordinates coordinates, string tag, BitmapImage image, ITile backendTile)
+        public BoardTile(double angle, Coordinates coordinates, string tag, string image, ITile backendTile)
         {
             _angle = angle;
             Coordinates = coordinates;

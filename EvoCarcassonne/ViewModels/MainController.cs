@@ -183,7 +183,7 @@ namespace EvoCarcassonne.ViewModels
         /// </summary>
         private void LoadTiles()
         {
-            TileStack = new TileParser(Utils).TileStack;
+            TileStack = new TileParser().TileStack;
             var boardTiles = new ObservableCollection<BoardTile>();
 
             var nullSpecialty = new List<Speciality> { Speciality.None };
