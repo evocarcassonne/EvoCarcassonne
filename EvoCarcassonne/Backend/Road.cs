@@ -43,12 +43,11 @@ namespace EvoCarcassonne.Backend
                         {
                             result++;
                         }
-                        
-                        RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection)i, true);
                         _utils.DistributePoints(result, FiguresOnTiles);
                         result = 0;
                         FiguresOnTiles = new List<IFigure>();
                     }
+                    RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection)i, true);
                 }
                 if (FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
                 {
