@@ -53,9 +53,6 @@ namespace EvoCarcassonne.Backend
 
                     Directions[0] = temp;
                     break;
-                default:
-                    Debug.WriteLine(@"[ERROR] You have given a wrong rotation value!");
-                    break;
             }
         }
 
