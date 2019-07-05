@@ -129,7 +129,6 @@ namespace EvoCarcassonne.Backend
          */
         private int CalculateWithDirections(BoardTile currentTile, CardinalDirection whereToGo)
         {
-            Console.WriteLine(currentTile);
             int result = 1;
             Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = _utils.GetSurroundingTiles(currentTile);
             BoardTile neighborTile = _utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
@@ -153,7 +152,6 @@ namespace EvoCarcassonne.Backend
             {
                 CheckFigureOnTile(neighborTile, (int)_utils.GetOppositeDirection(whereToGo));
                 LastTile = neighborTile;
-                Console.WriteLine(neighborTile);
                 return result;
             }
             return SearchInTilesSides(result, neighborTile, (int)_utils.GetOppositeDirection(whereToGo));
@@ -173,7 +171,6 @@ namespace EvoCarcassonne.Backend
         {
             if (currentTile.BackendTile.Directions[onlySideToCheck].Figure != null)
             {
-                Console.WriteLine(@"Ezt adom hozzá:    " + currentTile.BackendTile.Directions[onlySideToCheck].Figure.Owner.Name);
                 FiguresOnTiles.Add(currentTile.BackendTile.Directions[onlySideToCheck].Figure);
             }
         }
