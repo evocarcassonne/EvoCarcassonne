@@ -43,14 +43,8 @@ namespace EvoCarcassonne.Backend
                         {
                             result++;
                         }
-                        if (!IsRoadFinished)
-                        {
-                            result = 0;
-                        }
-                        else
-                        {
-                            RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection)i, true);
-                        }
+                        
+                        RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection)i, true);
                         _utils.DistributePoints(result, FiguresOnTiles);
                         result = 0;
                         FiguresOnTiles = new List<IFigure>();

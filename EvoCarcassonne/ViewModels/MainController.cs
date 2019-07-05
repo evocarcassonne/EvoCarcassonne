@@ -244,6 +244,7 @@ namespace EvoCarcassonne.ViewModels
         {
             if (TileStack.Count == 0)
             {
+                CalculateGameOver();
                 return false;
             }
 
@@ -426,6 +427,26 @@ namespace EvoCarcassonne.ViewModels
                 return false;
             }
         }
+        
+        private void CalculateGameOver()
+        {
+            foreach (BoardTile tile in PlacedBoardTiles)
+            {
+                if (tile.BackendTile is Church && tile.BackendTile.CenterFigure != null)
+                {
+                    var churchTile = (Church)tile.BackendTile;
+                    churchTile.calculate(tile, true,Utils);
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    if (tile.BackendTile.Directions[i].Figure != null && !(tile.BackendTile.Directions[i].Landscape is Field))
+                    {
+                        tile.BackendTile.Directions[i].Landscape.calculate(tile, true, Utils);
+                    }
+                }
+            }
+        }
+        
         #endregion
 
     }
