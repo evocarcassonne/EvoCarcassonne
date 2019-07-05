@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using EvoCarcassonne.Models;
 using EvoCarcassonne.ViewModels;
 
@@ -17,6 +13,7 @@ namespace EvoCarcassonne.Backend
         {
             _mainController = mainController;
         }
+
         
         public bool CheckFitOfTile(BoardTile boardTile)
         {
