@@ -17,20 +17,8 @@ namespace EvoCarcassonne.Backend
         {
             _mainController = mainController;
         }
-
-        public List<string> GetResourceNames(string condition)
-        {
-            var asm = Assembly.GetEntryAssembly();
-            var resName = asm.GetName().Name + ".g.resources";
-            using (var stream = asm.GetManifestResourceStream(resName))
-            using (var reader = new System.Resources.ResourceReader(stream ?? throw new InvalidOperationException()))
-            {
-                return reader.Cast<DictionaryEntry>().Select(entry => (string)entry.Key)
-                    .Where(x => x.Contains(condition)).ToList();
-            }
-        }
         
-        public  bool CheckFitOfTile(BoardTile boardTile)
+        public bool CheckFitOfTile(BoardTile boardTile)
         {
             Dictionary<CardinalDirection, BoardTile> surroundingTiles = GetSurroundingTiles(boardTile);
             if (surroundingTiles.Count == 0)
@@ -78,7 +66,7 @@ namespace EvoCarcassonne.Backend
             }
             return result;
         }
-        public  List<BoardTile> GetAllSurroundingTiles(BoardTile currentTile)
+        public List<BoardTile> GetAllSurroundingTiles(BoardTile currentTile)
         {
 
             List<BoardTile> result = new List<BoardTile>();
@@ -99,7 +87,7 @@ namespace EvoCarcassonne.Backend
             return result;
         }
 
-        public  CardinalDirection GetOppositeDirection(CardinalDirection direction)
+        public CardinalDirection GetOppositeDirection(CardinalDirection direction)
         {
             switch (direction)
             {
@@ -111,7 +99,7 @@ namespace EvoCarcassonne.Backend
             }
         }
 
-        public  BoardTile GetNeighborTile(Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile, CardinalDirection whereToGo)
+        public BoardTile GetNeighborTile(Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile, CardinalDirection whereToGo)
         {
             foreach (var pair in tilesNextToTheGivenTile)
             {
@@ -121,12 +109,6 @@ namespace EvoCarcassonne.Backend
                 }
             }
             return null;
-        }
-
-        private bool IsOnTheGivenSide(BoardTile currentTile, BoardTile neighborTile, int diffX, int diffY)
-        {
-            return currentTile.Coordinates.X + diffX == neighborTile.Coordinates.X &&
-                currentTile.Coordinates.Y + diffY == neighborTile.Coordinates.Y;
         }
 
         public void GiveBackFigureToOwner(IFigure figure)
@@ -143,12 +125,12 @@ namespace EvoCarcassonne.Backend
             }
         }
         
-        public void DistributePoints(int result, List<IFigure> FiguresOnTiles)
+        public void DistributePoints(int result, List<IFigure> figuresOnTiles)
         {
             var points = new List<int>();
             var players = new List<IOwner>();
             var playersToGetPoints = new List<IOwner>();
-            foreach (var i in FiguresOnTiles)
+            foreach (var i in figuresOnTiles)
             {
                 if (!players.Contains(i.Owner))
                 {
@@ -159,9 +141,9 @@ namespace EvoCarcassonne.Backend
             for (int i = 0; i < players.Count; i++)
             {
                 int currentCount = 0;
-                for (int j = 0; j < FiguresOnTiles.Count; j++)
+                for (int j = 0; j < figuresOnTiles.Count; j++)
                 {
-                    if (players[i].Equals(FiguresOnTiles[j].Owner))
+                    if (players[i].Equals(figuresOnTiles[j].Owner))
                     {
                         currentCount++;
                     }
@@ -188,6 +170,11 @@ namespace EvoCarcassonne.Backend
             {
                 i.Points += result;
             }
+       }
+        private bool IsOnTheGivenSide(BoardTile currentTile, BoardTile neighborTile, int diffX, int diffY)
+        {
+            return currentTile.Coordinates.X + diffX == neighborTile.Coordinates.X &&
+                   currentTile.Coordinates.Y + diffY == neighborTile.Coordinates.Y;
         }
     }
 }

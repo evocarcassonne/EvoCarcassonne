@@ -22,35 +22,18 @@ namespace EvoCarcassonne.ViewModels
         [JsonProperty]
         public ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
         public ObservableCollection<BoardTile> BoardTiles { get; set; }
-        public ObservableCollection<BoardTile> TileStack { get; set; }
+        
 
         /// <summary>
         /// Contains the players
         /// </summary>
         public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
 
-        private Utils Utils { get; set; }
-
+       
         /// <summary>
         /// Gets or sets the current round number
         /// </summary>
         public int CurrentRound { get; set; } = 1;
-
-        /// <summary>
-        /// A flag that indicates if the player has a tile
-        /// </summary>
-        public bool HasCurrentTile
-        {
-            get => _hasCurrentTile;
-            set
-            {
-                if (_hasCurrentTile != value)
-                {
-                    _hasCurrentTile = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
 
         /// <summary>
         /// The current Tile
@@ -84,22 +67,7 @@ namespace EvoCarcassonne.ViewModels
             }
         }
 
-        /// <summary>
-        /// A flag that indicates if the current tile is on the board
-        /// </summary>
-        public bool TileIsDown
-        {
-            get => _tileIsDown;
-            private set
-            {
-                if (_tileIsDown != value)
-                {
-                    _tileIsDown = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
+        
         #endregion
 
         #region Private Members
@@ -111,6 +79,38 @@ namespace EvoCarcassonne.ViewModels
         private bool _alreadyCalculated;
         private int _currentSideForFigure = -1;
         private bool _figureDown = false;
+        /// <summary>
+        /// A flag that indicates if the current tile is on the board
+        /// </summary>
+        private bool TileIsDown
+        {
+            get => _tileIsDown;
+            set
+            {
+                if (_tileIsDown != value)
+                {
+                    _tileIsDown = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        /// <summary>
+        /// A flag that indicates if the player has a tile
+        /// </summary>
+        private bool HasCurrentTile
+        {
+            get => _hasCurrentTile;
+            set
+            {
+                if (_hasCurrentTile != value)
+                {
+                    _hasCurrentTile = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private Utils Utils { get; set; }
+        private ObservableCollection<BoardTile> TileStack { get; set; }
         #endregion
 
         #region Commands

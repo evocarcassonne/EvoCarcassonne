@@ -23,7 +23,7 @@ namespace EvoCarcassonne.Backend
         public static ObservableCollection<BoardTile> GetTileStack(Utils utils)
         {
             var tileStack = new ObservableCollection<BoardTile>();
-            var tileResourcePathList = utils.GetResourceNames(@"tiles");
+            var tileResourcePathList = GetResourceNames(@"tiles");
 
             AddTile(tileStack, tileResourcePathList.Find(t => Path.GetFileNameWithoutExtension(t).StartsWith("s")));
 
@@ -40,9 +40,21 @@ namespace EvoCarcassonne.Backend
             return tileStack;
         }
 
+       
+        
         #region Private methods
 
-       
+        private static List<string> GetResourceNames(string condition)
+        {
+            var asm = Assembly.GetEntryAssembly();
+            var resName = asm.GetName().Name + ".g.resources";
+            using (var stream = asm.GetManifestResourceStream(resName))
+            using (var reader = new System.Resources.ResourceReader(stream ?? throw new InvalidOperationException()))
+            {
+                return reader.Cast<DictionaryEntry>().Select(entry => (string)entry.Key)
+                    .Where(x => x.Contains(condition)).ToList();
+            }
+        }
         
         private static void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
         {
