@@ -57,18 +57,6 @@ namespace EvoCarcassonne.Backend
        
         #region Private methods
 
-        private static List<string> GetResourceNames(string condition)
-        {
-            var asm = Assembly.GetEntryAssembly();
-            var resName = asm.GetName().Name + ".g.resources";
-            using (var stream = asm.GetManifestResourceStream(resName))
-            using (var reader = new System.Resources.ResourceReader(stream ?? throw new InvalidOperationException()))
-            {
-                return reader.Cast<DictionaryEntry>().Select(entry => (string)entry.Key)
-                    .Where(x => x.Contains(condition)).ToList();
-            }
-        }
-
         private static void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
         {
             var tileName = Path.GetFileNameWithoutExtension(resourcePath);
@@ -173,5 +161,6 @@ namespace EvoCarcassonne.Backend
                     .Where(x => x.Contains(condition)).ToList();
             }
         }
+        #endregion
     }
 }
