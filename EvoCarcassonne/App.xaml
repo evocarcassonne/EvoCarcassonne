@@ -4,14 +4,25 @@
              xmlns:views="clr-namespace:EvoCarcassonne.Views"
              xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type viewModels:MenuViewModel}">
-            <views:MenuView />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:MainController}">
-            <views:MainView />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:PlayerEditorViewModel}">
-            <views:PlayerEditorView />
-        </DataTemplate>
+        <ResourceDictionary>
+            <!-- ViewModel-View pairing -->
+            <DataTemplate DataType="{x:Type viewModels:MenuViewModel}">
+                <views:MenuView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:MainController}">
+                <views:MainView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:PlayerEditorViewModel}">
+                <views:PlayerEditorView />
+            </DataTemplate>
+
+            <!-- Material Design -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/materialdesigncolor.deeppurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
