@@ -14,18 +14,11 @@ namespace EvoCarcassonne.Backend
         private List<BoardTile> BoardTileList { get; set; } = new List<BoardTile>();
         private bool firstCall { get; set; } = true;
         private List<IFigure> FiguresOnTiles { get; set; } = new List<IFigure>();
-        private int DeleteDirection { get; set; }
-        private BoardTile StarterTile { get; set; } = null;
-        private BoardTile LastTile { get; set; } = null;
         private CardinalDirection StarterWhereToGo { get; set; }
         private bool DeleteFigures { get; set; } = false;
         private List<BoardTile> PlacedCastleTiles { get; set; } = new List<BoardTile>();
         private bool Gameover { get; set; }
-
-        public int calculate()
-        {
-            throw new System.NotImplementedException();
-        }
+        private bool OutOfRange { get; set; } = false;
 
         public Castle()
         {
@@ -39,10 +32,10 @@ namespace EvoCarcassonne.Backend
             int result = 0;
             for (int i = 0; i < 4; i++)
             {
+                DeleteFigures = false;
                 if (CheckEndOfCastle(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Castle)
                 {
-                    firstCall = true;
-                    DeleteFigures = false;
+                    firstCall = true;                   
                     result += CalculateWithDirections(currentTile, (CardinalDirection)i);
 
                     firstCall = true;
@@ -97,6 +90,12 @@ namespace EvoCarcassonne.Backend
             // Check if the castle is not finished         
             if (!FinishedCastle && !Gameover)
                 return 0;
+            
+            if (OutOfRange)
+            {
+                OutOfRange = false;
+                return 0;
+            }
 
             // Get the CurrentTile's coordinate
             var x = currentTile.Coordinates.X;
@@ -293,16 +292,43 @@ namespace EvoCarcassonne.Backend
 
 
         private int GetIndex(int side, int index)
-        {
+        {            
             switch (side)
             {
                 case 0:
+                    if (index - 10 < 0)
+                    {
+                        OutOfRange = true;
+                        return 0;
+                    }
+
                     return index - 10;
                 case 1:
+                    if (index + 1 > MainController.BoardTiles.Count)
+                    {
+                        OutOfRange = true;
+                        return 0;
+                    }
+
+
                     return index + 1;
                 case 2:
+                    if (index + 10 > MainController.BoardTiles.Count)
+                    {
+                        OutOfRange = true;
+                        return 0;
+                    }
+
+
                     return index + 10;
                 case 3:
+                    if (index - 1 < 0)
+                    {
+                        OutOfRange = true;
+                        return 0;
+                    }
+
+
                     return index - 1;
                 default: return 0;
             }
