@@ -8,10 +8,12 @@ namespace EvoCarcassonne.Backend
     {
         private  int DistanceBetweenTiles = 1;
         private readonly MainController _mainController;
+        public MainController MainController;
 
         public Utils(MainController mainController)
         {
             _mainController = mainController;
+            MainController = mainController;
         }
 
         public  bool CheckFitOfTile(BoardTile boardTile)

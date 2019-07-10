@@ -278,7 +278,17 @@ namespace EvoCarcassonne.ViewModels
                     church.calculate(tile, false, Utils);
                 }
             }
-            
+
+            //Searching for castle sides, paying attention to be called only once
+            foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
+            {
+                if (i.Landscape is Castle)
+                {
+                    i.Landscape.calculate(PlacedBoardTiles.Last(), false, Utils);
+                    break;
+                }
+            }
+
             //Searching for road sides, paying attention to be called only once
             foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
             {
