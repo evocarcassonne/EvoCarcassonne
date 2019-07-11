@@ -20,6 +20,7 @@ namespace EvoCarcassonne.Backend
         private bool Gameover { get; set; }
         private bool OutOfRange { get; set; } = false;
         private Utils _utils;
+        private MainController _mainController;
         public Castle()
         {
         }
@@ -27,6 +28,7 @@ namespace EvoCarcassonne.Backend
         public void calculate(BoardTile currentTile, bool gameover, Utils utils)
         {
             _utils = utils;
+            _mainController = _utils.GetMainController();
             Gameover = gameover;
             PlacedCastleTiles.Clear();
 
@@ -167,7 +169,7 @@ namespace EvoCarcassonne.Backend
                         BoardTileList.Add(CurrentBoardTile);
                         PlacedCastleTiles.Add(CurrentBoardTile);
                         firstCall = false;
-                        CurrentBoardTile = _utils.MainController.BoardTiles[GetIndex(i, index)];
+                        CurrentBoardTile = _mainController.BoardTiles[GetIndex(i, index)];
                         CalculateWithDirections(CurrentBoardTile, (CardinalDirection)i);
                         CurrentBoardTile = currentTile;
 
@@ -312,7 +314,7 @@ namespace EvoCarcassonne.Backend
 
                     return index - 10;
                 case 1:
-                    if (index + 1 > _utils.MainController.BoardTiles.Count)
+                    if (index + 1 > _mainController.BoardTiles.Count)
                     {
                         OutOfRange = true;
                         return 0;
@@ -321,7 +323,7 @@ namespace EvoCarcassonne.Backend
 
                     return index + 1;
                 case 2:
-                    if (index + 10 > _utils.MainController.BoardTiles.Count)
+                    if (index + 10 > _mainController.BoardTiles.Count)
                     {
                         OutOfRange = true;
                         return 0;
@@ -428,7 +430,7 @@ namespace EvoCarcassonne.Backend
 
                     whereToGo = i;
                     BoardTileList.Add(CurrentBoardTile);
-                    CurrentBoardTile = _utils.MainController.BoardTiles[GetIndex(i, index)];
+                    CurrentBoardTile = _mainController.BoardTiles[GetIndex(i, index)];
                     CalculateCastle(CurrentBoardTile, false);
                     CurrentBoardTile = currentTile;
                 }
