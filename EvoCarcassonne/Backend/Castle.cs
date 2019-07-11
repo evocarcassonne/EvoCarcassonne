@@ -6,21 +6,22 @@ namespace EvoCarcassonne.Backend
 {
     public class Castle : ILandscape
     {
-        private int whereToGo { get; set; }
-        private BoardTile FirstTile { get; set; }
-        private bool FinishedCastle { get; set; } = true;
-        private int Points { get; set; }
-        private BoardTile CurrentBoardTile { get; set; }
-        private List<BoardTile> BoardTileList { get; set; } = new List<BoardTile>();
-        private bool firstCall { get; set; } = true;
-        private List<IFigure> FiguresOnTiles { get; set; } = new List<IFigure>();
-        private CardinalDirection StarterWhereToGo { get; set; }
-        private bool DeleteFigures { get; set; } = false;
-        private List<BoardTile> PlacedCastleTiles { get; set; } = new List<BoardTile>();
-        private bool Gameover { get; set; }
-        private bool OutOfRange { get; set; } = false;
+        private int _whereToGo { get; set; }
+        private BoardTile _firstTile { get; set; }
+        private bool _finishedCastle { get; set; } = true;
+        private int _points { get; set; }
+        private BoardTile _currentBoardTile { get; set; }
+        private List<BoardTile> _boardTileList { get; set; } = new List<BoardTile>();
+        private bool _firstCall { get; set; } = true;
+        private List<IFigure> _figuresOnTiles { get; set; } = new List<IFigure>();
+        private CardinalDirection _starterWhereToGo { get; set; }
+        private bool _deleteFigures { get; set; } = false;
+        private List<BoardTile> _placedCastleTiles { get; set; } = new List<BoardTile>();
+        private bool _gameOver { get; set; }
+        private bool _outOfRange { get; set; } = false;
         private Utils _utils;
-        private MainController _mainController;
+        private int _boardTilesSize { get; set; }
+
         public Castle()
         {
         }
@@ -28,25 +29,25 @@ namespace EvoCarcassonne.Backend
         public void calculate(BoardTile currentTile, bool gameover, Utils utils)
         {
             _utils = utils;
-            _mainController = _utils.GetMainController();
-            Gameover = gameover;
-            PlacedCastleTiles.Clear();
+            _boardTilesSize = _utils.GetBoardTilesSize();
+            _gameOver = gameover;
+            _placedCastleTiles.Clear();
 
             int result = 0;
             for (int i = 0; i < 4; i++)
             {
-                DeleteFigures = false;
+                _deleteFigures = false;
                 if (CheckEndOfCastle(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Castle)
                 {
-                    firstCall = true;
+                    _firstCall = true;
                     result += CalculateWithDirections(currentTile, (CardinalDirection)i);
 
-                    firstCall = true;
+                    _firstCall = true;
                     DistributePoints(result);
-                    FiguresOnTiles = new List<IFigure>();
+                    _figuresOnTiles = new List<IFigure>();
                     if (result > 0)
                     {
-                        DeleteFigures = true;
+                        _deleteFigures = true;
                         CalculateWithDirections(currentTile, (CardinalDirection)i);
                     }
                     result = 0;
@@ -55,16 +56,16 @@ namespace EvoCarcassonne.Backend
                 else if (!CheckEndOfCastle(currentTile))
                 {
 
-                    firstCall = true;
+                    _firstCall = true;
                     result += CalculateCastle(currentTile, false);
 
-                    firstCall = true;
+                    _firstCall = true;
                     DistributePoints(result);
-                    FiguresOnTiles = new List<IFigure>();
+                    _figuresOnTiles = new List<IFigure>();
                     if (result > 0)
                     {
-                        DeleteFigures = true;
-                        CalculateCastle(FirstTile, false);
+                        _deleteFigures = true;
+                        CalculateCastle(_firstTile, false);
                     }
                     result = 0;
 
@@ -77,26 +78,26 @@ namespace EvoCarcassonne.Backend
         private int CalculateWithDirections(BoardTile currentTile, CardinalDirection whereToGo)
         {
             // If it is the first tile, reset the properties...
-            if (firstCall)
+            if (_firstCall)
             {
-                FirstTile = currentTile;
-                CurrentBoardTile = currentTile;
-                FirstTile = currentTile;
-                Points = 0;
-                FinishedCastle = true;
-                BoardTileList.Clear();
-                FiguresOnTiles.Clear();
-                StarterWhereToGo = whereToGo;
+                _firstTile = currentTile;
+                _currentBoardTile = currentTile;
+                _firstTile = currentTile;
+                _points = 0;
+                _finishedCastle = true;
+                _boardTileList.Clear();
+                _figuresOnTiles.Clear();
+                _starterWhereToGo = whereToGo;
             }
 
 
             // Check if the castle is not finished         
-            if (!FinishedCastle && !Gameover)
+            if (!_finishedCastle && !_gameOver)
                 return 0;
 
-            if (OutOfRange)
+            if (_outOfRange)
             {
-                OutOfRange = false;
+                _outOfRange = false;
                 return 0;
             }
 
@@ -110,31 +111,31 @@ namespace EvoCarcassonne.Backend
 
 
 
-            if (IsChecked(CurrentBoardTile, BoardTileList))
+            if (IsChecked(_currentBoardTile, _boardTileList))
                 return 0;
 
 
-            if (CurrentBoardTile.BackendTile.Directions == null)
+            if (_currentBoardTile.BackendTile.Directions == null)
             {
-                if (!Gameover)
-                    FinishedCastle = false;
+                if (!_gameOver)
+                    _finishedCastle = false;
                 return 0;
             }
 
             // If it is an EndOfCastle tile and it isn't the first tile...
-            if (CheckEndOfCastle(CurrentBoardTile) && FirstTile != CurrentBoardTile)
+            if (CheckEndOfCastle(_currentBoardTile) && _firstTile != _currentBoardTile)
             {
-                if (CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
-                    FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure);
+                if (_currentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
+                    _figuresOnTiles.Add(_currentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure);
 
-                if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
+                if (_deleteFigures && _currentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
                 {
-                    _utils.GiveBackFigureToOwner(CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure);
-                    CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure = null;
+                    _utils.GiveBackFigureToOwner(_currentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure);
+                    _currentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure = null;
                 }
                     
 
-                Points += 2;
+                _points += 2;
                 return 0;
             }
 
@@ -143,37 +144,37 @@ namespace EvoCarcassonne.Backend
 
             for (int i = 0; i < 4; i++)
             {
-                if (CurrentBoardTile.BackendTile.Directions[i].Landscape is Castle)
+                if (_currentBoardTile.BackendTile.Directions[i].Landscape is Castle)
                 {
-                    if (firstCall && i != (int)StarterWhereToGo)
+                    if (_firstCall && i != (int)_starterWhereToGo)
                     {
                     }
                     else
                     {
-                        if (CurrentBoardTile == FirstTile && (int)StarterWhereToGo == getFromDirection((int)whereToGo) && !firstCall)
+                        if (_currentBoardTile == _firstTile && (int)_starterWhereToGo == getFromDirection((int)whereToGo) && !_firstCall)
                             return 0;
 
-                        if (CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                        if (_currentBoardTile.BackendTile.Directions[i].Figure != null)
                         {
-                            FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[i].Figure);
+                            _figuresOnTiles.Add(_currentBoardTile.BackendTile.Directions[i].Figure);
                         }
 
-                        if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                        if (_deleteFigures && _currentBoardTile.BackendTile.Directions[i].Figure != null)
                         {
-                            _utils.GiveBackFigureToOwner(CurrentBoardTile.BackendTile.Directions[i].Figure);
-                            CurrentBoardTile.BackendTile.Directions[i].Figure = null;
+                            _utils.GiveBackFigureToOwner(_currentBoardTile.BackendTile.Directions[i].Figure);
+                            _currentBoardTile.BackendTile.Directions[i].Figure = null;
                         }
 
                         whereToGo = (CardinalDirection)i;
 
-                        BoardTileList.Add(CurrentBoardTile);
-                        PlacedCastleTiles.Add(CurrentBoardTile);
-                        firstCall = false;
-                        CurrentBoardTile = _mainController.BoardTiles[GetIndex(i, index)];
-                        CalculateWithDirections(CurrentBoardTile, (CardinalDirection)i);
-                        CurrentBoardTile = currentTile;
+                        _boardTileList.Add(_currentBoardTile);
+                        _placedCastleTiles.Add(_currentBoardTile);
+                        _firstCall = false;
+                        _currentBoardTile = _utils.GetOneNeighborTile(_currentBoardTile, GetIndex(i, index));
+                        CalculateWithDirections(_currentBoardTile, (CardinalDirection)i);
+                        _currentBoardTile = currentTile;
 
-                        if (CurrentBoardTile == FirstTile)
+                        if (_currentBoardTile == _firstTile)
                             break;
                     }
 
@@ -182,23 +183,23 @@ namespace EvoCarcassonne.Backend
             }
 
 
-            if (FinishedCastle)
+            if (_finishedCastle)
             {
-                Points += 2;
-                if (CheckShield(CurrentBoardTile))
-                    Points += 2;
+                _points += 2;
+                if (CheckShield(_currentBoardTile))
+                    _points += 2;
             }
             else
-                Points = 0;
+                _points = 0;
 
-            if (DeleteFigures)
-                Points = 0;
+            if (_deleteFigures)
+                _points = 0;
 
-            if (FirstTile == CurrentBoardTile && Points == 1)
-                Points = 0;
+            if (_firstTile == _currentBoardTile && _points == 1)
+                _points = 0;
 
 
-            return Points;
+            return _points;
         }
 
         private bool CheckShield(BoardTile bt)
@@ -217,7 +218,7 @@ namespace EvoCarcassonne.Backend
             var points = new List<int>();
             var players = new List<IOwner>();
             var playersToGetPoints = new List<IOwner>();
-            foreach (var i in FiguresOnTiles)
+            foreach (var i in _figuresOnTiles)
             {
                 if (!players.Contains(i.Owner))
                 {
@@ -228,9 +229,9 @@ namespace EvoCarcassonne.Backend
             for (int i = 0; i < players.Count; i++)
             {
                 int currentCount = 0;
-                for (int j = 0; j < FiguresOnTiles.Count; j++)
+                for (int j = 0; j < _figuresOnTiles.Count; j++)
                 {
-                    if (players[i].Equals(FiguresOnTiles[j].Owner))
+                    if (players[i].Equals(_figuresOnTiles[j].Owner))
                     {
                         currentCount++;
                     }
@@ -308,24 +309,24 @@ namespace EvoCarcassonne.Backend
                 case 0:
                     if (index - 10 < 0)
                     {
-                        OutOfRange = true;
+                        _outOfRange = true;
                         return 0;
                     }
 
                     return index - 10;
                 case 1:
-                    if (index + 1 > _mainController.BoardTiles.Count)
+                    if (index + 1 > _boardTilesSize)
                     {
-                        OutOfRange = true;
+                        _outOfRange = true;
                         return 0;
                     }
 
 
                     return index + 1;
                 case 2:
-                    if (index + 10 > _mainController.BoardTiles.Count)
+                    if (index + 10 > _boardTilesSize)
                     {
-                        OutOfRange = true;
+                        _outOfRange = true;
                         return 0;
                     }
 
@@ -334,7 +335,7 @@ namespace EvoCarcassonne.Backend
                 case 3:
                     if (index - 1 < 0)
                     {
-                        OutOfRange = true;
+                        _outOfRange = true;
                         return 0;
                     }
 
@@ -353,7 +354,7 @@ namespace EvoCarcassonne.Backend
         private int CalculateCastle(BoardTile currentTile, bool gameover)
         {
             // Check if the castle is not finished         
-            if (!FinishedCastle && !Gameover)
+            if (!_finishedCastle && !_gameOver)
                 return 0;
 
             // Get the CurrentTile's coordinate
@@ -366,46 +367,46 @@ namespace EvoCarcassonne.Backend
 
 
             // If it is the first tile, reset the properties...
-            if (firstCall)
+            if (_firstCall)
             {
-                firstCall = false;
-                FirstTile = currentTile;
-                CurrentBoardTile = currentTile;
-                FirstTile = currentTile;
-                Points = 0;
-                FinishedCastle = true;
-                BoardTileList.Clear();
-                FiguresOnTiles.Clear();
+                _firstCall = false;
+                _firstTile = currentTile;
+                _currentBoardTile = currentTile;
+                _firstTile = currentTile;
+                _points = 0;
+                _finishedCastle = true;
+                _boardTileList.Clear();
+                _figuresOnTiles.Clear();
 
             }
 
 
-            if (IsChecked(CurrentBoardTile, BoardTileList))
+            if (IsChecked(_currentBoardTile, _boardTileList))
                 return 0;
 
 
-            if (CurrentBoardTile.BackendTile.Directions == null)
+            if (_currentBoardTile.BackendTile.Directions == null)
             {
-                if (!Gameover)
-                    FinishedCastle = false;
+                if (!_gameOver)
+                    _finishedCastle = false;
 
                 return 0;
             }
 
 
             // If it is an EndOfCastle tile and it isn't the first tile...
-            if (CheckEndOfCastle(CurrentBoardTile) && FirstTile != CurrentBoardTile)
+            if (CheckEndOfCastle(_currentBoardTile) && _firstTile != _currentBoardTile)
             {
-                if (CurrentBoardTile.BackendTile.Directions[getFromDirection(whereToGo)].Figure != null)
-                    FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[getFromDirection(whereToGo)].Figure);
+                if (_currentBoardTile.BackendTile.Directions[getFromDirection(_whereToGo)].Figure != null)
+                    _figuresOnTiles.Add(_currentBoardTile.BackendTile.Directions[getFromDirection(_whereToGo)].Figure);
 
-                if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure != null)
+                if (_deleteFigures && _currentBoardTile.BackendTile.Directions[getFromDirection((int)_whereToGo)].Figure != null)
                 {
-                    _utils.GiveBackFigureToOwner(CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure);
-                    CurrentBoardTile.BackendTile.Directions[getFromDirection((int)whereToGo)].Figure = null;
+                    _utils.GiveBackFigureToOwner(_currentBoardTile.BackendTile.Directions[getFromDirection((int)_whereToGo)].Figure);
+                    _currentBoardTile.BackendTile.Directions[getFromDirection((int)_whereToGo)].Figure = null;
                 }
 
-                Points += 2;
+                _points += 2;
                 return 0;
             }
 
@@ -414,49 +415,47 @@ namespace EvoCarcassonne.Backend
 
             for (int i = 0; i < 4; i++)
             {
-                if (CurrentBoardTile.BackendTile.Directions[i].Landscape is Castle)
+                if (_currentBoardTile.BackendTile.Directions[i].Landscape is Castle)
                 {
-                    if (CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                    if (_currentBoardTile.BackendTile.Directions[i].Figure != null)
                     {
-                        FiguresOnTiles.Add(CurrentBoardTile.BackendTile.Directions[i].Figure);
+                        _figuresOnTiles.Add(_currentBoardTile.BackendTile.Directions[i].Figure);
                     }
 
-                    if (DeleteFigures && CurrentBoardTile.BackendTile.Directions[i].Figure != null)
+                    if (_deleteFigures && _currentBoardTile.BackendTile.Directions[i].Figure != null)
                     {
-                        _utils.GiveBackFigureToOwner(CurrentBoardTile.BackendTile.Directions[i].Figure);
-                        CurrentBoardTile.BackendTile.Directions[i].Figure = null;
+                        _utils.GiveBackFigureToOwner(_currentBoardTile.BackendTile.Directions[i].Figure);
+                        _currentBoardTile.BackendTile.Directions[i].Figure = null;
                     }
                         
 
-                    whereToGo = i;
-                    BoardTileList.Add(CurrentBoardTile);
-                    CurrentBoardTile = _mainController.BoardTiles[GetIndex(i, index)];
-                    CalculateCastle(CurrentBoardTile, false);
-                    CurrentBoardTile = currentTile;
+                    _whereToGo = i;
+                    _boardTileList.Add(_currentBoardTile);
+                    _currentBoardTile = _utils.GetOneNeighborTile(_currentBoardTile, GetIndex(i, index));
+                    CalculateCastle(_currentBoardTile, false);
+                    _currentBoardTile = currentTile;
                 }
             }
 
 
-            if (FinishedCastle)
+            if (_finishedCastle)
             {
-                Points += 2;
-                if (CheckShield(CurrentBoardTile))
-                    Points += 2;
+                _points += 2;
+                if (CheckShield(_currentBoardTile))
+                    _points += 2;
             }
             else
-                Points = 0;
+                _points = 0;
 
-            if (DeleteFigures)
-                Points = 0;
-
-
-            if (FirstTile == CurrentBoardTile && Points == 1)
-                Points = 0;
+            if (_deleteFigures)
+                _points = 0;
 
 
+            if (_firstTile == _currentBoardTile && _points == 1)
+                _points = 0;
 
 
-            return Points;
+            return _points;
         }
     }
 }
