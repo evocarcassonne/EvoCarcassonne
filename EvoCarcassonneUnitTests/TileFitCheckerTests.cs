@@ -196,6 +196,30 @@ namespace EvoCarcassonneUnitTests
 
             Assert.IsTrue(_utils.CheckFitOfTile(boardTile8));
         }
+ [TestMethod]
+        public void CheckFitOfTile_ChurchCanFit_ReturnsFalse_TestCase1()
+        {
+            _mainController.PlacedBoardTiles = new ObservableCollection<BoardTile>();
+            _mainController.PlacedBoardTiles.Add(boardTile1);
+            _mainController.PlacedBoardTiles.Add(boardTile2);
+            _mainController.PlacedBoardTiles.Add(boardTile3);
+            _mainController.PlacedBoardTiles.Add(boardTile5);
+            _mainController.PlacedBoardTiles.Add(boardTile6);
+            _mainController.PlacedBoardTiles.Add(boardTile7);
+            
+            var specialities = new List<Speciality>();
+            specialities.Add(Speciality.EndOfRoad);
+            var directions = new List<IDirection>();
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Castle(), null));
+            directions.Add(new Direction(new Road(), null));
+            
+            boardTile8.BackendTile = new Church(directions, specialities);
+            _mainController.PlacedBoardTiles.Add(boardTile8);
+
+            Assert.IsTrue(_utils.CheckFitOfTile(boardTile8));
+        }
 
     }
 }
