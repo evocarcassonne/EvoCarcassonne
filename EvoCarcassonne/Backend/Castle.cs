@@ -17,5 +17,10 @@ namespace EvoCarcassonne.Backend
         {
             throw new System.NotImplementedException();
         }
+
+        public bool CanPlaceFigure(BoardTile currentTile, CardinalDirection whereToGo, Utils utils, bool firstCall)
+        {
+            return true;
+        }
     }
 }

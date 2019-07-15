@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
+using System.Text.RegularExpressions;
 using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
@@ -11,6 +13,8 @@ namespace EvoCarcassonne.Backend
         private bool Gameover { get; set; }
         private bool IsRoadFinished { get; set; } = true;
 
+        private bool _canPlaceFigure = true;
+        
         private Utils _utils;
 
         private CardinalDirection _whereToGoAfterEndOfRoadFound;
@@ -122,6 +126,86 @@ namespace EvoCarcassonne.Backend
         }
 
 
+        public bool CanPlaceFigure(BoardTile currentTile, CardinalDirection whereToGo, Utils utils, bool firstCall)
+        {
+            BoardTile neighborTile = utils.GetNeighborTile(utils.GetSurroundingTiles(currentTile), whereToGo);
+
+            if (firstCall)
+            {
+                if (IsEndOfRoad(currentTile))
+                {
+                    return CanPlaceFigure(currentTile, whereToGo, utils, false);
+                }
+                else
+                {
+                    CardinalDirection otherSide = CardinalDirection.North;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (currentTile.BackendTile.Directions[i].Landscape is Road && i != (int)whereToGo)
+                        {
+                            otherSide = (CardinalDirection)i;
+                        }
+                    }
+
+                    return CanPlaceFigure(currentTile, whereToGo, utils, false) &&
+                           CanPlaceFigure(currentTile, otherSide, utils, false);
+                }
+            }
+            else
+            {
+                if (neighborTile == null)
+                {
+                    return _canPlaceFigure;
+                }
+
+                if (IsEndOfRoad(neighborTile))
+                {
+                    return neighborTile.BackendTile.Directions[(int)utils.GetOppositeDirection(whereToGo)].Figure == null;
+                }
+
+                for (int i = 0; i < 4; i++)
+                {
+                    if (neighborTile.BackendTile.Directions[i].Figure != null &&
+                        neighborTile.BackendTile.Directions[i].Landscape is Road)
+                    {
+                        _canPlaceFigure = false;
+                        return false;
+                    }
+                }
+
+                if (IsEndOfRoad(currentTile))
+                {
+                    for (var i = 0; i < 4; i++)
+                    {
+                        if (currentTile.BackendTile.Speciality.Contains(Speciality.EndOfRoad))
+                        {
+                            if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)utils.GetOppositeDirection(whereToGo))
+                            {
+                                return CanPlaceFigure(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), utils, false);
+                            }
+                        }
+                        if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)utils.GetOppositeDirection(whereToGo))
+                        {
+                            return CanPlaceFigure(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), utils, false);
+                        }
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < 4; i++)
+                    {
+                        if (neighborTile.BackendTile.Directions[i].Landscape is Road && i != (int)utils.GetOppositeDirection(whereToGo))
+                        {
+                            return CanPlaceFigure(neighborTile, neighborTile.BackendTile.GetCardinalDirectionByIndex(i), utils, false);
+                        }
+                    }
+                }
+
+            }
+            
+           
+            return true;
+        }
 
 
         /**
@@ -269,6 +353,6 @@ namespace EvoCarcassonne.Backend
                     break;
                 }
             }
-        }
+        }   
     }
 }
