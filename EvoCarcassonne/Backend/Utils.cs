@@ -173,5 +173,17 @@ namespace EvoCarcassonne.Backend
                 i.Points += result;
             }
         }
+
+        public BoardTile GetOneNeighborTile(BoardTile currentTile, int index)
+        {
+            return _mainController.BoardTiles[index];
+        }
+
+        public int GetBoardTilesSize()
+        {
+            return _mainController.BoardTiles.Count;
+        }
+
+
     }
 }
