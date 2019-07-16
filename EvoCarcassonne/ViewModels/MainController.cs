@@ -22,35 +22,18 @@ namespace EvoCarcassonne.ViewModels
         [JsonProperty]
         public ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
         public ObservableCollection<BoardTile> BoardTiles { get; set; }
-        public ObservableCollection<BoardTile> TileStack { get; set; }
+        
 
         /// <summary>
         /// Contains the players
         /// </summary>
         public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
 
-        private Utils Utils { get; set; }
-
+       
         /// <summary>
         /// Gets or sets the current round number
         /// </summary>
         public int CurrentRound { get; set; } = 1;
-
-        /// <summary>
-        /// A flag that indicates if the player has a tile
-        /// </summary>
-        public bool HasCurrentTile
-        {
-            get => _hasCurrentTile;
-            set
-            {
-                if (_hasCurrentTile != value)
-                {
-                    _hasCurrentTile = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
 
         /// <summary>
         /// The current Tile
@@ -84,22 +67,7 @@ namespace EvoCarcassonne.ViewModels
             }
         }
 
-        /// <summary>
-        /// A flag that indicates if the current tile is on the board
-        /// </summary>
-        public bool TileIsDown
-        {
-            get => _tileIsDown;
-            private set
-            {
-                if (_tileIsDown != value)
-                {
-                    _tileIsDown = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
+        
         #endregion
 
         #region Private Members
@@ -111,6 +79,38 @@ namespace EvoCarcassonne.ViewModels
         private bool _alreadyCalculated;
         private int _currentSideForFigure = -1;
         private bool _figureDown = false;
+        /// <summary>
+        /// A flag that indicates if the current tile is on the board
+        /// </summary>
+        private bool TileIsDown
+        {
+            get => _tileIsDown;
+            set
+            {
+                if (_tileIsDown != value)
+                {
+                    _tileIsDown = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        /// <summary>
+        /// A flag that indicates if the player has a tile
+        /// </summary>
+        private bool HasCurrentTile
+        {
+            get => _hasCurrentTile;
+            set
+            {
+                if (_hasCurrentTile != value)
+                {
+                    _hasCurrentTile = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private Utils Utils { get; set; }
+        private ObservableCollection<BoardTile> TileStack { get; set; }
         #endregion
 
         #region Commands
@@ -243,6 +243,7 @@ namespace EvoCarcassonne.ViewModels
         {
             if (TileStack.Count == 0)
             {
+                CalculateGameOver();
                 return false;
             }
 
@@ -278,7 +279,17 @@ namespace EvoCarcassonne.ViewModels
                     church.calculate(tile, false, Utils);
                 }
             }
-            
+
+            //Searching for castle sides, paying attention to be called only once
+            foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
+            {
+                if (i.Landscape is Castle)
+                {
+                    i.Landscape.calculate(PlacedBoardTiles.Last(), false, Utils);
+                    break;
+                }
+            }
+
             //Searching for road sides, paying attention to be called only once
             foreach (var i in PlacedBoardTiles.Last().BackendTile.Directions)
             {
@@ -429,6 +440,26 @@ namespace EvoCarcassonne.ViewModels
                 return false;
             }
         }
+        
+        private void CalculateGameOver()
+        {
+            foreach (BoardTile tile in PlacedBoardTiles)
+            {
+                if (tile.BackendTile is Church && tile.BackendTile.CenterFigure != null)
+                {
+                    var churchTile = (Church)tile.BackendTile;
+                    churchTile.calculate(tile, true,Utils);
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    if (tile.BackendTile.Directions[i].Figure != null && !(tile.BackendTile.Directions[i].Landscape is Field))
+                    {
+                        tile.BackendTile.Directions[i].Landscape.calculate(tile, true, Utils);
+                    }
+                }
+            }
+        }
+        
         #endregion
 
     }

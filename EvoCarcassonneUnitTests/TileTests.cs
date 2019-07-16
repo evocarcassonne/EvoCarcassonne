@@ -27,9 +27,7 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void Rotate_RotateLeft_ReturnsVoid()
         {
-            Console.WriteLine(tile.ToString());
             tile.Rotate(-90);
-            Console.WriteLine(tile.ToString());
             Assert.IsTrue(tile.Directions[0].Landscape is Road);
             Assert.IsTrue(tile.Directions[1].Landscape is Road);
             Assert.IsTrue(tile.Directions[2].Landscape is Castle);
@@ -39,9 +37,7 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void Rotate_RotateRight_ReturnsVoid()
         {
-            Console.WriteLine(tile.ToString());
             tile.Rotate(90);
-            Console.WriteLine(tile.ToString());
             Assert.IsTrue(tile.Directions[2].Landscape is Road);
             Assert.IsTrue(tile.Directions[3].Landscape is Road);
             Assert.IsTrue(tile.Directions[0].Landscape is Castle);
@@ -51,10 +47,8 @@ namespace EvoCarcassonneUnitTests
         [TestMethod]
         public void Rotate_RotateTwiceRight_ReturnsVoid()
         {
-            Console.WriteLine(tile.ToString());
             tile.Rotate(90);
             tile.Rotate(90);
-            Console.WriteLine(tile.ToString());
             Assert.IsTrue(tile.Directions[0].Landscape is Road);
             Assert.IsTrue(tile.Directions[1].Landscape is Castle);
             Assert.IsTrue(tile.Directions[2].Landscape is Castle);

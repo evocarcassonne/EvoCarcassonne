@@ -23,7 +23,7 @@ namespace EvoCarcassonne
         /// <summary>
         /// Starts the <see cref="ApplicationView"/>, sets the data context <see cref="ApplicationViewModel"/> and shows it to user
         /// </summary>
-        private static void OnStartup()
+        private void OnStartup()
         {
             var app = new ApplicationView();
             var context = new ApplicationViewModel();
