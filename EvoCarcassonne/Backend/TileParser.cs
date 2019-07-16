@@ -27,10 +27,13 @@ namespace EvoCarcassonne.Backend
             TileStack = GetTileStack();
         }
 
+        #region Private methods
+
         private ObservableCollection<BoardTile> GetTileStack()
         {
             var tileStack = new ObservableCollection<BoardTile>();
             var tileResourcePathList = GetResourceNames("tiles");
+
 
             AddTile(tileStack,
                 tileResourcePathList.Find(name => Path.GetFileNameWithoutExtension(name).StartsWith("s")));
@@ -53,7 +56,7 @@ namespace EvoCarcassonne.Backend
             return tileStack;
         }
 
-        private static void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
+        private void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
         {
             var tileName = Path.GetFileNameWithoutExtension(resourcePath);
             var tileSpecialities = ParseTileSpecialities(tileName);
@@ -73,12 +76,12 @@ namespace EvoCarcassonne.Backend
             tileStack.Add(tile);
         }
 
-        private static int ParseTileCount(string tileName)
+        private int ParseTileCount(string tileName)
         {
             return Convert.ToInt32(tileName[1].ToString());
         }
 
-        private static List<IDirection> ParseTileDirections(string tileName)
+        private List<IDirection> ParseTileDirections(string tileName)
         {
             var directions = new List<IDirection>();
 
@@ -92,7 +95,7 @@ namespace EvoCarcassonne.Backend
             return directions;
         }
 
-        private static List<Speciality> ParseTileSpecialities(string tileName)
+        private List<Speciality> ParseTileSpecialities(string tileName)
         {
             var specialities = new List<Speciality>();
             var specialitySubstring = tileName.Substring(6);
@@ -126,7 +129,7 @@ namespace EvoCarcassonne.Backend
             return specialities;
         }
 
-        private static ILandscape ParseLandscape(char landscapeCharacter)
+        private ILandscape ParseLandscape(char landscapeCharacter)
         {
             ILandscape landscape;
 
@@ -146,7 +149,7 @@ namespace EvoCarcassonne.Backend
             return landscape;
         }
 
-        public List<string> GetResourceNames(string condition)
+        private List<string> GetResourceNames(string condition)
         {
             var asm = Assembly.GetEntryAssembly();
             var resName = asm.GetName().Name + ".g.resources";
@@ -157,5 +160,6 @@ namespace EvoCarcassonne.Backend
                     .Where(x => x.Contains(condition)).ToList();
             }
         }
+        #endregion
     }
 }

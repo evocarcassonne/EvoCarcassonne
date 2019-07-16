@@ -43,18 +43,11 @@ namespace EvoCarcassonne.Backend
                         {
                             result++;
                         }
-                        if (!IsRoadFinished)
-                        {
-                            result = 0;
-                        }
-                        else
-                        {
-                            RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection)i, true);
-                        }
                         _utils.DistributePoints(result, FiguresOnTiles);
                         result = 0;
                         FiguresOnTiles = new List<IFigure>();
                     }
+                    RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection)i, true);
                 }
                 if (FirstTile.Coordinates.X != LastTile.Coordinates.X && FirstTile.Coordinates.Y != LastTile.Coordinates.Y)
                 {
@@ -129,7 +122,6 @@ namespace EvoCarcassonne.Backend
          */
         private int CalculateWithDirections(BoardTile currentTile, CardinalDirection whereToGo)
         {
-            Console.WriteLine(currentTile);
             int result = 1;
             Dictionary<CardinalDirection, BoardTile> tilesNextToTheGivenTile = _utils.GetSurroundingTiles(currentTile);
             BoardTile neighborTile = _utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
@@ -153,7 +145,6 @@ namespace EvoCarcassonne.Backend
             {
                 CheckFigureOnTile(neighborTile, (int)_utils.GetOppositeDirection(whereToGo));
                 LastTile = neighborTile;
-                Console.WriteLine(neighborTile);
                 return result;
             }
             return SearchInTilesSides(result, neighborTile, (int)_utils.GetOppositeDirection(whereToGo));
@@ -173,7 +164,6 @@ namespace EvoCarcassonne.Backend
         {
             if (currentTile.BackendTile.Directions[onlySideToCheck].Figure != null)
             {
-                Console.WriteLine(@"Ezt adom hozzá:    " + currentTile.BackendTile.Directions[onlySideToCheck].Figure.Owner.Name);
                 FiguresOnTiles.Add(currentTile.BackendTile.Directions[onlySideToCheck].Figure);
             }
         }
