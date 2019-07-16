@@ -21,7 +21,7 @@ namespace EvoCarcassonneUnitTests
             directions.Add(new Direction(new Road(), figure));
             directions.Add(new Direction(new Road(), figure));
             directions.Add(new Direction(new Castle(), figure));
-            this.tile = new Tile(directions, specialities);
+            tile = new Tile(directions, specialities);
         }
 
         [TestMethod]
@@ -53,7 +53,68 @@ namespace EvoCarcassonneUnitTests
             Assert.IsTrue(tile.Directions[1].Landscape is Castle);
             Assert.IsTrue(tile.Directions[2].Landscape is Castle);
             Assert.IsTrue(tile.Directions[3].Landscape is Road);
+        } [TestMethod]
+        public void Rotate_RotateLeft_ReturnsVoid_Church()
+        {
+            List<IDirection> directions = new List<IDirection>();
+            List<Speciality> specialities = new List<Speciality>();
+            Figure figure = new Figure(new Owner("Pista"));
 
+            directions.Add(new Direction(new Castle(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Castle(), figure));
+            tile = new Church(directions, specialities);
+            Console.WriteLine(tile.ToString());
+            tile.Rotate(-90);
+            Console.WriteLine(tile.ToString());
+            Assert.IsTrue(tile.Directions[0].Landscape is Road);
+            Assert.IsTrue(tile.Directions[1].Landscape is Road);
+            Assert.IsTrue(tile.Directions[2].Landscape is Castle);
+            Assert.IsTrue(tile.Directions[3].Landscape is Castle);
+        }
+
+        [TestMethod]
+        public void Rotate_RotateRight_ReturnsVoid_Church2()
+        {
+            List<IDirection> directions = new List<IDirection>();
+            List<Speciality> specialities = new List<Speciality>();
+            Figure figure = new Figure(new Owner("Pista"));
+
+            directions.Add(new Direction(new Castle(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Castle(), figure));
+            tile = new Church(directions, specialities);
+            Console.WriteLine(tile.ToString());
+            tile.Rotate(90);
+            Console.WriteLine(tile.ToString());
+            Assert.IsTrue(tile.Directions[2].Landscape is Road);
+            Assert.IsTrue(tile.Directions[3].Landscape is Road);
+            Assert.IsTrue(tile.Directions[0].Landscape is Castle);
+            Assert.IsTrue(tile.Directions[1].Landscape is Castle);
+        }
+
+        [TestMethod]
+        public void Rotate_RotateTwiceRight_ReturnsVoid_Church3()
+        {
+            List<IDirection> directions = new List<IDirection>();
+            List<Speciality> specialities = new List<Speciality>();
+            Figure figure = new Figure(new Owner("Pista"));
+
+            directions.Add(new Direction(new Castle(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Road(), figure));
+            directions.Add(new Direction(new Castle(), figure));
+            tile = new Church(directions, specialities);
+            Console.WriteLine(tile.ToString());
+            tile.Rotate(90);
+            tile.Rotate(90);
+            Console.WriteLine(tile.ToString());
+            Assert.IsTrue(tile.Directions[0].Landscape is Road);
+            Assert.IsTrue(tile.Directions[1].Landscape is Castle);
+            Assert.IsTrue(tile.Directions[2].Landscape is Castle);
+            Assert.IsTrue(tile.Directions[3].Landscape is Road);
         }
     }
 }

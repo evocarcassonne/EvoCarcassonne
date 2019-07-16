@@ -102,5 +102,10 @@ namespace EvoCarcassonne.Backend
                 }
             }
         }
+
+        public bool CanPlaceFigure(BoardTile currentTile, CardinalDirection whereToGo, Utils utils, bool firstCall)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

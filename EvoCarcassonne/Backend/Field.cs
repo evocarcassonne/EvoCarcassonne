@@ -12,7 +12,12 @@ namespace EvoCarcassonne.Backend
 
         public void calculate(BoardTile currentTile, bool gameover, Utils utils)
         {
-            throw new NotImplementedException();
+            
+        }
+
+        public bool CanPlaceFigure(BoardTile currentTile, CardinalDirection whereToGo, Utils utils, bool firstCall)
+        {
+            return false;
         }
     }
 }

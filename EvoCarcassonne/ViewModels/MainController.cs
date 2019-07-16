@@ -431,6 +431,10 @@ namespace EvoCarcassonne.ViewModels
                         return false;
                     }
 
+                    if (directionIndex != 4)
+                    {
+                        return tile.BackendTile.Directions[directionIndex].Figure == null && tile.BackendTile.Directions[directionIndex].Landscape.CanPlaceFigure(tile, (CardinalDirection)directionIndex, Utils, true);
+                    }
                     return tile.BackendTile.Directions[directionIndex].Figure == null;
                 }
                 return false;
