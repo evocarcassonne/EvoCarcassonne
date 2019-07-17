@@ -243,7 +243,6 @@ namespace EvoCarcassonne.ViewModels
         {
             if (TileStack.Count == 0)
             {
-                CalculateGameOver();
                 return false;
             }
 
@@ -254,6 +253,12 @@ namespace EvoCarcassonne.ViewModels
         {
             TileIsDown = false;
             PlacedBoardTiles.Last().CanPlaceFigure = false;
+
+            if (TileStack.Count == 0)
+            {
+                CalculateGameOver();
+                return;
+            }
 
             CallCalculate();
             _figureDown = false;
