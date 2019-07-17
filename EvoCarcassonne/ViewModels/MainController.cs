@@ -29,11 +29,22 @@ namespace EvoCarcassonne.ViewModels
         /// </summary>
         public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
 
-       
+
         /// <summary>
         /// Gets or sets the current round number
         /// </summary>
-        public int CurrentRound { get; set; } = 1;
+        public int CurrentRound
+        {
+            get => _currentRound;
+            set
+            {
+                if (_currentRound != value)
+                {
+                    _currentRound = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The current Tile
@@ -79,6 +90,8 @@ namespace EvoCarcassonne.ViewModels
         private bool _alreadyCalculated;
         private int _currentSideForFigure = -1;
         private bool _figureDown = false;
+        private int _currentRound = 1;
+
         /// <summary>
         /// A flag that indicates if the current tile is on the board
         /// </summary>
