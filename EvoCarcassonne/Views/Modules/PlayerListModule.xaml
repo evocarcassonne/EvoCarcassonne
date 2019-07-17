@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:EvoCarcassonne.ViewModels"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance viewModels:MainController}">
+             d:DataContext="{d:DesignInstance viewModels:MainController}"
+             TextElement.FontSize="16">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
