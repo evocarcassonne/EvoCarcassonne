@@ -310,7 +310,7 @@ namespace EvoCarcassonne.ViewModels
 
         private bool CanEndTurn()
         {
-            return !HasCurrentTile;
+            return !HasCurrentTile && TileIsDown;
         }
 
         private void PlaceTile(Button button)
