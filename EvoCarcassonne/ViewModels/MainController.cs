@@ -19,7 +19,6 @@ namespace EvoCarcassonne.ViewModels
         /// <summary>
         /// Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
         /// </summary>
-        [JsonProperty]
         public ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
         public ObservableCollection<BoardTile> BoardTiles { get; set; }
         
@@ -91,6 +90,7 @@ namespace EvoCarcassonne.ViewModels
         private int _currentSideForFigure = -1;
         private bool _figureDown = false;
         private int _currentRound = 1;
+        private Random _randomNumberGenerator;
 
         /// <summary>
         /// A flag that indicates if the current tile is on the board
@@ -123,6 +123,7 @@ namespace EvoCarcassonne.ViewModels
             }
         }
         private Utils Utils { get; set; }
+        [JsonProperty]
         private ObservableCollection<BoardTile> TileStack { get; set; }
         #endregion
 
@@ -173,6 +174,7 @@ namespace EvoCarcassonne.ViewModels
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
             PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
             PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure, CanPlaceFigure);
+            _randomNumberGenerator = new Random();
         }
 
         public MainController(IEnumerable<Player> players) : this()
@@ -247,9 +249,7 @@ namespace EvoCarcassonne.ViewModels
 
             _alreadyCalculated = false;
 
-            var random = new Random();
-
-            CurrentBoardTile = TileStack.RemoveAndGet(random.Next(TileStack.Count));
+            CurrentBoardTile = TileStack.RemoveAndGet(_randomNumberGenerator.Next(TileStack.Count));
         }
 
         private bool CanGetNewTile()
