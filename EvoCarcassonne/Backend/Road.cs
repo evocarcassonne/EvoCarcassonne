@@ -40,7 +40,7 @@ namespace EvoCarcassonne.Backend
                         CheckFigureOnTile(currentTile, i);
                         result += CalculateWithDirections(currentTile, (CardinalDirection) i);
                     }
-                    if (IsEndOfRoad(currentTile))
+                    if (IsEndOfRoad(currentTile) && currentTile.BackendTile.Directions[i].Landscape is Road)
                     {
                         if (!(FirstTile.Coordinates.X == LastTile.Coordinates.X &&
                               FirstTile.Coordinates.Y == LastTile.Coordinates.Y) && IsRoadFinished)
