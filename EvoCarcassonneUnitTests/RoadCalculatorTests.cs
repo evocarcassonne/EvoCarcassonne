@@ -504,11 +504,7 @@ namespace EvoCarcassonneUnitTests
             boardTile3.BackendTile = new Tile(directions, specialities);
             #endregion
             boardTile4.BackendTile.Directions[0].Figure = Player3.Figures[0];
-            
             boardTile3.BackendTile.Directions[0].Landscape.calculate(boardTile3,  false, _utils);
-            
-            
-            
             Assert.IsTrue(Player1.BackendOwner.Points == 3);
             Assert.IsTrue(Player2.BackendOwner.Points == 4);
             Assert.IsTrue(Player3.BackendOwner.Points == 3);
@@ -580,5 +576,62 @@ namespace EvoCarcassonneUnitTests
             
             Assert.IsTrue(Player1.BackendOwner.Points == 6);
         }   */
+        
+        
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedGameover_CalledWithEndofroad_ShouldReturnNumberOfTiles()
+        {
+            #region Initialize values
+
+            var directions = new List<IDirection>();
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            var specialities = new List<Speciality>();
+            specialities.Add(Speciality.EndOfRoad);
+            boardTile1.BackendTile = new Tile(directions, specialities);
+            directions = new List<IDirection>();
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Road(), null));
+            boardTile2.BackendTile = new Church(directions, specialities);
+            specialities.Add(Speciality.Colostor);
+            
+            #endregion
+            boardTile2.BackendTile.CenterFigure = Player1.Figures[0];
+            boardTile2.BackendTile.Directions[3].Landscape.calculate(boardTile2,  true, _utils);
+            Console.WriteLine("Pontok    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 0);
+        }
+        
+        [TestMethod]
+        public void CalculateRoad_RoadIsFinishedGameover_CalledWithEndofroad_ShouldReturnNumberOfTiles1()
+        {
+            #region Initialize values
+
+            var directions = new List<IDirection>();
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            directions.Add(new Direction(new Road(), null));
+            var specialities = new List<Speciality>();
+            specialities.Add(Speciality.EndOfRoad);
+            boardTile1.BackendTile = new Tile(directions, specialities);
+            directions = new List<IDirection>();
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Field(), null));
+            directions.Add(new Direction(new Road(), Player1.Figures[0]));
+            boardTile2.BackendTile = new Church(directions, specialities);
+            specialities.Add(Speciality.Colostor);
+            
+            #endregion
+            boardTile2.BackendTile.CenterFigure = Player1.Figures[0];
+            boardTile2.BackendTile.Directions[3].Landscape.calculate(boardTile2,  true, _utils);
+            Console.WriteLine("Pontok    " + Player1.BackendOwner.Points);
+            Assert.IsTrue(Player1.BackendOwner.Points == 2);
+        }
     }
 }

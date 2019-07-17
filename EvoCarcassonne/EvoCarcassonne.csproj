@@ -219,5 +219,8 @@
     <Resource Include="Resources\Tiles\T810100.png" />
     <Resource Include="Resources\Tiles\T900110.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="ViewModels\NewFile1.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
