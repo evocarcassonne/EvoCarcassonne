@@ -15,6 +15,9 @@
             <DataTemplate DataType="{x:Type viewModels:PlayerEditorViewModel}">
                 <views:PlayerEditorView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:GameOverViewModel}">
+                <views:GameOverView />
+            </DataTemplate>
 
             <!-- Material Design -->
             <ResourceDictionary.MergedDictionaries>

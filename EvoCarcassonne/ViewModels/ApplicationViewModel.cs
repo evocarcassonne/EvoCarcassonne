@@ -54,6 +54,8 @@ namespace EvoCarcassonne.ViewModels
 
         public ICommand SavePlayersCommand { get; set; }
 
+        public ICommand GameOverCommand { get; set; }
+
         public ApplicationViewModel()
         {
             ViewModels = new List<IViewModel>();
@@ -68,6 +70,25 @@ namespace EvoCarcassonne.ViewModels
             LoadGameCommand = new RelayCommand(LoadGame);
             SaveGameCommand = new RelayCommand(SaveGame, CanSaveGame);
             SavePlayersCommand = new RelayCommand<ObservableCollection<Player>>(SavePlayers);
+            GameOverCommand = new RelayCommand(GameOver);
+        }
+
+        private void GameOver()
+        {
+            MainController gameVm = null;
+
+            foreach (var viewModel in ViewModels)
+            {
+                if (viewModel.GetType().Name == nameof(MainController))
+                {
+                    gameVm = (MainController)viewModel;
+                    break;
+                }
+            }
+
+            ViewModels.Remove(gameVm);
+
+            ChangeViewModel(new GameOverViewModel(gameVm));
         }
 
         private void ChangeViewModel(IViewModel viewModel)
@@ -133,6 +154,7 @@ namespace EvoCarcassonne.ViewModels
                     PreserveReferencesHandling = PreserveReferencesHandling.Objects
                 });
                 ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
+                gameVm.GameOverCommand = GameOverCommand;
                 ChangeViewModel(gameVm);
             }
         }
@@ -165,7 +187,9 @@ namespace EvoCarcassonne.ViewModels
         private void SavePlayers(ObservableCollection<Player> players)
         {
             ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
-            ChangeViewModel(new MainController(players));
+            var gameVm = new MainController(players);
+            gameVm.GameOverCommand = GameOverCommand;
+            ChangeViewModel(gameVm);
         }
     }
 }

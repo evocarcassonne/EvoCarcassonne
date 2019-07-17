@@ -11,36 +11,62 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Resources/SvgDictionary.xaml" />
-                <ResourceDictionary Source="../../Resources/PlayerListViewStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ListView BorderThickness="0" Background="Transparent" ItemsSource="{Binding Path=Players}" SelectedItem="{Binding Path=CurrentPlayer}" ItemContainerStyle="{StaticResource PlayerListViewItemStyle}" IsEnabled="False" Style="{DynamicResource PlayerListViewStyle}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Viewbox Width="16" Height="16" Margin="0,2,5,2">
-                            <Canvas Width="512" Height="512">
-                                <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Color}">
-                                    <Path.Effect>
-                                        <DropShadowEffect />
-                                    </Path.Effect>
-                                </Path>
-                            </Canvas>
-                        </Viewbox>
-                        <TextBlock Text="{Binding Path=Name}" Margin="0,0,10,0" />
-                        <TextBlock Margin="0,0,10,0">
-                        <Run Text="{Binding BackendOwner.Points, Mode=OneWay}"/>
-                        <Run Text="pont"/>
-                        </TextBlock>
-                        <TextBlock>
-                        <Run Text="{Binding Path=Figures.Count, Mode=OneWay}"/>
-                        <Run Text="db figura"/>
-                        </TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+        <ListView IsHitTestVisible="False" ItemsSource="{Binding Path=Players}" SelectedItem="{Binding Path=CurrentPlayer}">
+            <ListView.Resources>
+                <Style TargetType="GridViewColumnHeader">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Viewbox Width="16" Height="16">
+                                    <Canvas Width="512" Height="512">
+                                        <Path Data="{StaticResource FigureSvg}" Fill="{Binding Path=Color}">
+                                            <Path.Effect>
+                                                <DropShadowEffect />
+                                            </Path.Effect>
+                                        </Path>
+                                    </Canvas>
+                                </Viewbox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding BackendOwner.Points, Mode=OneWay}"/>
+                                    <Run Text="pont"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding Path=Figures.Count, Mode=OneWay}"/>
+                                    <Run Text="db figura"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
         </ListView>
     </Grid>
 </UserControl>

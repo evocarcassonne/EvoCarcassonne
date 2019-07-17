@@ -77,7 +77,10 @@ namespace EvoCarcassonne.ViewModels
             }
         }
 
-        
+        [JsonIgnore]
+        public ICommand GameOverCommand { get; set; }
+
+
         #endregion
 
         #region Private Members
@@ -270,6 +273,7 @@ namespace EvoCarcassonne.ViewModels
             if (TileStack.Count == 0)
             {
                 CalculateGameOver();
+                GameOverCommand.Execute(null);
                 return;
             }
 

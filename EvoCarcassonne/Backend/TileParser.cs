@@ -48,11 +48,6 @@ namespace EvoCarcassonne.Backend
                 }
             }
 
-            if (tileStack.Count != 72)
-            {
-                throw new InvalidOperationException();
-            }
-
             return tileStack;
         }
 

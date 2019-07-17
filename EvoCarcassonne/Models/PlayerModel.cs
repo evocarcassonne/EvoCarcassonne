@@ -15,6 +15,8 @@ namespace EvoCarcassonne.Models
 
         public const int FigureCount = 7;
 
+        public int Rank { get; set; }
+
         public Player(string name, System.Windows.Media.Brush color)
         {
             Name = name;
