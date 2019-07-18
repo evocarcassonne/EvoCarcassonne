@@ -99,6 +99,7 @@ namespace EvoCarcassonne.Backend
 
             if (_outOfRange)
             {
+                _finishedCastle = false;
                 _outOfRange = false;
                 return 0;
             }
@@ -107,9 +108,6 @@ namespace EvoCarcassonne.Backend
             var x = currentTile.Coordinates.X;
             var y = currentTile.Coordinates.Y;
             var index = x + (y * 10);
-
-            if (x < 0 || y < 0 || x > 9 || y > 9)
-                return 0;
 
 
 
@@ -186,6 +184,12 @@ namespace EvoCarcassonne.Backend
 
 
             if (_finishedCastle)
+            {
+                _points += 2;
+                if (CheckShield(_currentBoardTile))
+                    _points += 2;
+            }
+            else if (!_finishedCastle && _gameOver)
             {
                 _points += 2;
                 if (CheckShield(_currentBoardTile))
@@ -359,13 +363,18 @@ namespace EvoCarcassonne.Backend
             if (!_finishedCastle && !_gameOver)
                 return 0;
 
+            if (_outOfRange)
+            {
+                _finishedCastle = false;
+                _outOfRange = false;
+                return 0;
+            }
+
             // Get the CurrentTile's coordinate
             var x = currentTile.Coordinates.X;
             var y = currentTile.Coordinates.Y;
             var index = x + (y * 10);
 
-            if (x < 0 || y < 0 || x > 9 || y > 9)
-                return 0;
 
 
             // If it is the first tile, reset the properties...
@@ -446,8 +455,14 @@ namespace EvoCarcassonne.Backend
                 if (CheckShield(_currentBoardTile))
                     _points += 2;
             }
+            else if (!_finishedCastle && _gameOver)
+            {
+                _points += 2;
+                if (CheckShield(_currentBoardTile))
+                    _points += 2;
+            }
             else
-                _points = 0;
+                _points = 0; 
 
             if (_deleteFigures)
                 _points = 0;
@@ -474,7 +489,7 @@ namespace EvoCarcassonne.Backend
                 _firstCall = true;
                 result += CalculateWithDirections(currentTile, whereToGo);
 
-                if (result > 0 && _figuresOnTiles.Count > 0)
+                if (_figuresOnTiles.Count > 0)
                     _canPlaceFigure = false;
                 else
                     _canPlaceFigure = true;
@@ -488,7 +503,7 @@ namespace EvoCarcassonne.Backend
                 _firstCall = true;
                 result += CalculateCastle(currentTile, false);
 
-                if (result > 0 && _figuresOnTiles.Count > 0)
+                if ( _figuresOnTiles.Count > 0)
                     _canPlaceFigure = false;
                 else
                     _canPlaceFigure = true;
