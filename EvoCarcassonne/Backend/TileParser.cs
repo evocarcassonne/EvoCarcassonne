@@ -27,6 +27,11 @@ namespace EvoCarcassonne.Backend
             TileStack = GetTileStack();
         }
 
+        public TileParser(List<string> resourcesNames)
+        {
+            TileStack = GetTileStack(resourcesNames);
+        }
+        
         #region Private methods
 
         private ObservableCollection<BoardTile> GetTileStack()
@@ -51,6 +56,22 @@ namespace EvoCarcassonne.Backend
             return tileStack;
         }
 
+        private ObservableCollection<BoardTile> GetTileStack(List<string> resourcesNames)
+        {
+            var tileStack = new ObservableCollection<BoardTile>();
+
+            foreach (var resourcePath in resourcesNames)
+            {
+                var tileName = resourcePath;
+
+                for (var i = 0; i < ParseTileCount(tileName); i++)
+                {
+                    AddTile(tileStack, "C:/Users/Ilku Krisztián/RiderProjects/EvoCarcassonne/EvoCarcassonne/Resources/Tiles" + resourcePath + ".png");
+                }
+            }
+            return tileStack;
+        }
+        
         private void AddTile(ICollection<BoardTile> tileStack, string resourcePath)
         {
             var tileName = Path.GetFileNameWithoutExtension(resourcePath);
