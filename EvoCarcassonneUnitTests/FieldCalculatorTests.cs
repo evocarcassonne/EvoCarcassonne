@@ -34,7 +34,13 @@ namespace EvoCarcassonneUnitTests
         public void test1()
         {
             boardTile1.BackendTile.Directions[0].Landscape.calculate(boardTile1, false, new Utils(new MainController()));
-            boardTile1.BackendTile.Directions[0].Landscape.CanPlaceFigure(boardTile1, CardinalDirection.East, new Utils(new MainController()), false);
+        }
+        
+        [TestMethod]
+        public void test2()
+        {
+            var canPlaceFigure = boardTile1.BackendTile.Directions[0].Landscape.CanPlaceFigure(boardTile1, CardinalDirection.East, new Utils(new MainController()), false);
+            Assert.IsFalse(canPlaceFigure);
         }
     }
 }

@@ -39,6 +39,15 @@ namespace EvoCarcassonneUnitTests
             resources.Add("T810100");
             resources.Add("T900110");
             tileParser = new TileParser(resources);
+            Assert.AreEqual(71, tileParser.TileStack.Count);
+        }
+
+        [TestMethod]
+        public void TestEquals()
+        {
+            var field1 = new Field();
+            var field2 = field1;
+            Assert.AreEqual(field1, field2);
         }
 
     }
