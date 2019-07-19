@@ -19,7 +19,6 @@ namespace EvoCarcassonne.ViewModels
         /// <summary>
         /// Contains the currently placed tiles on the board. When putting down a tile that tile should be added to list as well.
         /// </summary>
-        [JsonProperty]
         public ObservableCollection<BoardTile> PlacedBoardTiles { get; set; } = new ObservableCollection<BoardTile>();
         public ObservableCollection<BoardTile> BoardTiles { get; set; }
         
@@ -29,11 +28,22 @@ namespace EvoCarcassonne.ViewModels
         /// </summary>
         public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
 
-       
+
         /// <summary>
         /// Gets or sets the current round number
         /// </summary>
-        public int CurrentRound { get; set; } = 1;
+        public int CurrentRound
+        {
+            get => _currentRound;
+            set
+            {
+                if (_currentRound != value)
+                {
+                    _currentRound = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The current Tile
@@ -67,7 +77,10 @@ namespace EvoCarcassonne.ViewModels
             }
         }
 
-        
+        [JsonIgnore]
+        public ICommand GameOverCommand { get; set; }
+
+
         #endregion
 
         #region Private Members
@@ -79,6 +92,9 @@ namespace EvoCarcassonne.ViewModels
         private bool _alreadyCalculated;
         private int _currentSideForFigure = -1;
         private bool _figureDown = false;
+        private int _currentRound = 1;
+        private Random _randomNumberGenerator;
+
         /// <summary>
         /// A flag that indicates if the current tile is on the board
         /// </summary>
@@ -110,6 +126,7 @@ namespace EvoCarcassonne.ViewModels
             }
         }
         private Utils Utils { get; set; }
+        [JsonProperty]
         private ObservableCollection<BoardTile> TileStack { get; set; }
         #endregion
 
@@ -160,6 +177,7 @@ namespace EvoCarcassonne.ViewModels
             EndTurnCommand = new RelayCommand(EndTurn, CanEndTurn);
             PlaceTileCommand = new RelayCommand<Button>(PlaceTile, CanPlaceTile);
             PlaceFigureCommand = new RelayCommand<Button>(PlaceFigure, CanPlaceFigure);
+            _randomNumberGenerator = new Random();
         }
 
         public MainController(IEnumerable<Player> players) : this()
@@ -234,16 +252,13 @@ namespace EvoCarcassonne.ViewModels
 
             _alreadyCalculated = false;
 
-            var random = new Random();
-
-            CurrentBoardTile = TileStack.RemoveAndGet(random.Next(TileStack.Count));
+            CurrentBoardTile = TileStack.RemoveAndGet(_randomNumberGenerator.Next(TileStack.Count));
         }
 
         private bool CanGetNewTile()
         {
             if (TileStack.Count == 0)
             {
-                CalculateGameOver();
                 return false;
             }
 
@@ -254,6 +269,13 @@ namespace EvoCarcassonne.ViewModels
         {
             TileIsDown = false;
             PlacedBoardTiles.Last().CanPlaceFigure = false;
+
+            if (TileStack.Count == 0)
+            {
+                CalculateGameOver();
+                GameOverCommand.Execute(null);
+                return;
+            }
 
             CallCalculate();
             _figureDown = false;
@@ -305,7 +327,7 @@ namespace EvoCarcassonne.ViewModels
 
         private bool CanEndTurn()
         {
-            return !HasCurrentTile;
+            return !HasCurrentTile && TileIsDown;
         }
 
         private void PlaceTile(Button button)

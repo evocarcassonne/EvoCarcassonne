@@ -25,7 +25,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Width="100" Content="Lapkérés" Command="{Binding GetNewTileCommand}" HorizontalAlignment="Center" Grid.Column="0" />
+            <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Margin="0,0,15,0" Style="{StaticResource MaterialDesignButtonTextBlock}" TextAlignment="Center" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center"><Run Text="{Binding Path=CurrentRound, FallbackValue='0'}" />. kör</TextBlock>
+
+                <Button Width="100" Content="Lapkérés" Command="{Binding GetNewTileCommand}"/>
+            </StackPanel>
+
             <Button Height="35" Width="35" Margin="35,0"
             Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
             Grid.Column="1" 
@@ -36,7 +41,7 @@
                 Width="24" />
             </Button>
 
-            <materialDesign:Card Grid.Column="2" Margin="10" Padding="-0.25" >
+            <materialDesign:Card Margin="10" Grid.Column="2" Padding="-0.25" >
                 <Grid>
                     <Image Panel.ZIndex="1" Source="{Binding CurrentBoardTile.Image}">
                         <Image.LayoutTransform>
@@ -48,7 +53,6 @@
                     <Image Panel.ZIndex="-1" Source="/EvoCarcassonne;component/Resources/backtile.png" />
                 </Grid>
             </materialDesign:Card>
-
 
             <Button Margin="35,0" Height="35" Width="35"
                 Style="{StaticResource MaterialDesignFloatingActionMiniButton}"

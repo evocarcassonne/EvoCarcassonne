@@ -54,6 +54,8 @@ namespace EvoCarcassonne.ViewModels
 
         public ICommand SavePlayersCommand { get; set; }
 
+        public ICommand GameOverCommand { get; set; }
+
         public ApplicationViewModel()
         {
             ViewModels = new List<IViewModel>();
@@ -68,6 +70,25 @@ namespace EvoCarcassonne.ViewModels
             LoadGameCommand = new RelayCommand(LoadGame);
             SaveGameCommand = new RelayCommand(SaveGame, CanSaveGame);
             SavePlayersCommand = new RelayCommand<ObservableCollection<Player>>(SavePlayers);
+            GameOverCommand = new RelayCommand(GameOver);
+        }
+
+        private void GameOver()
+        {
+            MainController gameVm = null;
+
+            foreach (var viewModel in ViewModels)
+            {
+                if (viewModel.GetType().Name == nameof(MainController))
+                {
+                    gameVm = (MainController)viewModel;
+                    break;
+                }
+            }
+
+            ViewModels.Remove(gameVm);
+
+            ChangeViewModel(new GameOverViewModel(gameVm));
         }
 
         private void ChangeViewModel(IViewModel viewModel)
@@ -119,41 +140,60 @@ namespace EvoCarcassonne.ViewModels
 
         private void LoadGame()
         {
-            var openFileDialog = new OpenFileDialog
+            try
             {
-                Filter = "Save file (*.json)|*.json",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
-            if (openFileDialog.ShowDialog() == true)
-            {
-                var json = File.ReadAllText(openFileDialog.FileName);
-                var gameVm = JsonConvert.DeserializeObject<MainController>(json, new JsonSerializerSettings
+                var openFileDialog = new OpenFileDialog
                 {
-                    TypeNameHandling = TypeNameHandling.Objects,
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
-                });
+                    Filter = "Save file (*.json)|*.json",
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                };
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    var json = File.ReadAllText(openFileDialog.FileName);
+                    var gameVm = JsonConvert.DeserializeObject<MainController>(json, new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.Objects,
+                        PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                    });
+                    ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
+                    gameVm.GameOverCommand = GameOverCommand;
+                    ChangeViewModel(gameVm);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Something went wrong!{Environment.NewLine}Error message: {e.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
                 ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
-                ChangeViewModel(gameVm);
             }
         }
 
         private void SaveGame()
         {
             var gameVm = ViewModels.First(vm => vm.GetType().Name == nameof(MainController)) as MainController;
-            var saveFileDialog = new SaveFileDialog
+
+            try
             {
-                Filter = "Save file (*.json)|*.json",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"EvoCarcassonne_Save_Round{gameVm.CurrentRound:D2}_{DateTime.Now:yyyyMMdd-HHmmss}.json"
-            };
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                var json = JsonConvert.SerializeObject(gameVm, new JsonSerializerSettings
+                var saveFileDialog = new SaveFileDialog
                 {
-                    TypeNameHandling = TypeNameHandling.Objects,
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
-                });
-                File.WriteAllText(saveFileDialog.FileName, json);
+                    Filter = "Save file (*.json)|*.json",
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    FileName = $"EvoCarcassonne_Save_Round{gameVm.CurrentRound:D2}_{DateTime.Now:yyyyMMdd-HHmmss}.json"
+                };
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    var json = JsonConvert.SerializeObject(gameVm, new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.Objects,
+                        PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                    });
+                    File.WriteAllText(saveFileDialog.FileName, json);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Something went wrong!{Environment.NewLine}Error message: {e.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -165,7 +205,9 @@ namespace EvoCarcassonne.ViewModels
         private void SavePlayers(ObservableCollection<Player> players)
         {
             ViewModels.RemoveAll(vm => vm.GetType().Name == nameof(MainController));
-            ChangeViewModel(new MainController(players));
+            var gameVm = new MainController(players);
+            gameVm.GameOverCommand = GameOverCommand;
+            ChangeViewModel(gameVm);
         }
     }
 }

@@ -77,6 +77,7 @@
     <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Backend\Utils.cs" />
+    <Compile Include="ViewModels\GameOverViewModel.cs" />
     <Compile Include="ViewModels\MainController.cs" />
     <Compile Include="Models\BoardTileModel.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
@@ -85,6 +86,9 @@
     <Compile Include="ViewModels\PlayerEditorViewModel.cs" />
     <Compile Include="Views\ApplicationView.xaml.cs">
       <DependentUpon>ApplicationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GameOverView.xaml.cs">
+      <DependentUpon>GameOverView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -119,15 +123,15 @@
     <Compile Include="Views\PlayerEditorView.xaml.cs">
       <DependentUpon>PlayerEditorView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Resources\PlayerListViewStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
     <Page Include="Resources\SvgDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Views\ApplicationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GameOverView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
