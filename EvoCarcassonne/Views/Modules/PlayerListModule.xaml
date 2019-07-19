@@ -45,7 +45,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn>
+                    <GridViewColumn Width="55">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock>

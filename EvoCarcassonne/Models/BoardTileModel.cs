@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Media.Imaging;
-using EvoCarcassonne.Backend;
+﻿using EvoCarcassonne.Backend;
 
 namespace EvoCarcassonne.Models
 {
