@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using EvoCarcassonne.Models;
 
 namespace EvoCarcassonne.Backend
@@ -60,13 +61,21 @@ namespace EvoCarcassonne.Backend
         {
             var tileStack = new ObservableCollection<BoardTile>();
 
+            var assemblyPath = Assembly.GetExecutingAssembly().Location;
+
+            // 4 jegyzékkel fentebb megy, dirty hack
+            for (int i = 0; i < 4; i++)
+            {
+                assemblyPath = Path.GetDirectoryName(assemblyPath);
+            }
+
             foreach (var resourcePath in resourcesNames)
             {
                 var tileName = resourcePath;
 
                 for (var i = 0; i < ParseTileCount(tileName); i++)
                 {
-                    AddTile(tileStack, "C:/Users/Ilku Krisztián/RiderProjects/EvoCarcassonne/EvoCarcassonne/Resources/Tiles" + resourcePath + ".png");
+                    AddTile(tileStack, assemblyPath + "/Resources/Tiles" + resourcePath + ".png");
                 }
             }
             return tileStack;
