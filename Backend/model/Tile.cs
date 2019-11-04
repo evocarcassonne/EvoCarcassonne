@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Backend
+namespace Backend.Model
 {
     public class Tile : ITile
     {

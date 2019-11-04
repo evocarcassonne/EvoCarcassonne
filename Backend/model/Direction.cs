@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Backend
+namespace Backend.Model
 {
     public class Direction : IDirection
     {

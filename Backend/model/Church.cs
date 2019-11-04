@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Backend
+namespace Backend.Model
 {
     public class Church : ITile, ILandscape
     {
@@ -78,10 +78,10 @@ namespace Backend
             }
         }
 
-        public void calculate(ITile currentTile, bool gameover, Utils utils)
+        public void calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
         {
             List<ITile> surroundingTiles = new List<ITile>();
-            
+            figuresToGiveBack = new List<IFigure>();
             currentTile.Directions.ForEach(e => surroundingTiles.Add(e.Neighbor));
             
             var churchTile = (Church)currentTile;
@@ -97,14 +97,14 @@ namespace Backend
                     if (churchTile.CenterFigure != null)
                     {
                         churchTile.CenterFigure.Owner.Points += 9;
-                        utils.GiveBackFigureToOwner(churchTile.CenterFigure);
+                        figuresToGiveBack.Add(churchTile.CenterFigure);
                         churchTile.CenterFigure = null;
                     }
                 }
             }
         }
 
-        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, Utils utils, bool firstCall)
+        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             return true;
         }

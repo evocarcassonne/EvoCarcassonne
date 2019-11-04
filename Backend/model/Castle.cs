@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Backend
+namespace Backend.Model
 {
     public class Castle : ILandscape
     {
@@ -19,14 +19,13 @@ namespace Backend
         private List<ITile> _placedCastleTiles { get; set; } = new List<ITile>();
         private bool _gameOver { get; set; }
         private bool _outOfRange { get; set; } = false;
-        private Utils _utils;
+        private List<IFigure> FiguresToGiveBacktoOwner;
         public Castle()
         {
         }
 
-        public void calculate(ITile currentTile, bool gameover, Utils utils)
+        public void calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
         {
-            _utils = utils;
             _gameOver = gameover;
             _placedCastleTiles.Clear();
 
@@ -69,6 +68,8 @@ namespace Backend
                     break;
                 }
             }
+
+            figuresToGiveBack = FiguresToGiveBacktoOwner;
         }
 
 
@@ -84,6 +85,7 @@ namespace Backend
                 _finishedCastle = true;
                 _ITileList.Clear();
                 _figuresOnTiles.Clear();
+                FiguresToGiveBacktoOwner.Clear();
                 _starterWhereToGo = whereToGo;
             }
 
@@ -125,7 +127,7 @@ namespace Backend
 
                 if (_deleteFigures && _currentITile.Directions[getFromDirection((int)whereToGo)].Figure != null)
                 {
-                    _utils.GiveBackFigureToOwner(_currentITile.Directions[getFromDirection((int)whereToGo)].Figure);
+                    FiguresToGiveBacktoOwner.Add(_currentITile.Directions[getFromDirection((int)whereToGo)].Figure);
                     _currentITile.Directions[getFromDirection((int)whereToGo)].Figure = null;
                 }
                     
@@ -153,7 +155,7 @@ namespace Backend
 
                         if (_deleteFigures && _currentITile.Directions[i].Figure != null)
                         {
-                            _utils.GiveBackFigureToOwner(_currentITile.Directions[i].Figure);
+                            FiguresToGiveBacktoOwner.Add(_currentITile.Directions[i].Figure);
                             _currentITile.Directions[i].Figure = null;
                         }
 
@@ -296,51 +298,6 @@ namespace Backend
             return false;
         }
 
-
-
-        /*private int GetIndex(int side, int index)
-        {
-            switch (side)
-            {
-                case 0:
-                    if (index - 10 < 0)
-                    {
-                        _outOfRange = true;
-                        return 0;
-                    }
-
-                    return index - 10;
-                case 1:
-                    if (index + 1 > _ITilesSize)
-                    {
-                        _outOfRange = true;
-                        return 0;
-                    }
-
-
-                    return index + 1;
-                case 2:
-                    if (index + 10 > _ITilesSize)
-                    {
-                        _outOfRange = true;
-                        return 0;
-                    }
-
-
-                    return index + 10;
-                case 3:
-                    if (index - 1 < 0)
-                    {
-                        _outOfRange = true;
-                        return 0;
-                    }
-
-
-                    return index - 1;
-                default: return 0;
-            }
-        }*/
-
         public override bool Equals(object obj)
         {
             return obj is Castle;
@@ -371,6 +328,7 @@ namespace Backend
                 _finishedCastle = true;
                 _ITileList.Clear();
                 _figuresOnTiles.Clear();
+                FiguresToGiveBacktoOwner.Clear();
 
             }
 
@@ -396,7 +354,7 @@ namespace Backend
 
                 if (_deleteFigures && _currentITile.Directions[getFromDirection((int)_whereToGo)].Figure != null)
                 {
-                    _utils.GiveBackFigureToOwner(_currentITile.Directions[getFromDirection((int)_whereToGo)].Figure);
+                    FiguresToGiveBacktoOwner.Add(_currentITile.Directions[getFromDirection((int)_whereToGo)].Figure);
                     _currentITile.Directions[getFromDirection((int)_whereToGo)].Figure = null;
                 }
 
@@ -415,7 +373,7 @@ namespace Backend
 
                     if (_deleteFigures && _currentITile.Directions[i].Figure != null)
                     {
-                        _utils.GiveBackFigureToOwner(_currentITile.Directions[i].Figure);
+                        FiguresToGiveBacktoOwner.Add(_currentITile.Directions[i].Figure);
                         _currentITile.Directions[i].Figure = null;
                     }
                     
@@ -454,9 +412,8 @@ namespace Backend
             return _points;
         }
 
-        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, Utils utils, bool firstCall)
+        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
-            _utils = utils;
             _placedCastleTiles.Clear();
             _gameOver = true;
 

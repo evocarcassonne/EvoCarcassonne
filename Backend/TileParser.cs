@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ConsoleApplication1;
+using Backend.Model;
 using Newtonsoft.Json;
 
 namespace Backend
@@ -21,7 +20,7 @@ namespace Backend
 
     public class TileParser
     {
-        public ObservableCollection<ITile> TileStack { get; }
+        public List<ITile> TileStack { get; }
 
         public TileParser()
         {
@@ -35,11 +34,11 @@ namespace Backend
         
         #region Private methods
 
-        private ObservableCollection<ITile> GetTileStack()
+        private List<ITile> GetTileStack()
         {
-            var tileStack = new ObservableCollection<ITile>();
+            var tileStack = new List<ITile>();
             JsonReaderObject items;
-            using (StreamReader r = new StreamReader(GetResourceNames("tiles") + "\file.json"))
+            using (StreamReader r = new StreamReader(GetResourceNames("tiles") + @"\TileDefinitions.json"))
             {
                 string json = r.ReadToEnd();
                 items = JsonConvert.DeserializeObject<JsonReaderObject>(json);
@@ -63,9 +62,9 @@ namespace Backend
             return tileStack;
         }
 
-        private ObservableCollection<ITile> GetTileStack(List<string> resourcesNames)
+        private List<ITile> GetTileStack(List<string> resourcesNames)
         {
-            var tileStack = new ObservableCollection<ITile>();
+            var tileStack = new List<ITile>();
 
             /*var assemblyPath = Assembly.GetExecutingAssembly().Location;
 

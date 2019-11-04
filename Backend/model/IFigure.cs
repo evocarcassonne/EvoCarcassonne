@@ -1,4 +1,4 @@
-﻿namespace Backend
+﻿namespace Backend.Model
 {
     public interface IFigure
     {

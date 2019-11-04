@@ -41,25 +41,29 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="CardinalDirection.cs" />
-        <Compile Include="Castle.cs" />
-        <Compile Include="Church.cs" />
-        <Compile Include="Coordinates.cs" />
-        <Compile Include="Direction.cs" />
+        <Compile Include="dao\GameController.cs" />
+        <Compile Include="dao\GamePlay.cs" />
         <Compile Include="Extensions.cs" />
-        <Compile Include="Field.cs" />
-        <Compile Include="Figure.cs" />
-        <Compile Include="IDirection.cs" />
-        <Compile Include="IFigure.cs" />
-        <Compile Include="ILandscape.cs" />
-        <Compile Include="IOwner.cs" />
-        <Compile Include="ITile.cs" />
-        <Compile Include="JsonReaderObject.cs" />
-        <Compile Include="Owner.cs" />
+        <Compile Include="model\CardinalDirection.cs" />
+        <Compile Include="model\Castle.cs" />
+        <Compile Include="model\Church.cs" />
+        <Compile Include="model\Coordinates.cs" />
+        <Compile Include="model\Direction.cs" />
+        <Compile Include="model\Field.cs" />
+        <Compile Include="model\Figure.cs" />
+        <Compile Include="model\IDirection.cs" />
+        <Compile Include="model\IFigure.cs" />
+        <Compile Include="model\ILandscape.cs" />
+        <Compile Include="model\IOwner.cs" />
+        <Compile Include="model\ITile.cs" />
+        <Compile Include="model\JsonReaderObject.cs" />
+        <Compile Include="model\Owner.cs" />
+        <Compile Include="model\Player.cs" />
+        <Compile Include="model\Road.cs" />
+        <Compile Include="model\Speciality.cs" />
+        <Compile Include="model\Tile.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="Road.cs" />
-        <Compile Include="Speciality.cs" />
-        <Compile Include="Tile.cs" />
+        <Compile Include="services\PlayerService.cs" />
         <Compile Include="TileParser.cs" />
         <Compile Include="Utils.cs" />
     </ItemGroup>
@@ -68,6 +72,9 @@
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="controllers" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

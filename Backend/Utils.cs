@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Net.Security;
+using Backend.Model;
 
 namespace Backend
 {
-    public  class Utils
+    public class Utils
     {
         private int DistanceBetweenTiles = 1;
-        //private List<IOwner> Players = new List<IOwner>();
         
-        public bool CheckFitOfTile(ITile tile)
+        public static bool CheckFitOfTile(ITile tile)
         {
             Dictionary<CardinalDirection, ITile> surroundingTiles = GetSurroundingTiles(tile);
             if (surroundingTiles.Count == 0)
@@ -29,7 +28,7 @@ namespace Backend
             return true;
         }
 
-        public  Dictionary<CardinalDirection, ITile> GetSurroundingTiles(ITile currentTile)
+        public static Dictionary<CardinalDirection, ITile> GetSurroundingTiles(ITile currentTile)
         {
             Dictionary<CardinalDirection, ITile> result =
                 new Dictionary<CardinalDirection, ITile>();
@@ -64,7 +63,7 @@ namespace Backend
             }*/
             return result;
         }
-        public List<ITile> GetAllSurroundingTiles(ITile currentTile)
+        public static List<ITile> GetAllSurroundingTiles(ITile currentTile)
         {
 
             Dictionary<CardinalDirection, ITile> immediateNeighbors = GetSurroundingTiles(currentTile);
@@ -102,7 +101,7 @@ namespace Backend
             return result;
         }
 
-        public CardinalDirection GetOppositeDirection(CardinalDirection direction)
+        public static CardinalDirection GetOppositeDirection(CardinalDirection direction)
         {
             switch (direction)
             {
@@ -114,7 +113,7 @@ namespace Backend
             }
         }
 
-        public ITile GetNeighborTile(Dictionary<CardinalDirection, ITile> tilesNextToTheGivenTile, CardinalDirection whereToGo)
+        public static ITile GetNeighborTile(Dictionary<CardinalDirection, ITile> tilesNextToTheGivenTile, CardinalDirection whereToGo)
         {
             foreach (var pair in tilesNextToTheGivenTile)
             {
@@ -126,22 +125,21 @@ namespace Backend
             return null;
         }
 
-        public void GiveBackFigureToOwner(IFigure figure)
+        public static void GiveBackFigureToOwner(IFigure figure, ref List<Player> players)
         {
             if (figure != null)
             {
-                foreach (var player in Players)
+                foreach (var player in players)
                 {
-                    if (player.Equals(figure.Owner))
+                    if (player.Owner.Equals(figure.Owner))
                     {
-                        //TODO Find a place to store figures
-                        //player.Figures.Add(new Figure(figure.Owner));
+                        player.Figures.Add(new Figure(figure.Owner));
                     }
                 }
             }
         }
         
-        public void DistributePoints(int result, List<IFigure> figuresOnTiles)
+        public static void DistributePoints(int result, List<IFigure> figuresOnTiles)
         {
             var points = new List<int>();
             var players = new List<IOwner>();

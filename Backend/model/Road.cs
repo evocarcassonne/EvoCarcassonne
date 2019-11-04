@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Backend
+namespace Backend.Model
 {
     public class Road : ILandscape
     {
@@ -11,8 +11,6 @@ namespace Backend
 
         private bool _canPlaceFigure = true;
         
-        private Utils _utils;
-
         private CardinalDirection _whereToGoAfterEndOfRoadFound;
        
         private List<IFigure> FiguresOnTiles { get; set; } = new List<IFigure>();
@@ -21,9 +19,8 @@ namespace Backend
         {
         }
 
-        public void calculate(ITile currentTile, bool gameover, Utils utils)
+        public void calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
         {
-            _utils = utils;
             int result = 0;
             Gameover = gameover;
             FirstTile = currentTile;
@@ -43,7 +40,9 @@ namespace Backend
                         {
                             result++;
                         }
-                        _utils.DistributePoints(result, FiguresOnTiles);
+
+                        figuresToGiveBack = FiguresOnTiles;
+                        Utils.DistributePoints(result, FiguresOnTiles);
                         result = 0;
                         FiguresOnTiles = new List<IFigure>();
                     }
@@ -53,7 +52,9 @@ namespace Backend
                 {
                     result += 1;
                 }
-                _utils.DistributePoints(result, FiguresOnTiles);
+
+                figuresToGiveBack = FiguresOnTiles;
+                Utils.DistributePoints(result, FiguresOnTiles);
             }
             else
             {
@@ -77,7 +78,8 @@ namespace Backend
                             RemoveFiguresFromFinishedRoad(currentTile, (CardinalDirection) i, true);
                         }
                         IsRoadFinished = true;
-                        _utils.DistributePoints(result, FiguresOnTiles);
+                        figuresToGiveBack = FiguresOnTiles;
+                        Utils.DistributePoints(result, FiguresOnTiles);
                         LastTile = null;
                         FiguresOnTiles = new List<IFigure>();
                         result = 0;
@@ -103,26 +105,27 @@ namespace Backend
                         {
                             RemoveFiguresFromFinishedRoad(FirstTile, _whereToGoAfterEndOfRoadFound, true);
                         }
-                        _utils.DistributePoints(result, FiguresOnTiles);
+                        figuresToGiveBack = FiguresOnTiles;
+                        Utils.DistributePoints(result, FiguresOnTiles);
                         break;
                     }   
                 }
             }
-            FiguresOnTiles = new List<IFigure>();
+            FiguresOnTiles = figuresToGiveBack = new List<IFigure>();
             FirstTile = null;
             LastTile = null;
             IsRoadFinished = true;
         }
 
 
-        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, Utils utils, bool firstCall)
+        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             ITile neighborTile = currentTile.getTileSideByCardinalDirection(whereToGo).Neighbor;
             if (firstCall)
             {
                 if (IsEndOfRoad(currentTile))
                 {
-                    return CanPlaceFigure(currentTile, whereToGo, utils, false);
+                    return CanPlaceFigure(currentTile, whereToGo, false);
                 }
                 else
                 {
@@ -135,8 +138,8 @@ namespace Backend
                         }
                     }
 
-                    return CanPlaceFigure(currentTile, whereToGo, utils, false) &&
-                           CanPlaceFigure(currentTile, otherSide, utils, false);
+                    return CanPlaceFigure(currentTile, whereToGo, false) &&
+                           CanPlaceFigure(currentTile, otherSide,  false);
                 }
             }
             else
@@ -148,7 +151,7 @@ namespace Backend
 
                 if (IsEndOfRoad(neighborTile))
                 {
-                    return neighborTile.Directions[(int)utils.GetOppositeDirection(whereToGo)].Figure == null;
+                    return neighborTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure == null;
                 }
 
                 for (int i = 0; i < 4; i++)
@@ -167,14 +170,14 @@ namespace Backend
                     {
                         if (currentTile.Speciality.Contains(Speciality.EndOfRoad))
                         {
-                            if (neighborTile.Directions[i].Landscape is Road && i != (int)utils.GetOppositeDirection(whereToGo))
+                            if (neighborTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
                             {
-                                return CanPlaceFigure(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), utils, false);
+                                return CanPlaceFigure(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), false);
                             }
                         }
-                        if (neighborTile.Directions[i].Landscape is Road && i != (int)utils.GetOppositeDirection(whereToGo))
+                        if (neighborTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
                         {
-                            return CanPlaceFigure(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), utils, false);
+                            return CanPlaceFigure(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), false);
                         }
                     }
                 }
@@ -182,9 +185,9 @@ namespace Backend
                 {
                     for (var i = 0; i < 4; i++)
                     {
-                        if (neighborTile.Directions[i].Landscape is Road && i != (int)utils.GetOppositeDirection(whereToGo))
+                        if (neighborTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
                         {
-                            return CanPlaceFigure(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), utils, false);
+                            return CanPlaceFigure(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), false);
                         }
                     }
                 }
@@ -202,8 +205,8 @@ namespace Backend
         private int CalculateWithDirections(ITile currentTile, CardinalDirection whereToGo)
         {
             int result = 1;
-            Dictionary<CardinalDirection, ITile> tilesNextToTheGivenTile = _utils.GetSurroundingTiles(currentTile);
-            ITile neighborTile = _utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
+            Dictionary<CardinalDirection, ITile> tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
+            ITile neighborTile = Utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
             
             for (int i = 0; i < 4; i++)
             {
@@ -222,11 +225,11 @@ namespace Backend
 
             if (IsEndOfRoad(neighborTile) || neighborTile.Position.Equals(FirstTile.Position))
             {
-                CheckFigureOnTile(neighborTile, (int)_utils.GetOppositeDirection(whereToGo));
+                CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
                 LastTile = neighborTile;
                 return result;
             }
-            return SearchInTilesSides(result, neighborTile, (int)_utils.GetOppositeDirection(whereToGo));
+            return SearchInTilesSides(result, neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
         }
 
         public override bool Equals(object obj)
@@ -275,16 +278,16 @@ namespace Backend
         /// <returns>The end of road tile found in the given direction. Null if there is no end of road tile</returns>
         private ITile SearchEndOfRoadTileInGivenDirection(ITile currentTile, CardinalDirection whereToGo)
         {
-            ITile neighborTile = _utils.GetNeighborTile(_utils.GetSurroundingTiles(currentTile), whereToGo);
+            ITile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
             if (neighborTile == null || IsEndOfRoad(neighborTile) || FirstTile.Position.Equals(neighborTile.Position))
             {
-                _whereToGoAfterEndOfRoadFound = _utils.GetOppositeDirection(whereToGo);
+                _whereToGoAfterEndOfRoadFound = Utils.GetOppositeDirection(whereToGo);
                 return neighborTile;
             }
 
             for (var i = 0; i < 4; i++)
             {
-                if (neighborTile.Directions[i].Landscape is Road && i != (int)_utils.GetOppositeDirection(whereToGo))
+                if (neighborTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
                 {
                     return SearchEndOfRoadTileInGivenDirection(neighborTile, neighborTile.GetCardinalDirectionByIndex(i));
                 }
@@ -304,10 +307,10 @@ namespace Backend
         
         private void RemoveFiguresFromFinishedRoad(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
-            ITile neighborTile = _utils.GetNeighborTile(_utils.GetSurroundingTiles(currentTile), whereToGo);
+            ITile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
             if (firstCall)
             {
-                _utils.GiveBackFigureToOwner(currentTile.Directions[(int)whereToGo].Figure);
+                //Utils.GiveBackFigureToOwner(currentTile.Directions[(int)whereToGo].Figure);
                 currentTile.Directions[(int)whereToGo].Figure = null;
             }
 
@@ -317,22 +320,22 @@ namespace Backend
             }
             if (IsEndOfRoad(neighborTile) || neighborTile.Position.Equals(FirstTile.Position))
             {
-                _utils.GiveBackFigureToOwner(neighborTile.Directions[(int)_utils.GetOppositeDirection(whereToGo)].Figure);
-                neighborTile.Directions[(int)_utils.GetOppositeDirection(whereToGo)].Figure = null;
+                //Utils.GiveBackFigureToOwner(neighborTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure);
+                neighborTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure = null;
                 return;
             }
             for (int i = 0; i < 4; i++)
             {
                 if (neighborTile.Directions[i].Figure != null && neighborTile.Directions[i].Landscape is Road)
                 {
-                    _utils.GiveBackFigureToOwner( neighborTile.Directions[i].Figure);
+                    //Utils.GiveBackFigureToOwner( neighborTile.Directions[i].Figure);
                     neighborTile.Directions[i].Figure = null;
                 }
             }
             
             for (int i = 0; i < 4; i++)
             {
-                if (neighborTile.Directions[i].Landscape is Road && i != (int)_utils.GetOppositeDirection(whereToGo))
+                if (neighborTile.Directions[i].Landscape is Road && i != (int)Utils.GetOppositeDirection(whereToGo))
                 {
                     RemoveFiguresFromFinishedRoad(neighborTile, (CardinalDirection)i, false);
                     break;
