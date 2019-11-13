@@ -64,6 +64,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Backend\Backend.csproj">
+      <Project>{b24f857a-d1ef-4278-920c-962970d5658a}</Project>
+      <Name>Backend</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EvoCarcassonne\EvoCarcassonne.csproj">
       <Project>{6c4a5807-050e-444b-af9b-f1ed7e4f633f}</Project>
       <Name>EvoCarcassonne</Name>
