@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 
 namespace Backend.Model
 {
     public class Player
     {
+        public Guid playerId { get; set; }
         private int _numberOfFigures = 7;
         public List<Figure> Figures = new List<Figure>();
         public IOwner Owner;

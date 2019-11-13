@@ -7,11 +7,13 @@ using Backend.Model;
 
 namespace Backend.services
 {
-    interface IPlayerService
+    public interface IPlayerService
     {
-        void Subscribe(Guid gameID, Player player);
-        void Unsubscribe(Guid gameId, Player player);
+        Guid Subscribe(Guid gameID, Player player);
+        void Unsubscribe(Guid gameId, Guid playerId);
         List<Player> GetPlayers(Guid gameId);
         Player GetCurrentPlayer(Guid gameId);
+        Guid CreateGameSession();
+        void DeleteGameSession(Guid gameId);
     }
 }

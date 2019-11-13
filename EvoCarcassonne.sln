@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvoCarcassonneUnitTests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{B24F857A-D1EF-4278-920C-962970D5658A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{4179AB2E-93FD-432C-81ED-E37F26D18045}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B24F857A-D1EF-4278-920C-962970D5658A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B24F857A-D1EF-4278-920C-962970D5658A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B24F857A-D1EF-4278-920C-962970D5658A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4179AB2E-93FD-432C-81ED-E37F26D18045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4179AB2E-93FD-432C-81ED-E37F26D18045}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4179AB2E-93FD-432C-81ED-E37F26D18045}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4179AB2E-93FD-432C-81ED-E37F26D18045}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -76,9 +76,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="TileDefinitions.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
