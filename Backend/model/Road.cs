@@ -120,7 +120,7 @@ namespace Backend.Model
 
         public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
-            ITile neighborTile = currentTile.getTileSideByCardinalDirection(whereToGo).Neighbor;
+            ITile neighborTile = currentTile.GetTileSideByCardinalDirection(whereToGo).Neighbor;
             if (firstCall)
             {
                 if (IsEndOfRoad(currentTile))

@@ -22,6 +22,8 @@ namespace Backend.Model
             }
         }
 
+        public string PropertiesAsString { get; set; }
+
         public Church(List<IDirection> directions, List<Speciality> speciality)
         {
             Directions = directions;
@@ -54,7 +56,7 @@ namespace Backend.Model
             }
         }
 
-        public IDirection getTileSideByCardinalDirection(CardinalDirection side)
+        public IDirection GetTileSideByCardinalDirection(CardinalDirection side)
         {
             switch (side)
             {

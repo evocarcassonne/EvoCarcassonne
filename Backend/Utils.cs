@@ -16,8 +16,8 @@ namespace Backend
             }
             foreach (var neighborTile in surroundingTiles)
             {
-                ILandscape currentTileLandscape = tile.getTileSideByCardinalDirection(neighborTile.Key).Landscape;
-                ILandscape neighborTileLandscape = neighborTile.Value.getTileSideByCardinalDirection(GetOppositeDirection(neighborTile.Key)).Landscape;
+                ILandscape currentTileLandscape = tile.GetTileSideByCardinalDirection(neighborTile.Key).Landscape;
+                ILandscape neighborTileLandscape = neighborTile.Value.GetTileSideByCardinalDirection(GetOppositeDirection(neighborTile.Key)).Landscape;
                 
                 if (!currentTileLandscape.Equals(neighborTileLandscape))
                 {
@@ -81,16 +81,16 @@ namespace Backend
                 ITile neighbor = null;
                 if (neighborTile.Key == CardinalDirection.East)
                 {
-                    neighbor = neighborTile.Value.getTileSideByCardinalDirection(CardinalDirection.North).Neighbor;
+                    neighbor = neighborTile.Value.GetTileSideByCardinalDirection(CardinalDirection.North).Neighbor;
                 }else if (neighborTile.Key == CardinalDirection.South)
                 {
-                    neighbor = neighborTile.Value.getTileSideByCardinalDirection(CardinalDirection.East).Neighbor;
+                    neighbor = neighborTile.Value.GetTileSideByCardinalDirection(CardinalDirection.East).Neighbor;
                 }else if (neighborTile.Key == CardinalDirection.West)
                 {
-                    neighbor = neighborTile.Value.getTileSideByCardinalDirection(CardinalDirection.South).Neighbor;
+                    neighbor = neighborTile.Value.GetTileSideByCardinalDirection(CardinalDirection.South).Neighbor;
                 }else if (neighborTile.Key == CardinalDirection.North)
                 {
-                    neighbor = neighborTile.Value.getTileSideByCardinalDirection(CardinalDirection.West).Neighbor;
+                    neighbor = neighborTile.Value.GetTileSideByCardinalDirection(CardinalDirection.West).Neighbor;
                 }
                 if (neighbor != null)
                 {

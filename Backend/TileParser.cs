@@ -38,7 +38,8 @@ namespace Backend
         {
             var tileStack = new List<ITile>();
             JsonReaderObject items;
-            using (StreamReader r = new StreamReader(GetResourceNames("tiles") + @"\TileDefinitions.json"))
+            GetResourceNames("tiles");
+            using (StreamReader r = new StreamReader("TileDefinitions.json"))
             {
                 string json = r.ReadToEnd();
                 items = JsonConvert.DeserializeObject<JsonReaderObject>(json);
@@ -66,27 +67,9 @@ namespace Backend
         {
             var tileStack = new List<ITile>();
 
-            /*var assemblyPath = Assembly.GetExecutingAssembly().Location;
-
-            // 4 jegyzékkel fentebb megy, dirty hack
-            for (int i = 0; i < 4; i++)
+            if (resourcesNames != null)
             {
-                assemblyPath = Path.GetDirectoryName(assemblyPath);
-            }*/
-            
-            JsonReaderObject items;
-            using (StreamReader r = new StreamReader(GetResourceNames("tiles") + "\file.json"))
-            {
-                string json = r.ReadToEnd();
-                items = JsonConvert.DeserializeObject<JsonReaderObject>(json);
-            }
-
-            var tilesFromJson = items.carcassonne.Where(type => type.gametype == "default").Select(e => e.defaultTiles).FirstOrDefault();
-
-
-            if (tilesFromJson != null)
-            {
-                foreach (var tileName in tilesFromJson)
+                foreach (var tileName in resourcesNames)
                 {
                     for (var i = 0; i < ParseTileCount(tileName); i++)
                     {
@@ -111,6 +94,8 @@ namespace Backend
             {
                 backendTile = new Tile(ParseTileDirections(tileName), tileSpecialities);
             }
+
+            backendTile.PropertiesAsString = tileName;
             tileStack.Add(backendTile);
         }
 

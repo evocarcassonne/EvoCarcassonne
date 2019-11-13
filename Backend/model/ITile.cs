@@ -8,9 +8,9 @@ namespace Backend.Model
         List<Speciality> Speciality { get; set; }
         Coordinates Position { get; set; }
         void Rotate(int direction);
-        IDirection getTileSideByCardinalDirection(CardinalDirection side);
+        IDirection GetTileSideByCardinalDirection(CardinalDirection side);
         CardinalDirection GetCardinalDirectionByIndex(int index);
-
         IFigure CenterFigure { get; set; }
+        string PropertiesAsString { get; set; }
     }
 }

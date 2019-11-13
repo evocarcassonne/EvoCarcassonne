@@ -24,21 +24,6 @@ namespace Backend.dao
             }
         }
         
-        /// <summary>
-        /// The tile that is currently in hand, or on the table
-        /// </summary>
-        public ITile CurrentTile
-        {
-            get => _currentTile;
-            set
-            {
-                if (_currentTile != value)
-                {
-                    _currentTile = value;
-                }
-            }
-        }
-        
         public Player CurrentPlayer
         {
             get => _currentPlayer;
@@ -73,9 +58,7 @@ namespace Backend.dao
 
                 CurrentPlayer = Players.First();
             }
-
-
-                #endregion
+        #endregion
         
         #region Public methods
         
@@ -89,12 +72,10 @@ namespace Backend.dao
             TileIsDown = false;
             HasCurrentTile = true;
             _alreadyCalculated = false;
-
-            CurrentTile = TileStack.RemoveAndGet(_randomNumberGenerator.Next(TileStack.Count));
-            return CurrentTile;
+            return TileStack.RemoveAndGet(_randomNumberGenerator.Next(TileStack.Count));
         }
 
-        public bool PlaceTile(Coordinates coordinates)
+        public bool PlaceTile(ITile tileToPlace, Coordinates coordinates)
         {
             bool canPlaceTile = !(!HasCurrentTile || TileIsDown);
 
@@ -109,42 +90,40 @@ namespace Backend.dao
                 return false;
             }
             CurrentPlayer = CurrentPlayer;
-            CurrentTile.Position = coordinates;
+            tileToPlace.Position = coordinates;
             CanPlaceFigureProperty = true;
-            if (!Utils.CheckFitOfTile(CurrentTile))
+            if (!Utils.CheckFitOfTile(tileToPlace))
             {
-                CurrentTile.Position = null;
+                tileToPlace.Position = null;
                 return false;
             }
 
-            UpdateTiles();
-            PlacedTiles.Add(CurrentTile);
+            UpdateTiles(tileToPlace);
+            PlacedTiles.Add(tileToPlace);
             TileIsDown = true;
             HasCurrentTile = false;
-
-            CurrentTile = new Tile(null, new List<Speciality> { Speciality.None });
             return true;
         }
 
-        private void UpdateTiles()
+        private void UpdateTiles(ITile justPlacedTile)
         {
             foreach (var placedTile in PlacedTiles)
             {
-                if (placedTile.Position.X  == CurrentTile.Position.X + 1 && placedTile.Position.Y == CurrentTile.Position.Y)
+                if (placedTile.Position.X  == justPlacedTile.Position.X + 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
                 {
-                    placedTile.Directions[3].Neighbor = CurrentTile;
+                    placedTile.Directions[3].Neighbor = justPlacedTile;
                 }
-                if (placedTile.Position.X == CurrentTile.Position.X && placedTile.Position.Y == CurrentTile.Position.Y + 1)
+                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y + 1)
                 {
-                    placedTile.Directions[0].Neighbor = CurrentTile;
+                    placedTile.Directions[0].Neighbor = justPlacedTile;
                 }
-                if (placedTile.Position.X == CurrentTile.Position.X - 1 && placedTile.Position.Y == CurrentTile.Position.Y)
+                if (placedTile.Position.X == justPlacedTile.Position.X - 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
                 {
-                    placedTile.Directions[1].Neighbor = CurrentTile;
+                    placedTile.Directions[1].Neighbor = justPlacedTile;
                 }
-                if (placedTile.Position.X == CurrentTile.Position.X && placedTile.Position.Y == CurrentTile.Position.Y - 1)
+                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y - 1)
                 {
-                    placedTile.Directions[2].Neighbor = CurrentTile;
+                    placedTile.Directions[2].Neighbor = justPlacedTile;
                 }
             }
         }
@@ -154,9 +133,9 @@ namespace Backend.dao
         /// </summary>
         /// <param name="currentTile">The tile, to put figure on</param>
         /// <param name="side">Which side of tile should be the figure placed</param>
-        public bool PlaceFigure(int side)
+        public bool PlaceFigure(ITile tileToPlace, int side)
         {
-            if (!CanPlaceFigure(CurrentTile, side))
+            if (!CanPlaceFigure(tileToPlace, side))
             {
                 return false;
             }
@@ -166,15 +145,15 @@ namespace Backend.dao
                 _figureDown = false;
                 _currentSideForFigure = -1;
 
-                if (side == 4 && CurrentTile is Church)
+                if (side == 4 && tileToPlace is Church)
                 {
-                    figureToGetdown = CurrentTile.CenterFigure;
-                    CurrentTile.CenterFigure = null;
+                    figureToGetdown = tileToPlace.CenterFigure;
+                    tileToPlace.CenterFigure = null;
                 }
                 else
                 {
-                    figureToGetdown = CurrentTile.Directions[side].Figure;
-                    CurrentTile.Directions[side].Figure = null;
+                    figureToGetdown = tileToPlace.Directions[side].Figure;
+                    tileToPlace.Directions[side].Figure = null;
                 }
 
                 if (figureToGetdown != null)
@@ -185,13 +164,13 @@ namespace Backend.dao
             else
             {
                 var playerFigure = CurrentPlayer.Figures.RemoveAndGet(0);
-                if (side == 4 && CurrentTile is Church)
+                if (side == 4 && tileToPlace is Church)
                 {
-                    CurrentTile.CenterFigure = playerFigure;
+                    tileToPlace.CenterFigure = playerFigure;
                 }
                 else
                 {
-                    CurrentTile.Directions[side].Figure = playerFigure;
+                    tileToPlace.Directions[side].Figure = playerFigure;
                 }
 
                 _figureDown = true;
@@ -325,10 +304,7 @@ namespace Backend.dao
             }
             return false;
         }
-        private bool CanRotate()
-        {
-            return HasCurrentTile;
-        }
+
         private void CalculateGameOver()
         {
             foreach (ITile tile in PlacedTiles)

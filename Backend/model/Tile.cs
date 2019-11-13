@@ -14,6 +14,8 @@ namespace Backend.Model
             Speciality = speciality;
         }
 
+        public string PropertiesAsString { get; set; }
+
         /**
          * Rotate the tile depending on the given parameter.
          */
@@ -46,7 +48,7 @@ namespace Backend.Model
         /**
          * Returns the queried side of the tile. If wrong side is given, it returns with the North side of the tile.
          */
-        public IDirection getTileSideByCardinalDirection(CardinalDirection side)
+        public IDirection GetTileSideByCardinalDirection(CardinalDirection side)
         {
             switch (side)
             {
@@ -63,7 +65,8 @@ namespace Backend.Model
             return "directions1: " + Directions[0].Landscape + "    directions2" +
                    Directions[1].Landscape +
                    "    directions2" + Directions[2].Landscape + "    directions4" + Directions[3].Landscape +
-                   "    specialty: " + Speciality;
+                   "    specialty: " + Speciality +
+                   "    stringRepresentation: " + PropertiesAsString;
         }
 
         public CardinalDirection GetCardinalDirectionByIndex(int index)

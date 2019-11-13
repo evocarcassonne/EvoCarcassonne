@@ -164,7 +164,7 @@ namespace Backend.Model
                         _ITileList.Add(_currentITile);
                         _placedCastleTiles.Add(_currentITile);
                         _firstCall = false;
-                        _currentITile = _currentITile.getTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
+                        _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
                         CalculateWithDirections(_currentITile, (CardinalDirection)i);
                         _currentITile = currentTile;
 
@@ -379,7 +379,7 @@ namespace Backend.Model
                     
                     _whereToGo = i;
                     _ITileList.Add(_currentITile);
-                    _currentITile = _currentITile.getTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
+                    _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
                     CalculateCastle(_currentITile, false);
                     _currentITile = currentTile;
                 }
