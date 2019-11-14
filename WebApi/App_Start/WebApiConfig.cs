@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace WebApi
@@ -14,11 +15,28 @@ namespace WebApi
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json") ); 
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/xml") ); 
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html") ); 
+            
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
+                name: "PlayerAPI",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                defaults: new { id = RouteParameter.Optional }  
             );
+            
+            /*config.Routes.MapHttpRoute(
+                name: "PlayerAPI2",
+                routeTemplate: "api/{controller}/{gameID}/{playerName}",
+                defaults: new { gameID = RouteParameter.Optional, playerName = RouteParameter.Optional }  
+            );*/
+            /*config.Routes.MapHttpRoute(
+                name: "ActionApi",
+                routeTemplate: "api/{controller}/{action}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );*/
+
+
         }
     }
 }

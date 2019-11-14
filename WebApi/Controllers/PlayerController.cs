@@ -1,35 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Backend.Model;
 using Backend.services;
-using Backend.Services;
 using Backend.Services.impl;
 
 namespace WebApi.Controllers
 {
+    [RoutePrefix("api/Player")]
     public class PlayerController : ApiController
     {
 
-        private IPlayerService playerService;
-        private List<Player> players; 
+        private readonly IPlayerService playerService;
 
         public PlayerController()
         {
             playerService = new PlayerService();
-            players = new List<Player>();
-            players.Add(new Player(new Owner("Alma")));
-            players.Add(new Player(new Owner("Korte")));
-            players.Add(new Player(new Owner("Szilva")));
-            players.Add(new Player(new Owner("Barack")));
         }
 
-        public IHttpActionResult GetAllProducts()
+        [HttpPost]
+        [Route("{gameID}/Subscribe/{playerName}")]
+        public Guid Subscribe([FromUri] string gameID, [FromUri] string playerName)
         {
-            return Ok(players);
+            return playerService.Subscribe(Guid.Parse(gameID), playerName);
+        }
+
+        [HttpPost]
+        [Route("{gameId}/Unsubscribe/{playerId}")]
+        void Unsubscribe(Guid gameId, Guid playerId)
+        {
+            playerService.Unsubscribe(gameId, playerId);
+        }
+        
+        [HttpGet]
+        [Route("{gameId}/Players")]
+        public List<Player> Players([FromUri] string gameId)
+        {
+            return playerService.GetPlayers(Guid.Parse(gameId));
+        }
+        
+        [HttpGet]
+        [Route("{gameId}/CurrentPlayer")]
+        public Player GetCurrentPlayer([FromUri] Guid gameId)
+        {
+            return playerService.GetCurrentPlayer(gameId);
         }
     }
 }
