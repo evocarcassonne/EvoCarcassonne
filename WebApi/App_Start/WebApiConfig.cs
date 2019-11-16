@@ -15,9 +15,7 @@ namespace WebApi
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json") ); 
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/xml") ); 
-            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html") ); 
             
             config.Routes.MapHttpRoute(
                 name: "PlayerAPI",
