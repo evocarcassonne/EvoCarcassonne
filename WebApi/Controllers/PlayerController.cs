@@ -25,11 +25,11 @@ namespace WebApi.Controllers
             return playerService.Subscribe(Guid.Parse(gameID), playerName);
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("{gameId}/Unsubscribe/{playerId}")]
-        void Unsubscribe(Guid gameId, Guid playerId)
+        public bool Unsubscribe([FromUri] string gameId, [FromUri] string playerId)
         {
-            playerService.Unsubscribe(gameId, playerId);
+            return playerService.Unsubscribe(Guid.Parse(gameId), Guid.Parse(playerId));
         }
         
         [HttpGet]
@@ -37,13 +37,6 @@ namespace WebApi.Controllers
         public List<Player> Players([FromUri] string gameId)
         {
             return playerService.GetPlayers(Guid.Parse(gameId));
-        }
-        
-        [HttpGet]
-        [Route("{gameId}/CurrentPlayer")]
-        public Player GetCurrentPlayer([FromUri] Guid gameId)
-        {
-            return playerService.GetCurrentPlayer(gameId);
         }
     }
 }

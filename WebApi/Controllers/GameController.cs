@@ -30,9 +30,9 @@ namespace WebApi.Controllers
 
         [HttpDelete]
         [Route("{id}/Delete")]
-        public void DeleteSession(Guid id)
+        public void DeleteSession([FromUri] string id)
         {
-            playerService.DeleteGameSession(id);
+            playerService.DeleteGameSession(Guid.Parse(id));
         } 
     }
 }

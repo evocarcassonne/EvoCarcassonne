@@ -29,9 +29,10 @@ namespace WebApi.Controllers
         
         [HttpGet]
         [Route("{gameId}/CurrentPlayer")]
-        public Player GetCurrentPlayer(Guid gameId)
+        public PlayerDto GetCurrentPlayer(Guid gameId)
         {
-            return gamePlayService.GetCurrentPlayer(gameId);
+            var player =  gamePlayService.GetCurrentPlayer(gameId);
+            return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
         }
 
         [HttpGet]
@@ -57,9 +58,13 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [Route("{gameId}/EndTurn")]
-        public GamePlay EndTurn(Guid gameId)
+        public GameInfoDto EndTurn(Guid gameId)
         {
-            return gamePlayService.EndTurn(gameId);
+            var gamePlay =  gamePlayService.EndTurn(gameId);
+            var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
+            gamePlay.PlacedTiles.ForEach(tile => gameInfoDto.AddTileInfoOneByOne(new TileInfoDto(tile.PropertiesAsString, tile.Position)));
+            gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name,player.Owner.Points)));
+            return gameInfoDto;
         }
         
     }
