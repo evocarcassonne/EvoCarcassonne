@@ -22,10 +22,6 @@ namespace Backend.Services.impl
 
             Player player = new Player(new Owner(playerName));
             player.playerId = Guid.NewGuid();
-            if (gamePlay.Players.Count == 0)
-            {
-                gamePlay.Owner = player.playerId;
-            }
             gamePlay.Players.Add(player);
             gamePlay.CurrentPlayer = gamePlay.Players[0];
             return player.playerId;
