@@ -44,13 +44,12 @@ namespace Backend.dao
             public GamePlay()
             {
                 Id = Guid.NewGuid();
+                LoadTiles();
                 _randomNumberGenerator = new Random();
             }
 
             public GamePlay(IEnumerable<Player> players) : this()
             {
-                LoadTiles();
-
                 foreach (var player in players)
                 {
                     Players.Add(player);
@@ -91,40 +90,55 @@ namespace Backend.dao
             }
             CurrentPlayer = CurrentPlayer;
             tileToPlace.Position = coordinates;
-            CanPlaceFigureProperty = true;
-            if (!Utils.CheckFitOfTile(tileToPlace))
+            if (!Utils.CheckFitOfTile(tileToPlace, SurroundingTilesByCoordinates(tileToPlace)))
             {
                 tileToPlace.Position = null;
                 return false;
             }
-
-            UpdateTiles(tileToPlace);
+            
             PlacedTiles.Add(tileToPlace);
+            UpdateTiles(tileToPlace);
+            CanPlaceFigureProperty = true;
             TileIsDown = true;
             HasCurrentTile = false;
             return true;
         }
 
-        private void UpdateTiles(ITile justPlacedTile)
+        private Dictionary<CardinalDirection, ITile> SurroundingTilesByCoordinates(ITile justPlacedTile)
         {
+            var result = new Dictionary<CardinalDirection, ITile>();
             foreach (var placedTile in PlacedTiles)
             {
                 if (placedTile.Position.X  == justPlacedTile.Position.X + 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
                 {
-                    placedTile.Directions[3].Neighbor = justPlacedTile;
+                    result.Add(CardinalDirection.East, placedTile);
+                    break;
                 }
                 if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y + 1)
                 {
-                    placedTile.Directions[0].Neighbor = justPlacedTile;
+                    result.Add(CardinalDirection.South, placedTile);
+                    break;
                 }
                 if (placedTile.Position.X == justPlacedTile.Position.X - 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
                 {
-                    placedTile.Directions[1].Neighbor = justPlacedTile;
+                    result.Add(CardinalDirection.West, placedTile);
+                    break;
                 }
                 if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y - 1)
                 {
-                    placedTile.Directions[2].Neighbor = justPlacedTile;
+                    result.Add(CardinalDirection.North, placedTile);
+                    break;
                 }
+            }
+            return result;
+        }
+        
+        private void UpdateTiles(ITile justPlacedTile)
+        {
+            foreach (var placedTile in SurroundingTilesByCoordinates(justPlacedTile))
+            {
+                placedTile.Value.Directions[(int) Utils.GetOppositeDirection(placedTile.Key)].Neighbor = justPlacedTile;
+                justPlacedTile.Directions[(int) placedTile.Key].Neighbor = placedTile.Value;
             }
         }
 
@@ -200,18 +214,21 @@ namespace Backend.dao
         #region Private methods
         private void LoadTiles()
         {
-            TileStack = new TileParser().TileStack;
-            for (var x = 0; x < 10; x++)
+            if (TileStack == null || TileStack.Count == 0)
             {
-                for (var y = 0; y < 10; y++)
+                TileStack = new TileParser().TileStack;
+                for (var x = 0; x < 10; x++)
                 {
-                    if (x == 5 && y == 5)
+                    for (var y = 0; y < 10; y++)
                     {
-                        // Put a tile to the middle of the board
-                        var starterTile = TileStack.RemoveAndGet(0);
-                        starterTile.Position = new Coordinates(x, y);
-                        CanPlaceFigureProperty = false;
-                        PlacedTiles.Add(starterTile);
+                        if (x == 5 && y == 5)
+                        {
+                            // Put a tile to the middle of the board
+                            var starterTile = TileStack.RemoveAndGet(0);
+                            starterTile.Position = new Coordinates(x, y);
+                            CanPlaceFigureProperty = false;
+                            PlacedTiles.Add(starterTile);
+                        }
                     }
                 }
             }
@@ -339,7 +356,7 @@ namespace Backend.dao
 
         [JsonProperty]
         private List<ITile> TileStack;
-        private List<ITile> PlacedTiles = new List<ITile>();
+        public List<ITile> PlacedTiles = new List<ITile>();
         
         private int _currentRound = 1;
         private ITile _currentTile;

@@ -7,9 +7,8 @@ namespace Backend
     {
         private int DistanceBetweenTiles = 1;
         
-        public static bool CheckFitOfTile(ITile tile)
+        public static bool CheckFitOfTile(ITile tile, Dictionary<CardinalDirection, ITile> surroundingTiles)
         {
-            Dictionary<CardinalDirection, ITile> surroundingTiles = GetSurroundingTiles(tile);
             if (surroundingTiles.Count == 0)
             {
                 return false;
@@ -24,7 +23,6 @@ namespace Backend
                     return false;
                 }
             }
-
             return true;
         }
 
