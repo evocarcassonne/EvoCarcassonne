@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Backend.Model;
-using Newtonsoft.Json;
 
 namespace Backend
 {
@@ -20,7 +18,8 @@ namespace Backend
 
     public class TileParser
     {
-        public List<ITile> TileStack { get; }
+        public List<ITile> TileStack { get; set; }
+        
 
         public TileParser()
         {
@@ -31,39 +30,57 @@ namespace Backend
         {
             TileStack = GetTileStack(resourcesNames);
         }
+
+        public static ITile Parse(string tileToParse)
+        {
+            ITile result = new Tile(ParseTileDirections(tileToParse), ParseTileSpecialities(tileToParse));
+            result.PropertiesAsString = tileToParse;
+            return result;
+        }
         
         #region Private methods
 
-        private List<ITile> GetTileStack()
+        private static List<ITile> GetTileStack()
         {
             var tileStack = new List<ITile>();
-            JsonReaderObject items;
-            GetResourceNames("tiles");
-            using (StreamReader r = new StreamReader("TileDefinitions.json"))
+            
+            /*try
             {
-                string json = r.ReadToEnd();
-                items = JsonConvert.DeserializeObject<JsonReaderObject>(json);
-            }
-
-            var tilesFromJson = items.carcassonne.Where(type => type.gametype == "default").Select(e => e.defaultTiles).FirstOrDefault();
-
-            AddTile(tileStack,
-                tilesFromJson?.Find(name => name.StartsWith("s")));
-
-            if (tilesFromJson != null)
-            {
-                foreach (var tileName in tilesFromJson)
+                JsonReaderObject items;
+                Assembly myAssembly = Assembly.GetExecutingAssembly();
+                var resourceStream = myAssembly.GetManifestResourceStream("TileDefinitions.json");
+                using (StreamReader r = new StreamReader(resourceStream ?? throw new Exception()))
                 {
-                    for (var i = 0; i < ParseTileCount(tileName); i++)
-                    {
-                        AddTile(tileStack, tileName);
-                    }
+                    string json = r.ReadToEnd();
+                    items = JsonConvert.DeserializeObject<JsonReaderObject>(json);
+                }
+
+                tilesFromJson = items.carcassonne.Where(type => type.gametype == "default").Select(e => e.defaultTiles)
+                    .FirstOrDefault();
+            }catch (FileLoadException)
+            {
+                tilesFromJson = defaultTiles;
+            }
+            catch (Exception)
+            {
+                tilesFromJson = defaultTiles;
+            }*/
+            List<string> defaultTiles = new List<string>{"S321014","T102020","T111113","T122021","T122123","T122221","T202021","T220021","T221121","T222004","T302024","T320020","T320114","T321104","T321120","T322020","T400002","T401113","T520004","T810100","T900110","T2001023","T2221213","T3211134"};
+            string firstTile = defaultTiles.Find(name => name.StartsWith("s"));
+            //AddTile(tileStack, firstTile);
+            AddTile(tileStack, defaultTiles.First());
+
+            foreach (var tileName in defaultTiles)
+            {
+                for (var i = 1; i < ParseTileCount(tileName); i++)
+                {
+                    AddTile(tileStack, tileName);
                 }
             }
             return tileStack;
         }
 
-        private List<ITile> GetTileStack(List<string> resourcesNames)
+        private static List<ITile> GetTileStack(List<string> resourcesNames)
         {
             var tileStack = new List<ITile>();
 
@@ -81,7 +98,7 @@ namespace Backend
             return tileStack;
         }
         
-        private void AddTile(ICollection<ITile> tileStack, string tileName)
+        private static void AddTile(ICollection<ITile> tileStack, string tileName)
         {
             var tileSpecialities = ParseTileSpecialities(tileName);
 
@@ -99,12 +116,12 @@ namespace Backend
             tileStack.Add(backendTile);
         }
 
-        private int ParseTileCount(string tileName)
+        private static int ParseTileCount(string tileName)
         {
             return Convert.ToInt32(tileName[1].ToString());
         }
 
-        private List<IDirection> ParseTileDirections(string tileName)
+        private static List<IDirection> ParseTileDirections(string tileName)
         {
             var directions = new List<IDirection>();
 
@@ -118,7 +135,7 @@ namespace Backend
             return directions;
         }
 
-        private List<Speciality> ParseTileSpecialities(string tileName)
+        private static List<Speciality> ParseTileSpecialities(string tileName)
         {
             var specialities = new List<Speciality>();
             var specialitySubstring = tileName.Substring(6);
@@ -152,7 +169,7 @@ namespace Backend
             return specialities;
         }
 
-        private ILandscape ParseLandscape(char landscapeCharacter)
+        private static ILandscape ParseLandscape(char landscapeCharacter)
         {
             ILandscape landscape;
 

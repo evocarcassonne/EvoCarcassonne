@@ -4,7 +4,7 @@ namespace Backend.Model
 {
     public class JsonReaderObject
     {
-        public List<GameType> carcassonne { get; set; }
+        public List<GameType> carcassonne { get; set; } = new List<GameType>();
     }
 
     public class GameType

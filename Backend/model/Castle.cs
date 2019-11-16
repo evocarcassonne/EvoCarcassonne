@@ -19,7 +19,7 @@ namespace Backend.Model
         private List<ITile> _placedCastleTiles { get; set; } = new List<ITile>();
         private bool _gameOver { get; set; }
         private bool _outOfRange { get; set; } = false;
-        private List<IFigure> FiguresToGiveBacktoOwner;
+        private List<IFigure> FiguresToGiveBacktoOwner = new List<IFigure>();
         public Castle()
         {
         }

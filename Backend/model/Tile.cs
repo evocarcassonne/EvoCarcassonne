@@ -14,6 +14,16 @@ namespace Backend.Model
             Speciality = speciality;
         }
 
+        public Tile(string propertiesAsString)
+        {
+            var tile = TileParser.Parse(propertiesAsString);
+            if (tile is Tile)
+            {
+                Directions = tile.Directions;
+                Speciality = tile.Speciality;
+            }
+        }
+        
         public string PropertiesAsString { get; set; }
 
         /**
