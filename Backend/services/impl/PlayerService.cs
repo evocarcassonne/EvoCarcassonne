@@ -11,16 +11,23 @@ namespace Backend.Services.impl
     {
         internal GameController Controller = GameController.Instance;
         
-        public Guid Subscribe(Guid gameID, string playerName)
+        public Guid Subscribe(Guid gameId, string playerName)
         {
-            var exists = Controller.GetGamePlayById(gameID)?.Players.Any(e => e.Owner.Name == playerName);
-            if (exists != null && (bool) exists)
+            var gamePlay = Controller.GetGamePlayById(gameId);
+            var exists = gamePlay?.Players.Any(e => e.Owner.Name == playerName);
+            if ( gamePlay == null || (bool) exists)
             {
                 return Guid.Empty;
             }
+
             Player player = new Player(new Owner(playerName));
             player.playerId = Guid.NewGuid();
-            Controller.GetGamePlayById(gameID)?.Players.Add(player);
+            if (gamePlay.Players.Count == 0)
+            {
+                gamePlay.Owner = player.playerId;
+            }
+            gamePlay.Players.Add(player);
+            gamePlay.CurrentPlayer = gamePlay.Players[0];
             return player.playerId;
         }
 
@@ -45,26 +52,6 @@ namespace Backend.Services.impl
         public List<Player> GetPlayers(Guid gameId)
         {
             return Controller.GetGamePlayById(gameId)?.Players;
-        }
-        
-        public Guid CreateGameSession()
-        {
-            var newGamePlay = new GamePlay();
-            Controller.GamePlays.Add(newGamePlay);
-            return newGamePlay.Id;
-        }
-
-        public void DeleteGameSession(Guid gameId)
-        {
-            foreach (GamePlay play in Controller.GamePlays)
-            {
-                if (play.Id == gameId)
-                {
-                    Controller.GamePlays.Remove(play);
-                    break;
-                }
-            }
-            
         }
     }
 }

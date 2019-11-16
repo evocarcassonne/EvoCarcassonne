@@ -64,7 +64,9 @@
     <Compile Include="model\Tile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="services\IGamePlayService.cs" />
+    <Compile Include="services\IGameService.cs" />
     <Compile Include="services\impl\GamePlayService.cs" />
+    <Compile Include="services\impl\GameService.cs" />
     <Compile Include="services\impl\PlayerService.cs" />
     <Compile Include="services\IPlayerService.cs" />
     <Compile Include="TileParser.cs" />

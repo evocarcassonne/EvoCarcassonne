@@ -195,6 +195,10 @@ namespace Backend.dao
         }
         public void EndTurn()
         {
+            if (!(!HasCurrentTile && TileIsDown))
+            {
+                return;
+            }
             TileIsDown = false;
             CanPlaceFigureProperty = false;
 

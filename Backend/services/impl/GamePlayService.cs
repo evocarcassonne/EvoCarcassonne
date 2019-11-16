@@ -41,7 +41,7 @@ namespace Backend.services.impl
 
         public ITile GetNewTile(Guid gameId)
         {
-            return Controller.GetGamePlayById(gameId).GetNewTile();
+            return Controller.GetGamePlayById(gameId)?.GetNewTile();
         }
 
         public GamePlay EndTurn(Guid gameId)
@@ -49,15 +49,6 @@ namespace Backend.services.impl
             var gamePlay = Controller.GetGamePlayById(gameId);
             gamePlay?.EndTurn();
             return gamePlay;
-        }
-
-        public void StartGame(Guid gameId)
-        {
-            var gamePlay = Controller.GetGamePlayById(gameId);
-            if (gamePlay != null)
-            {
-                gamePlay.CurrentPlayer = gamePlay.Players.First();
-            }
         }
     }
 }

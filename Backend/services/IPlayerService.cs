@@ -9,10 +9,8 @@ namespace Backend.services
 {
     public interface IPlayerService
     {
-        Guid Subscribe(Guid gameID, string playerName);
+        Guid Subscribe(Guid gameId, string playerName);
         bool Unsubscribe(Guid gameId, Guid playerId);
         List<Player> GetPlayers(Guid gameId);
-        Guid CreateGameSession();
-        void DeleteGameSession(Guid gameId);
     }
 }

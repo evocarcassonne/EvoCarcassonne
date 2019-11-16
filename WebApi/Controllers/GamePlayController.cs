@@ -19,12 +19,12 @@ namespace WebApi.Controllers
             gamePlayService = new GamePlayService();
         }
 
-        [HttpPost]
+/*        [HttpPost]
         [Route("{gameId}/Start")]
         public void StartGame([FromUri] Guid gameId)
         {
             gamePlayService.StartGame(gameId);
-        }
+        }*/
         
         
         [HttpGet]
@@ -46,7 +46,8 @@ namespace WebApi.Controllers
         [Route("PlaceTile")]
         public bool PlaceTileAndFigure([FromBody] PlaceTileDto tileDto)
         {
-            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, TileParser.Parse(tileDto.tileProps), new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.side);
+            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, TileParser.Parse(tileDto.tileProps), 
+                new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.side);
         }
 
         [HttpGet]

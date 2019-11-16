@@ -4,6 +4,7 @@ using System.Web.Http;
 using Backend.Model;
 using Backend.services;
 using Backend.Services.impl;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -34,9 +35,12 @@ namespace WebApi.Controllers
         
         [HttpGet]
         [Route("{gameId}/Players")]
-        public List<Player> Players([FromUri] string gameId)
+        public List<PlayerDto> Players([FromUri] string gameId)
         {
-            return playerService.GetPlayers(Guid.Parse(gameId));
+            var players =  playerService.GetPlayers(Guid.Parse(gameId));
+            var results = new List<PlayerDto>();
+            players.ForEach(player => results.Add(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
+            return results;
         }
     }
 }

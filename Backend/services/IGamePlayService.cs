@@ -15,6 +15,5 @@ namespace Backend.services
         bool PlaceTileAndFigure(Guid gameId, ITile tileToPlace, Coordinates coordinates, int side);
         ITile GetNewTile(Guid gameId);
         GamePlay EndTurn(Guid gameId);
-        void StartGame(Guid gameId);
     }
 }
