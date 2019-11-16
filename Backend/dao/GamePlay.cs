@@ -38,9 +38,57 @@ namespace Backend.dao
 
         #endregion
 
+        #region Private properties
+
+        [JsonProperty]
+        private List<ITile> TileStack;
+        public List<ITile> PlacedTiles = new List<ITile>();
+
+        private int _currentRound = 1;
+        private ITile _currentTile;
+        private Player _currentPlayer;
+        private bool _tileIsDown;
+        private bool _hasCurrentTile;
+        private bool _alreadyCalculated;
+        private int _currentSideForFigure = -1;
+        private bool _figureDown = false;
+        private Random _randomNumberGenerator;
+        private bool _canPlaceFigureProperty;
+
+        private bool TileIsDown
+        {
+            get => _tileIsDown;
+            set
+            {
+                if (_tileIsDown != value)
+                {
+                    _tileIsDown = value;
+                }
+            }
+        }
+
+        private bool HasCurrentTile
+        {
+            get => _hasCurrentTile;
+            set
+            {
+                if (_hasCurrentTile != value)
+                {
+                    _hasCurrentTile = value;
+                }
+            }
+        }
+
+        private bool CanPlaceFigureProperty
+        {
+            get => _canPlaceFigureProperty;
+            set => _canPlaceFigureProperty = value;
+        }
+        #endregion
+        
         #region Constructor
 
-            [JsonConstructor]
+        [JsonConstructor]
             public GamePlay()
             {
                 Id = Guid.NewGuid();
@@ -102,44 +150,6 @@ namespace Backend.dao
             TileIsDown = true;
             HasCurrentTile = false;
             return true;
-        }
-
-        private Dictionary<CardinalDirection, ITile> SurroundingTilesByCoordinates(ITile justPlacedTile)
-        {
-            var result = new Dictionary<CardinalDirection, ITile>();
-            foreach (var placedTile in PlacedTiles)
-            {
-                if (placedTile.Position.X  == justPlacedTile.Position.X + 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
-                {
-                    result.Add(CardinalDirection.East, placedTile);
-                    break;
-                }
-                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y + 1)
-                {
-                    result.Add(CardinalDirection.South, placedTile);
-                    break;
-                }
-                if (placedTile.Position.X == justPlacedTile.Position.X - 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
-                {
-                    result.Add(CardinalDirection.West, placedTile);
-                    break;
-                }
-                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y - 1)
-                {
-                    result.Add(CardinalDirection.North, placedTile);
-                    break;
-                }
-            }
-            return result;
-        }
-        
-        private void UpdateTiles(ITile justPlacedTile)
-        {
-            foreach (var placedTile in SurroundingTilesByCoordinates(justPlacedTile))
-            {
-                placedTile.Value.Directions[(int) Utils.GetOppositeDirection(placedTile.Key)].Neighbor = justPlacedTile;
-                justPlacedTile.Directions[(int) placedTile.Key].Neighbor = placedTile.Value;
-            }
         }
 
         /// <summary>
@@ -237,6 +247,45 @@ namespace Backend.dao
                 }
             }
         }
+
+        private Dictionary<CardinalDirection, ITile> SurroundingTilesByCoordinates(ITile justPlacedTile)
+        {
+            var result = new Dictionary<CardinalDirection, ITile>();
+            foreach (var placedTile in PlacedTiles)
+            {
+                if (placedTile.Position.X == justPlacedTile.Position.X + 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
+                {
+                    result.Add(CardinalDirection.East, placedTile);
+                    break;
+                }
+                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y + 1)
+                {
+                    result.Add(CardinalDirection.South, placedTile);
+                    break;
+                }
+                if (placedTile.Position.X == justPlacedTile.Position.X - 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
+                {
+                    result.Add(CardinalDirection.West, placedTile);
+                    break;
+                }
+                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y - 1)
+                {
+                    result.Add(CardinalDirection.North, placedTile);
+                    break;
+                }
+            }
+            return result;
+        }
+
+        private void UpdateTiles(ITile justPlacedTile)
+        {
+            foreach (var placedTile in SurroundingTilesByCoordinates(justPlacedTile))
+            {
+                placedTile.Value.Directions[(int)Utils.GetOppositeDirection(placedTile.Key)].Neighbor = justPlacedTile;
+                justPlacedTile.Directions[(int)placedTile.Key].Neighbor = placedTile.Value;
+            }
+        }
+
         private bool CallCalculate()
         {
             if (_alreadyCalculated || HasCurrentTile || !TileIsDown)
@@ -353,54 +402,6 @@ namespace Backend.dao
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Private properties
-
-        [JsonProperty]
-        private List<ITile> TileStack;
-        public List<ITile> PlacedTiles = new List<ITile>();
-        
-        private int _currentRound = 1;
-        private ITile _currentTile;
-        private Player _currentPlayer;
-        private bool _tileIsDown;
-        private bool _hasCurrentTile;
-        private bool _alreadyCalculated;
-        private int _currentSideForFigure = -1;
-        private bool _figureDown = false;
-        private Random _randomNumberGenerator;
-        private bool _canPlaceFigureProperty;
-
-        private bool TileIsDown
-        {
-            get => _tileIsDown;
-            set
-            {
-                if (_tileIsDown != value)
-                {
-                    _tileIsDown = value;
-                }
-            }
-        }
-        
-        private bool HasCurrentTile
-        {
-            get => _hasCurrentTile;
-            set
-            {
-                if (_hasCurrentTile != value)
-                {
-                    _hasCurrentTile = value;
-                }
-            }
-        }
-        
-        private bool CanPlaceFigureProperty
-        {
-            get => _canPlaceFigureProperty;
-            set => _canPlaceFigureProperty = value;
         }
         #endregion
     }
