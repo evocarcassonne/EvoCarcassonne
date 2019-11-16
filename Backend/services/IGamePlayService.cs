@@ -8,12 +8,13 @@ using Backend.Model;
 
 namespace Backend.services
 {
-    interface IGamePlayService
+    public interface IGamePlayService
     {
         Player GetCurrentPlayer(Guid gameId);
         int GetCurrentRound(Guid gameId);
         bool PlaceTileAndFigure(Guid gameId, ITile tileToPlace, Coordinates coordinates, int side);
         ITile GetNewTile(Guid gameId);
         GamePlay EndTurn(Guid gameId);
+        void StartGame(Guid gameId);
     }
 }

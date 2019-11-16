@@ -8,7 +8,7 @@ using Backend.Model;
 
 namespace Backend.services.impl
 {
-    class GamePlayService : IGamePlayService
+    public class GamePlayService : IGamePlayService
     {
         internal GameController Controller = GameController.Instance;
 
@@ -49,6 +49,15 @@ namespace Backend.services.impl
             var gamePlay = Controller.GetGamePlayById(gameId);
             gamePlay?.EndTurn();
             return gamePlay;
+        }
+
+        public void StartGame(Guid gameId)
+        {
+            var gamePlay = Controller.GetGamePlayById(gameId);
+            if (gamePlay != null)
+            {
+                gamePlay.CurrentPlayer = gamePlay.Players.First();
+            }
         }
     }
 }
