@@ -91,8 +91,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\GameInfoDto.cs" />
     <Compile Include="Models\PlaceTileDto.cs" />
-    <Compile Include="Models\PlayerDTO.cs" />
+    <Compile Include="Models\PlayerDto.cs" />
+    <Compile Include="Models\TileInfoDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
