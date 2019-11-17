@@ -1,0 +1,337 @@
+{
+	"info": {
+		"_postman_id": "64f743b0-12b0-406f-b55e-09ee96875115",
+		"name": "EvoCarcassonne",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateSession",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:56448/api/Game/Create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"Game",
+						"Create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subscribe",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:56448/api/Player/a7038fff-8fa3-40ef-a643-8b931e205d5d/Subscribe/Krisz",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"Player",
+						"a7038fff-8fa3-40ef-a643-8b931e205d5d",
+						"Subscribe",
+						"Krisz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unsubscribe",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:56448/api/Player/72801d44-b666-4ced-aaba-cb0a42aa0d07/Unsubscribe/2ed3f022-b1af-4360-854c-456eef9ee338",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"Player",
+						"72801d44-b666-4ced-aaba-cb0a42aa0d07",
+						"Unsubscribe",
+						"2ed3f022-b1af-4360-854c-456eef9ee338"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Session",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:56448/api/Game/6de57928-6a5a-44bb-b48d-ee99f5bc789e/Delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"Game",
+						"6de57928-6a5a-44bb-b48d-ee99f5bc789e",
+						"Delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Players in Session",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:56448/api/Player/2d936e3a-437e-4d34-9d9b-295f00bbf79d/Players",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"Player",
+						"2d936e3a-437e-4d34-9d9b-295f00bbf79d",
+						"Players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Current Player",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:56448/api/GamePlay/a7038fff-8fa3-40ef-a643-8b931e205d5d/CurrentPlayer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"GamePlay",
+						"a7038fff-8fa3-40ef-a643-8b931e205d5d",
+						"CurrentPlayer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Current Round",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:56448/api/GamePlay/6de57928-6a5a-44bb-b48d-ee99f5bc789e/CurrentRound",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"GamePlay",
+						"6de57928-6a5a-44bb-b48d-ee99f5bc789e",
+						"CurrentRound"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get new tile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:56448/api/GamePlay/a7038fff-8fa3-40ef-a643-8b931e205d5d/GetNewTile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"GamePlay",
+						"a7038fff-8fa3-40ef-a643-8b931e205d5d",
+						"GetNewTile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Game",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:56448/api/GamePlay/a7038fff-8fa3-40ef-a643-8b931e205d5d/Start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"GamePlay",
+						"a7038fff-8fa3-40ef-a643-8b931e205d5d",
+						"Start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "End Turn",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:56448/api/GamePlay/a7038fff-8fa3-40ef-a643-8b931e205d5d/EndTurn",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"GamePlay",
+						"a7038fff-8fa3-40ef-a643-8b931e205d5d",
+						"EndTurn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put tile",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"gameId\" : \"31ebc6d6-91f2-45e5-b2bf-44eadb03fe93\",\n\t\"tileProps\" : \"T801010\",\n\t\"coordinateX\" : 6,\n\t\"coordinateY\" : 5,\n\t\"side\" : 3\n}"
+				},
+				"url": {
+					"raw": "http://localhost:56448/api/GamePlay/PlaceTile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "56448",
+					"path": [
+						"api",
+						"GamePlay",
+						"PlaceTile"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
