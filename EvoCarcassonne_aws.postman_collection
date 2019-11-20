@@ -1,0 +1,380 @@
+{
+	"info": {
+		"_postman_id": "64f743b0-12b0-406f-b55e-09ee96875115",
+		"name": "EvoCarcassonne",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateSession",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/Game/Create",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"Game",
+						"Create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subscribe",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/Player/3123fd21-43b8-40f7-8249-d4b249df8a42/Subscribe/Krisz",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"Player",
+						"3123fd21-43b8-40f7-8249-d4b249df8a42",
+						"Subscribe",
+						"Krisz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unsubscribe",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/Player/72801d44-b666-4ced-aaba-cb0a42aa0d07/Unsubscribe/2ed3f022-b1af-4360-854c-456eef9ee338",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"Player",
+						"72801d44-b666-4ced-aaba-cb0a42aa0d07",
+						"Unsubscribe",
+						"2ed3f022-b1af-4360-854c-456eef9ee338"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Session",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/Game/6de57928-6a5a-44bb-b48d-ee99f5bc789e/Delete",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"Game",
+						"6de57928-6a5a-44bb-b48d-ee99f5bc789e",
+						"Delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Players in Session",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/Player/deeb8c3f-0d71-4312-afc3-959405210925/Players",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"Player",
+						"deeb8c3f-0d71-4312-afc3-959405210925",
+						"Players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Current Player",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/GamePlay/433e0603-f3e6-46dd-919c-45e68c49d7b7/CurrentPlayer",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"GamePlay",
+						"433e0603-f3e6-46dd-919c-45e68c49d7b7",
+						"CurrentPlayer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Current Round",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/GamePlay/31ebc6d6-91f2-45e5-b2bf-44eadb03fe93/CurrentRound",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"GamePlay",
+						"31ebc6d6-91f2-45e5-b2bf-44eadb03fe93",
+						"CurrentRound"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get new tile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/GamePlay/3123fd21-43b8-40f7-8249-d4b249df8a42/GetNewTile",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"GamePlay",
+						"3123fd21-43b8-40f7-8249-d4b249df8a42",
+						"GetNewTile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Game",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/GamePlay/a147107a-ca03-4712-842a-7d378cadfc37/Start",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"GamePlay",
+						"a147107a-ca03-4712-842a-7d378cadfc37",
+						"Start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "End Turn",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/GamePlay/deeb8c3f-0d71-4312-afc3-959405210925/EndTurn",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"GamePlay",
+						"deeb8c3f-0d71-4312-afc3-959405210925",
+						"EndTurn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put tile",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"gameId\" : \"deeb8c3f-0d71-4312-afc3-959405210925\",\n\t\"tileProps\" : \"T322110\",\n\t\"coordinateX\" : 6,\n\t\"coordinateY\" : 5,\n\t\"side\" : 3\n}"
+				},
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/api/GamePlay/PlaceTile",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"api",
+						"GamePlay",
+						"PlaceTile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Home",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://evocarcassonne.eu-west-1.elasticbeanstalk.com/",
+					"protocol": "http",
+					"host": [
+						"evocarcassonne",
+						"eu-west-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
