@@ -22,7 +22,7 @@ namespace DotNetCoreWebApi.Backend
     public class TileParser
     {
         public List<ITile> TileStack { get; set; }
-        
+
 
         public TileParser()
         {
@@ -40,7 +40,7 @@ namespace DotNetCoreWebApi.Backend
             result.PropertiesAsString = tileToParse;
             return result;
         }
-        
+
         #region Private methods
 
         private static List<ITile> GetTileStack()
@@ -55,10 +55,10 @@ namespace DotNetCoreWebApi.Backend
             }
 
             defaultTiles = items.carcassonne.Where(type => type.gametype == "default").Select(e => e.defaultTiles).FirstOrDefault();
-            
+
             if (defaultTiles != null)
             {
-                string firstTile = defaultTiles.Find(e=>e.StartsWith("S"));
+                string firstTile = defaultTiles.Find(e => e.StartsWith("S"));
                 AddTile(tileStack, firstTile);
                 foreach (var tileName in defaultTiles)
                 {
@@ -89,7 +89,7 @@ namespace DotNetCoreWebApi.Backend
 
             return tileStack;
         }
-        
+
         private static void AddTile(ICollection<ITile> tileStack, string tileName)
         {
             var tileSpecialities = ParseTileSpecialities(tileName);
@@ -161,20 +161,20 @@ namespace DotNetCoreWebApi.Backend
             return specialities;
         }
 
-        private static ILandscape ParseLandscape(char landscapeCharacter)
+        private static Landscape ParseLandscape(char landscapeCharacter)
         {
-            ILandscape landscape;
+            Landscape landscape;
 
             switch (landscapeCharacter)
             {
                 default:
-                    landscape = new Field();
+                    landscape = Landscape.Field;
                     break;
                 case '1':
-                    landscape = new Road();
+                    landscape = Landscape.Road;
                     break;
                 case '2':
-                    landscape = new Castle();
+                    landscape = Landscape.Castle;
                     break;
             }
 

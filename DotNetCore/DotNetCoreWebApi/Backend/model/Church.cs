@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DotNetCoreWebApi.Backend.Model
 {
-    public class Church : ITile, ILandscape
+    public class Church : ITile
     {
         public List<IDirection> Directions { get; set; }
         public List<Speciality> Speciality { get; set; }
@@ -17,7 +17,6 @@ namespace DotNetCoreWebApi.Backend.Model
                 if (_centerFigure != value)
                 {
                     _centerFigure = value;
-                    //OnPropertyChanged();
                 }
             }
         }
@@ -78,37 +77,6 @@ namespace DotNetCoreWebApi.Backend.Model
                 case 3: return CardinalDirection.West;
                 default: return CardinalDirection.North;
             }
-        }
-
-        public void calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
-        {
-            List<ITile> surroundingTiles = new List<ITile>();
-            figuresToGiveBack = new List<IFigure>();
-            currentTile.Directions.ForEach(e => surroundingTiles.Add(e.Neighbor));
-            
-            var churchTile = (Church)currentTile;
-            if (gameover)
-            {
-                churchTile.CenterFigure.Owner.Points += surroundingTiles.Count;
-                churchTile.CenterFigure = null;
-            }
-            else
-            {
-                if (surroundingTiles.Count == 8 && surroundingTiles.All(e => e != null))
-                {
-                    if (churchTile.CenterFigure != null)
-                    {
-                        churchTile.CenterFigure.Owner.Points += 9;
-                        figuresToGiveBack.Add(churchTile.CenterFigure);
-                        churchTile.CenterFigure = null;
-                    }
-                }
-            }
-        }
-
-        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
-        {
-            return true;
         }
     }
 }

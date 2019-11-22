@@ -2,7 +2,7 @@
 {
     public interface IDirection
     {
-        ILandscape Landscape { get; set; }
+        Landscape Landscape { get; set; }
 
         IFigure Figure { get; set; }
 

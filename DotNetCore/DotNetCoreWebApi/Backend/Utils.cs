@@ -13,8 +13,8 @@ namespace DotNetCoreWebApi.Backend
             }
             foreach (var neighborTile in surroundingTiles)
             {
-                ILandscape currentTileLandscape = tile.GetTileSideByCardinalDirection(neighborTile.Key).Landscape;
-                ILandscape neighborTileLandscape = neighborTile.Value.GetTileSideByCardinalDirection(GetOppositeDirection(neighborTile.Key)).Landscape;
+                Landscape currentTileLandscape = tile.GetTileSideByCardinalDirection(neighborTile.Key).Landscape;
+                Landscape neighborTileLandscape = neighborTile.Value.GetTileSideByCardinalDirection(GetOppositeDirection(neighborTile.Key)).Landscape;
 
                 if (!currentTileLandscape.Equals(neighborTileLandscape))
                 {

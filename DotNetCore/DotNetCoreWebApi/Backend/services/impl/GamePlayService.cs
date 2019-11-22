@@ -221,7 +221,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 }
                 for (int i = 0; i < 4; i++)
                 {
-                    if (tile.Directions[i].Figure != null && !(tile.Directions[i].Landscape is Field))
+                    if (tile.Directions[i].Figure != null && !(tile.Directions[i].Landscape == Landscape.Field))
                     {
                         List<IFigure> figures;
                         calculateService.Calculate(tile, true, out figures);
@@ -279,53 +279,12 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 return;
             }
 
-            //Checks whether there is a church nearby.
-            var allSurrTiles = Utils.GetAllSurroundingTiles(gamePlay.PlacedTiles.Last());
-            allSurrTiles.Add(gamePlay.PlacedTiles.Last());
-            foreach (ITile tile in allSurrTiles)
+            List<IFigure> figures;
+            calculateService.Calculate(gamePlay.PlacedTiles.Last(), false, out figures);
+            foreach (var figure in figures)
             {
-                if (tile is Church)
-                {
-                    var church = (Church)tile;
-                    List<IFigure> figures;
-                    calculateService.Calculate(tile, false, out figures);
-                    foreach (var figure in figures)
-                    {
-                        Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-                    }
-                }
+                Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
             }
-
-            //Searching for castle sides, paying attention to be called only once
-            foreach (var i in gamePlay.PlacedTiles.Last().Directions)
-            {
-                if (i.Landscape is Castle)
-                {
-                    List<IFigure> figures;
-                    calculateService.Calculate(gamePlay.PlacedTiles.Last(), false, out figures);
-                    foreach (var figure in figures)
-                    {
-                        Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-                    }
-                    break;
-                }
-            }
-
-            //Searching for road sides, paying attention to be called only once
-            foreach (var i in gamePlay.PlacedTiles.Last().Directions)
-            {
-                if (i.Landscape is Road)
-                {
-                    List<IFigure> figures;
-                    calculateService.Calculate(gamePlay.PlacedTiles.Last(), false, out figures);
-                    foreach (var figure in figures)
-                    {
-                        Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-                    }
-                    break;
-                }
-            }
-
             gamePlay.AlreadyCalculated = true;
         }
     }

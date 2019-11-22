@@ -5,13 +5,32 @@ namespace DotNetCoreWebApi.Backend.dao
 {
     public class GameController
     {
-        public List<GamePlay> GamePlays = new List<GamePlay>();
+        private List<GamePlay> GamePlays = new List<GamePlay>();
         private static GameController _instance;
 
         public static GameController Instance
         {
             get => _instance ?? (_instance = new GameController());
             set => _instance = value;
+        }
+
+        internal void AddGamePlay(GamePlay newGamePlay)
+        {
+            if (newGamePlay != null)
+            {
+                GamePlays.Add(newGamePlay);
+            }
+        }
+
+        internal void DeleteGamePlay(Guid gameId)
+        {
+            foreach (var i in GamePlays)
+            {
+                if (i.Id == gameId)
+                {
+                    GamePlays.Remove(GetGamePlayById(gameId));
+                }
+            }
         }
 
         public GamePlay GetGamePlayById(Guid gameplayID)

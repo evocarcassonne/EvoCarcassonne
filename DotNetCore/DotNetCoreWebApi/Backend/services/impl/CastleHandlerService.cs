@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using DotNetCoreWebApi.Backend.Model;
 
-namespace DotNetCoreWebApi.Backend.Model
+namespace DotNetCoreWebApi.Backend.services.impl
 {
-    public class Castle : ILandscape
-    {
 
+    class CastleCalculatorService
+    {
         private bool _canPlaceFigure { get; set; }
         private int _whereToGo { get; set; }
         private ITile _firstTile { get; set; }
@@ -20,9 +21,6 @@ namespace DotNetCoreWebApi.Backend.Model
         private bool _gameOver { get; set; }
         private bool _outOfRange { get; set; } = false;
         private List<IFigure> FiguresToGiveBacktoOwner = new List<IFigure>();
-        public Castle()
-        {
-        }
 
         public void calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
         {
@@ -33,7 +31,7 @@ namespace DotNetCoreWebApi.Backend.Model
             for (int i = 0; i < 4; i++)
             {
                 _deleteFigures = false;
-                if (CheckEndOfCastle(currentTile) && currentTile.Directions[i].Landscape is Castle)
+                if (CheckEndOfCastle(currentTile) && currentTile.Directions[i].Landscape == Landscape.Castle)
                 {
                     _firstCall = true;
                     result += CalculateWithDirections(currentTile, (CardinalDirection)i);
@@ -131,7 +129,7 @@ namespace DotNetCoreWebApi.Backend.Model
 
             for (int i = 0; i < 4; i++)
             {
-                if (_currentITile.Directions[i].Landscape is Castle)
+                if (_currentITile.Directions[i].Landscape == Landscape.Castle)
                 {
                     if (_firstCall && i != (int)_starterWhereToGo)
                     {
@@ -229,10 +227,6 @@ namespace DotNetCoreWebApi.Backend.Model
             return false;
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is Castle;
-        }
 
         // If the current tile doesn't have endofcastle speciality 
         private int CalculateCastle(ITile currentTile, bool gameover)
@@ -295,7 +289,7 @@ namespace DotNetCoreWebApi.Backend.Model
 
             for (int i = 0; i < 4; i++)
             {
-                if (_currentITile.Directions[i].Landscape is Castle)
+                if (_currentITile.Directions[i].Landscape == Landscape.Castle)
                 {
                     if (_currentITile.Directions[i].Figure != null)
                     {
@@ -327,7 +321,7 @@ namespace DotNetCoreWebApi.Backend.Model
 
             int result = 0;
 
-            if (CheckEndOfCastle(currentTile) && currentTile.Directions[(int)whereToGo].Landscape is Castle)
+            if (CheckEndOfCastle(currentTile) && currentTile.Directions[(int)whereToGo].Landscape == Landscape.Castle)
             {
                 _firstCall = true;
                 result += CalculateWithDirections(currentTile, whereToGo);
@@ -357,6 +351,11 @@ namespace DotNetCoreWebApi.Backend.Model
 
 
             return _canPlaceFigure;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (Landscape)obj == Landscape.Castle;
         }
 
         public override int GetHashCode()

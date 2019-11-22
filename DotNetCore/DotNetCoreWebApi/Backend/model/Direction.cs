@@ -7,7 +7,7 @@ namespace DotNetCoreWebApi.Backend.Model
     {
         private IFigure _figure;
 
-        public ILandscape Landscape { get; set; }
+        public Landscape Landscape { get; set; }
         public ITile Neighbor { get; set; }
         public IFigure Figure
         {
@@ -17,20 +17,19 @@ namespace DotNetCoreWebApi.Backend.Model
                 if (_figure != value)
                 {
                     _figure = value;
-                    //OnPropertyChanged();
                 }
             }
         }
-        
-        public Direction(){}
 
-        public Direction(ILandscape landscape, IFigure figure)
+        public Direction() { }
+
+        public Direction(Landscape landscape, IFigure figure)
         {
             Landscape = landscape;
             Figure = figure;
         }
-        
-        public Direction(ILandscape landscape, IFigure figure, ITile neighbor)
+
+        public Direction(Landscape landscape, IFigure figure, ITile neighbor)
         {
             Landscape = landscape;
             Figure = figure;

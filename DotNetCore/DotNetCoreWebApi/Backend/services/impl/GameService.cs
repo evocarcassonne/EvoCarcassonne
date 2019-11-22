@@ -11,20 +11,13 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             var tileStack = new TileParser().TileStack;
             var newGamePlay = new GamePlay(tileStack);
-            Controller.GamePlays.Add(newGamePlay);
+            Controller.AddGamePlay(newGamePlay);
             return newGamePlay.Id;
         }
 
         public void DeleteGameSession(Guid gameId)
         {
-            foreach (var play in Controller.GamePlays)
-            {
-                if (play.Id == gameId)
-                {
-                    Controller.GamePlays.Remove(play);
-                    break;
-                }
-            }
+            Controller.DeleteGamePlay(gameId);
         }
     }
 }
