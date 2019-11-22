@@ -1,5 +1,5 @@
-using System;
 using DotNetCoreWebApi.Backend.dao;
+using System;
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
@@ -9,7 +9,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
         public Guid CreateGameSession()
         {
-            var newGamePlay = new GamePlay();
+            var tileStack = new TileParser().TileStack;
+            var newGamePlay = new GamePlay(tileStack);
             Controller.GamePlays.Add(newGamePlay);
             return newGamePlay.Id;
         }
