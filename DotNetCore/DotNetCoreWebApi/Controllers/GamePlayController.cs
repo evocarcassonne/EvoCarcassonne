@@ -1,12 +1,10 @@
-using System;
-using System.Net.Mime;
 using DotNetCoreWebApi.Backend;
-using DotNetCoreWebApi.Backend.dao;
 using DotNetCoreWebApi.Backend.Model;
 using DotNetCoreWebApi.Backend.services;
 using DotNetCoreWebApi.Backend.services.impl;
-using Microsoft.AspNetCore.Mvc;
 using DotNetCoreWebApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace DotNetCoreWebApi.Controllers
 {
@@ -19,7 +17,8 @@ namespace DotNetCoreWebApi.Controllers
 
         public GamePlayController()
         {
-            gamePlayService = new GamePlayService();
+            ICalculateService calculateService = new CalculateService();
+            gamePlayService = new GamePlayService(calculateService);
         }
 
         /*        [HttpPost]
