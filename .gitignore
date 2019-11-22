@@ -378,3 +378,5 @@ MigrationBackup/
 
 # Rider files
 .idea/
+DotNetCore/.vscode/
+.vscode/

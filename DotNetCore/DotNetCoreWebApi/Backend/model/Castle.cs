@@ -39,7 +39,7 @@ namespace DotNetCoreWebApi.Backend.Model
                     result += CalculateWithDirections(currentTile, (CardinalDirection)i);
 
                     _firstCall = true;
-                    DistributePoints(result);
+                    Utils.DistributePoints(result, _figuresOnTiles);
                     _figuresOnTiles = new List<IFigure>();
                     if (result > 0)
                     {
@@ -56,7 +56,7 @@ namespace DotNetCoreWebApi.Backend.Model
                     result += CalculateCastle(currentTile, false);
 
                     _firstCall = true;
-                    DistributePoints(result);
+                    Utils.DistributePoints(result, _figuresOnTiles);
                     _figuresOnTiles = new List<IFigure>();
                     if (result > 0)
                     {
@@ -101,13 +101,6 @@ namespace DotNetCoreWebApi.Backend.Model
                 return 0;
             }
 
-            // Get the CurrentTile's coordinate
-            var x = currentTile.Position.X;
-            var y = currentTile.Position.Y;
-            var index = x + (y * 10);
-
-
-
             if (IsChecked(_currentITile, _ITileList))
                 return 0;
 
@@ -122,15 +115,15 @@ namespace DotNetCoreWebApi.Backend.Model
             // If it is an EndOfCastle tile and it isn't the first tile...
             if (CheckEndOfCastle(_currentITile) && _firstTile != _currentITile)
             {
-                if (_currentITile.Directions[getFromDirection((int)whereToGo)].Figure != null)
-                    _figuresOnTiles.Add(_currentITile.Directions[getFromDirection((int)whereToGo)].Figure);
+                if (_currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure != null)
+                    _figuresOnTiles.Add(_currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure);
 
-                if (_deleteFigures && _currentITile.Directions[getFromDirection((int)whereToGo)].Figure != null)
+                if (_deleteFigures && _currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure != null)
                 {
-                    FiguresToGiveBacktoOwner.Add(_currentITile.Directions[getFromDirection((int)whereToGo)].Figure);
-                    _currentITile.Directions[getFromDirection((int)whereToGo)].Figure = null;
+                    FiguresToGiveBacktoOwner.Add(_currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure);
+                    _currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure = null;
                 }
-                    
+
 
                 _points += 2;
                 return 0;
@@ -145,7 +138,7 @@ namespace DotNetCoreWebApi.Backend.Model
                     }
                     else
                     {
-                        if (_currentITile == _firstTile && (int)_starterWhereToGo == getFromDirection((int)whereToGo) && !_firstCall)
+                        if (_currentITile == _firstTile && (int)_starterWhereToGo == (int)Utils.GetOppositeDirection(whereToGo) && !_firstCall)
                             return 0;
 
                         if (_currentITile.Directions[i].Figure != null)
@@ -174,7 +167,13 @@ namespace DotNetCoreWebApi.Backend.Model
                 }
             }
 
+            CheckForPoints();
 
+            return _points;
+        }
+
+        private void CheckForPoints()
+        {
             if (_finishedCastle)
             {
                 _points += 2;
@@ -195,9 +194,6 @@ namespace DotNetCoreWebApi.Backend.Model
 
             if (_firstTile == _currentITile && _points == 1)
                 _points = 0;
-
-
-            return _points;
         }
 
         private bool CheckShield(ITile bt)
@@ -209,71 +205,6 @@ namespace DotNetCoreWebApi.Backend.Model
             }
 
             return false;
-        }
-
-        private void DistributePoints(int result)
-        {
-            var points = new List<int>();
-            var players = new List<IOwner>();
-            var playersToGetPoints = new List<IOwner>();
-            foreach (var i in _figuresOnTiles)
-            {
-                if (!players.Contains(i.Owner))
-                {
-                    players.Add(i.Owner);
-                }
-            }
-            int maxIndex = 0;
-            for (int i = 0; i < players.Count; i++)
-            {
-                int currentCount = 0;
-                for (int j = 0; j < _figuresOnTiles.Count; j++)
-                {
-                    if (players[i].Equals(_figuresOnTiles[j].Owner))
-                    {
-                        currentCount++;
-                    }
-                }
-                points.Add(currentCount);
-                if (points[i] > points[maxIndex])
-                {
-                    maxIndex = i;
-                }
-            }
-
-            if (players.Count != 0)
-            {
-                playersToGetPoints.Add(players[maxIndex]);
-            }
-            for (int i = 0; i < points.Count; i++)
-            {
-                if (points[i] == points[maxIndex] && i != maxIndex)
-                {
-                    playersToGetPoints.Add(players[i]);
-                }
-            }
-            foreach (var i in playersToGetPoints)
-            {
-                i.Points += result;
-            }
-        }
-
-
-        private int getFromDirection(int c)
-        {
-            switch (c)
-            {
-                case 0:
-                    return 2;
-                case 1:
-                    return 3;
-                case 2:
-                    return 0;
-                case 3:
-                    return 1;
-                default:
-                    return 0;
-            }
         }
 
         private bool CheckEndOfCastle(ITile bt)
@@ -349,13 +280,13 @@ namespace DotNetCoreWebApi.Backend.Model
             // If it is an EndOfCastle tile and it isn't the first tile...
             if (CheckEndOfCastle(_currentITile) && _firstTile != _currentITile)
             {
-                if (_currentITile.Directions[getFromDirection(_whereToGo)].Figure != null)
-                    _figuresOnTiles.Add(_currentITile.Directions[getFromDirection(_whereToGo)].Figure);
+                if (_currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure != null)
+                    _figuresOnTiles.Add(_currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure);
 
-                if (_deleteFigures && _currentITile.Directions[getFromDirection((int)_whereToGo)].Figure != null)
+                if (_deleteFigures && _currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure != null)
                 {
-                    FiguresToGiveBacktoOwner.Add(_currentITile.Directions[getFromDirection((int)_whereToGo)].Figure);
-                    _currentITile.Directions[getFromDirection((int)_whereToGo)].Figure = null;
+                    FiguresToGiveBacktoOwner.Add(_currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure);
+                    _currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure = null;
                 }
 
                 _points += 2;
@@ -376,7 +307,7 @@ namespace DotNetCoreWebApi.Backend.Model
                         FiguresToGiveBacktoOwner.Add(_currentITile.Directions[i].Figure);
                         _currentITile.Directions[i].Figure = null;
                     }
-                    
+
                     _whereToGo = i;
                     _ITileList.Add(_currentITile);
                     _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
@@ -385,30 +316,7 @@ namespace DotNetCoreWebApi.Backend.Model
                 }
             }
 
-
-            if (_finishedCastle)
-            {
-                _points += 2;
-                if (CheckShield(_currentITile))
-                    _points += 2;
-            }
-            else if (!_finishedCastle && _gameOver)
-            {
-                _points += 2;
-                if (CheckShield(_currentITile))
-                    _points += 2;
-            }
-            else
-                _points = 0; 
-
-            if (_deleteFigures)
-                _points = 0;
-
-
-            if (_firstTile == _currentITile && _points == 1)
-                _points = 0;
-
-
+            CheckForPoints();
             return _points;
         }
 
@@ -438,7 +346,7 @@ namespace DotNetCoreWebApi.Backend.Model
                 _firstCall = true;
                 result += CalculateCastle(currentTile, false);
 
-                if ( _figuresOnTiles.Count > 0)
+                if (_figuresOnTiles.Count > 0)
                     _canPlaceFigure = false;
                 else
                     _canPlaceFigure = true;
@@ -449,6 +357,16 @@ namespace DotNetCoreWebApi.Backend.Model
 
 
             return _canPlaceFigure;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

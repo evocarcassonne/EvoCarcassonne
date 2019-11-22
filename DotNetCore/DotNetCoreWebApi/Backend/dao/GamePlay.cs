@@ -23,7 +23,7 @@ namespace DotNetCoreWebApi.Backend.dao
                 }
             }
         }
-        
+
         public Player CurrentPlayer
         {
             get => _currentPlayer;
@@ -85,30 +85,30 @@ namespace DotNetCoreWebApi.Backend.dao
             set => _canPlaceFigureProperty = value;
         }
         #endregion
-        
+
         #region Constructor
 
         [JsonConstructor]
-            public GamePlay()
+        public GamePlay()
+        {
+            Id = Guid.NewGuid();
+            LoadTiles();
+            _randomNumberGenerator = new Random();
+        }
+
+        public GamePlay(IEnumerable<Player> players) : this()
+        {
+            foreach (var player in players)
             {
-                Id = Guid.NewGuid();
-                LoadTiles();
-                _randomNumberGenerator = new Random();
+                Players.Add(player);
             }
 
-            public GamePlay(IEnumerable<Player> players) : this()
-            {
-                foreach (var player in players)
-                {
-                    Players.Add(player);
-                }
-
-                CurrentPlayer = Players.First();
-            }
+            CurrentPlayer = Players.First();
+        }
         #endregion
-        
+
         #region Public methods
-        
+
         public ITile GetNewTile()
         {
             if (TileStack.Count == 0 || HasCurrentTile || TileIsDown)
@@ -126,7 +126,8 @@ namespace DotNetCoreWebApi.Backend.dao
         {
             bool canPlaceTile = !(!HasCurrentTile || TileIsDown);
 
-            PlacedTiles.ForEach(t => {
+            PlacedTiles.ForEach(t =>
+            {
                 if (!canPlaceTile || t.Position.Equals(coordinates))
                 {
                     canPlaceTile = false;
@@ -143,7 +144,7 @@ namespace DotNetCoreWebApi.Backend.dao
                 tileToPlace.Position = null;
                 return false;
             }
-            
+
             PlacedTiles.Add(tileToPlace);
             UpdateTiles(tileToPlace);
             CanPlaceFigureProperty = true;
@@ -182,7 +183,7 @@ namespace DotNetCoreWebApi.Backend.dao
 
                 if (figureToGetdown != null)
                 {
-                    Utils.GiveBackFigureToOwner(figureToGetdown, ref Players);   
+                    Utils.GiveBackFigureToOwner(figureToGetdown, ref Players);
                 }
             }
             else
@@ -349,7 +350,7 @@ namespace DotNetCoreWebApi.Backend.dao
             {
                 return directionIndex == _currentSideForFigure;
             }
-            
+
             if (CurrentPlayer.Figures.Count == 0)
             {
                 return false;

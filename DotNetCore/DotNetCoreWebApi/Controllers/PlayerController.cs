@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using DotNetCoreWebApi.Backend.Model;
 using DotNetCoreWebApi.Backend.services;
-using DotNetCoreWebApi.Backend.Services.impl;
+using DotNetCoreWebApi.Backend.services.impl;
 using Microsoft.AspNetCore.Mvc;
 using DotNetCoreWebApi.Models;
 
@@ -29,15 +29,15 @@ namespace DotNetCoreWebApi.Controllers
         }
 
         [HttpDelete("{gameId}/Unsubscribe/{playerId}")]
-        public bool Unsubscribe( string gameId,  string playerId)
+        public bool Unsubscribe(string gameId, string playerId)
         {
             return playerService.Unsubscribe(Guid.Parse(gameId), Guid.Parse(playerId));
         }
-        
+
         [HttpGet("{gameId}/Players")]
-        public List<PlayerDto> Players( string gameId)
+        public List<PlayerDto> Players(string gameId)
         {
-            var players =  playerService.GetPlayers(Guid.Parse(gameId));
+            var players = playerService.GetPlayers(Guid.Parse(gameId));
             var results = new List<PlayerDto>();
             players.ForEach(player => results.Add(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
             return results;

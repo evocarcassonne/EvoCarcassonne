@@ -19,5 +19,15 @@ namespace DotNetCoreWebApi.Backend.Model
         {
             return false;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

@@ -27,15 +27,20 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return -1;
         }
 
-        public bool PlaceTileAndFigure(Guid gameId, ITile tileToPlace, Coordinates coordinates, int side)
+        public bool PlaceTileAndFigure(Guid gameId, ITile tileToPlace, Coordinates coordinates, bool placeFigure, int side)
         {
             var currentGamePlay = Controller.GetGamePlayById(gameId);
-            if (currentGamePlay == null) return false;
+            if (currentGamePlay == null) { return false; }
             if (currentGamePlay.PlaceTile(tileToPlace, coordinates))
             {
-                return currentGamePlay.PlaceFigure(tileToPlace, side);
+                if (placeFigure)
+                {
+                    bool placedFigure = currentGamePlay.PlaceFigure(tileToPlace, side);
+                    return placedFigure;
+                }
+                return false;
             }
-            
+
             return false;
         }
 

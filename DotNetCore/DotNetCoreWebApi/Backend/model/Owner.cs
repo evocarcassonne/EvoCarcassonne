@@ -13,7 +13,6 @@
                 if (_points != value)
                 {
                     _points = value;
-                    //OnPropertyChanged();
                 }
             }
         }
@@ -22,11 +21,21 @@
         {
             Name = name;
         }
-        
+
         public override bool Equals(object obj)
         {
             var other = (Owner)obj;
             return Points == other.Points && Name == other.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

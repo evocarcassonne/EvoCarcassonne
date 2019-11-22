@@ -5,8 +5,6 @@ namespace DotNetCoreWebApi.Backend
 {
     public class Utils
     {
-        private int DistanceBetweenTiles = 1;
-        
         public static bool CheckFitOfTile(ITile tile, Dictionary<CardinalDirection, ITile> surroundingTiles)
         {
             if (surroundingTiles.Count == 0)
@@ -17,7 +15,7 @@ namespace DotNetCoreWebApi.Backend
             {
                 ILandscape currentTileLandscape = tile.GetTileSideByCardinalDirection(neighborTile.Key).Landscape;
                 ILandscape neighborTileLandscape = neighborTile.Value.GetTileSideByCardinalDirection(GetOppositeDirection(neighborTile.Key)).Landscape;
-                
+
                 if (!currentTileLandscape.Equals(neighborTileLandscape))
                 {
                     return false;
@@ -39,26 +37,7 @@ namespace DotNetCoreWebApi.Backend
                     result.Add((CardinalDirection)i, tile);
                 }
             }
-            
-            /*foreach (var neighborTile in _mainController.PlacedITiles)
-            {
-                if (IsOnTheGivenSide(currentTile, neighborTile, DistanceBetweenTiles,0))
-                {
-                    result.Add(CardinalDirection.East, neighborTile);
-                }
-                if (IsOnTheGivenSide(currentTile, neighborTile, 0,DistanceBetweenTiles))
-                {
-                    result.Add(CardinalDirection.South, neighborTile);
-                }
-                if (IsOnTheGivenSide(currentTile, neighborTile, -DistanceBetweenTiles,0))
-                {
-                    result.Add(CardinalDirection.West, neighborTile);
-                }
-                if (IsOnTheGivenSide(currentTile, neighborTile, 0,-DistanceBetweenTiles))
-                {
-                    result.Add(CardinalDirection.North, neighborTile);
-                }
-            }*/
+
             return result;
         }
         public static List<ITile> GetAllSurroundingTiles(ITile currentTile)
@@ -69,33 +48,29 @@ namespace DotNetCoreWebApi.Backend
             result.AddRange(immediateNeighbors.Values);
             foreach (var neighborTile in immediateNeighbors)
             {
-                /*if (IsOnTheGivenSide(currentTile, neighborTile, DistanceBetweenTiles,DistanceBetweenTiles) ||
-                    IsOnTheGivenSide(currentTile, neighborTile, -DistanceBetweenTiles,DistanceBetweenTiles) ||
-                    IsOnTheGivenSide(currentTile, neighborTile, -DistanceBetweenTiles,-DistanceBetweenTiles) ||
-                    IsOnTheGivenSide(currentTile, neighborTile, DistanceBetweenTiles,-DistanceBetweenTiles))
-                {
-                    result.Add(neighborTile);
-                }*/
                 ITile neighbor = null;
                 if (neighborTile.Key == CardinalDirection.East)
                 {
                     neighbor = neighborTile.Value.GetTileSideByCardinalDirection(CardinalDirection.North).Neighbor;
-                }else if (neighborTile.Key == CardinalDirection.South)
+                }
+                else if (neighborTile.Key == CardinalDirection.South)
                 {
                     neighbor = neighborTile.Value.GetTileSideByCardinalDirection(CardinalDirection.East).Neighbor;
-                }else if (neighborTile.Key == CardinalDirection.West)
+                }
+                else if (neighborTile.Key == CardinalDirection.West)
                 {
                     neighbor = neighborTile.Value.GetTileSideByCardinalDirection(CardinalDirection.South).Neighbor;
-                }else if (neighborTile.Key == CardinalDirection.North)
+                }
+                else if (neighborTile.Key == CardinalDirection.North)
                 {
                     neighbor = neighborTile.Value.GetTileSideByCardinalDirection(CardinalDirection.West).Neighbor;
                 }
                 if (neighbor != null)
                 {
-                    result.Add(neighbor);    
+                    result.Add(neighbor);
                 }
             }
-            
+
             return result;
         }
 
@@ -136,7 +111,7 @@ namespace DotNetCoreWebApi.Backend
                 }
             }
         }
-        
+
         public static void DistributePoints(int result, List<IFigure> figuresOnTiles)
         {
             var points = new List<int>();
@@ -167,7 +142,7 @@ namespace DotNetCoreWebApi.Backend
                 }
             }
 
-            if (players.Count!=0)
+            if (players.Count != 0)
             {
                 playersToGetPoints.Add(players[maxIndex]);
             }
@@ -182,6 +157,6 @@ namespace DotNetCoreWebApi.Backend
             {
                 i.Points += result;
             }
-       }
+        }
     }
 }

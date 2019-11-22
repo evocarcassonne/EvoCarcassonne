@@ -10,7 +10,7 @@ using DotNetCoreWebApi.Models;
 
 namespace DotNetCoreWebApi.Controllers
 {
-    
+
     [ApiController]
     [Route("api/GamePlay")]
     public class GamePlayController : ControllerBase
@@ -22,18 +22,18 @@ namespace DotNetCoreWebApi.Controllers
             gamePlayService = new GamePlayService();
         }
 
-/*        [HttpPost]
-        [Route("{gameId}/Start")]
-        public void StartGame([FromUri] Guid gameId)
-        {
-            gamePlayService.StartGame(gameId);
-        }*/
-        
-        
+        /*        [HttpPost]
+                [Route("{gameId}/Start")]
+                public void StartGame([FromUri] Guid gameId)
+                {
+                    gamePlayService.StartGame(gameId);
+                }*/
+
+
         [HttpGet("{gameId}/CurrentPlayer")]
         public PlayerDto GetCurrentPlayer(Guid gameId)
         {
-            var player =  gamePlayService.GetCurrentPlayer(gameId);
+            var player = gamePlayService.GetCurrentPlayer(gameId);
             return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
         }
 
@@ -46,8 +46,8 @@ namespace DotNetCoreWebApi.Controllers
         [HttpPut("PlaceTile")]
         public bool PlaceTileAndFigure([FromBody] PlaceTileDto tileDto)
         {
-            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, TileParser.Parse(tileDto.tileProps), 
-                new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.side);
+            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, TileParser.Parse(tileDto.tileProps),
+                new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.placeFigure, tileDto.side);
         }
 
         [HttpGet("{gameId}/GetNewTile")]
@@ -59,12 +59,11 @@ namespace DotNetCoreWebApi.Controllers
         [HttpPost("{gameId}/EndTurn")]
         public GameInfoDto EndTurn(Guid gameId)
         {
-            var gamePlay =  gamePlayService.EndTurn(gameId);
+            var gamePlay = gamePlayService.EndTurn(gameId);
             var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
             gamePlay.PlacedTiles.ForEach(tile => gameInfoDto.AddTileInfoOneByOne(new TileInfoDto(tile.PropertiesAsString, tile.Position)));
-            gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name,player.Owner.Points)));
+            gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
             return gameInfoDto;
         }
-        
     }
 }

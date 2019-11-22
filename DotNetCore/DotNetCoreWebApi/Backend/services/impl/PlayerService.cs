@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetCoreWebApi.Backend.dao;
 using DotNetCoreWebApi.Backend.Model;
-using DotNetCoreWebApi.Backend.services;
 
-namespace DotNetCoreWebApi.Backend.Services.impl
+namespace DotNetCoreWebApi.Backend.services.impl
 {
     public class PlayerService : IPlayerService
     {

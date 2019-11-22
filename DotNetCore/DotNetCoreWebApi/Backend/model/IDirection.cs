@@ -5,8 +5,8 @@
         ILandscape Landscape { get; set; }
 
         IFigure Figure { get; set; }
-        
+
         ITile Neighbor { get; set; }
-        
+
     }
 }
