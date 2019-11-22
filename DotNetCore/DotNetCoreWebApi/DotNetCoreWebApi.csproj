@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <None Include="Backend\Resources\tiles\TileDefinitions.json" />
-    <None Include="Backend\TileDefinitions.json" />
   </ItemGroup>
 
 </Project>

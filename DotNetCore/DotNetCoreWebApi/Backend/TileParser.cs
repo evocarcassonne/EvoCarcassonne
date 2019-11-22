@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using DotNetCoreWebApi.Backend.Model;
+using Newtonsoft.Json;
 
 namespace DotNetCoreWebApi.Backend
 {
@@ -43,40 +46,29 @@ namespace DotNetCoreWebApi.Backend
         private static List<ITile> GetTileStack()
         {
             var tileStack = new List<ITile>();
+            var defaultTiles = new List<string>();
+            JsonReaderObject items;
+            using (StreamReader r = new StreamReader("TileDefinitions.json"))
+            {
+                string json = r.ReadToEnd();
+                items = JsonConvert.DeserializeObject<JsonReaderObject>(json);
+            }
+
+            defaultTiles = items.carcassonne.Where(type => type.gametype == "default").Select(e => e.defaultTiles).FirstOrDefault();
             
-            /*try
+            if (defaultTiles != null)
             {
-                JsonReaderObject items;
-                Assembly myAssembly = Assembly.GetExecutingAssembly();
-                var resourceStream = myAssembly.GetManifestResourceStream("TileDefinitions.json");
-                using (StreamReader r = new StreamReader(resourceStream ?? throw new Exception()))
+                string firstTile = defaultTiles.Find(e=>e.StartsWith("S"));
+                AddTile(tileStack, firstTile);
+                foreach (var tileName in defaultTiles)
                 {
-                    string json = r.ReadToEnd();
-                    items = JsonConvert.DeserializeObject<JsonReaderObject>(json);
-                }
-
-                tilesFromJson = items.carcassonne.Where(type => type.gametype == "default").Select(e => e.defaultTiles)
-                    .FirstOrDefault();
-            }catch (FileLoadException)
-            {
-                tilesFromJson = defaultTiles;
-            }
-            catch (Exception)
-            {
-                tilesFromJson = defaultTiles;
-            }*/
-            List<string> defaultTiles = new List<string>{"S321014","T102020","T111113","T122021","T122123","T122221","T202021","T220021","T221121","T222004","T302024","T320020","T320114","T321104","T321120","T322020","T400002","T401113","T520004","T810100","T900110","T2001023","T2221213","T3211134"};
-            string firstTile = defaultTiles.Find(name => name.StartsWith("s"));
-            //AddTile(tileStack, firstTile);
-            AddTile(tileStack, defaultTiles.First());
-
-            foreach (var tileName in defaultTiles)
-            {
-                for (var i = 1; i < ParseTileCount(tileName); i++)
-                {
-                    AddTile(tileStack, tileName);
+                    for (var i = 1; i < ParseTileCount(tileName); i++)
+                    {
+                        AddTile(tileStack, tileName);
+                    }
                 }
             }
+
             return tileStack;
         }
 
