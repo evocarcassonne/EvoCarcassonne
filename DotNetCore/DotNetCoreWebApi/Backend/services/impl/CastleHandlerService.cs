@@ -254,7 +254,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 _ITileList.Clear();
                 _figuresOnTiles.Clear();
                 FiguresToGiveBacktoOwner.Clear();
-
             }
 
 

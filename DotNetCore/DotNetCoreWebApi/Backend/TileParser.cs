@@ -36,7 +36,16 @@ namespace DotNetCoreWebApi.Backend
 
         public static ITile Parse(string tileToParse)
         {
-            ITile result = new Tile(ParseTileDirections(tileToParse), ParseTileSpecialities(tileToParse));
+            ITile result;
+            if (ParseTileSpecialities(tileToParse).Contains(Speciality.Colostor))
+            {
+                result = new Church(ParseTileDirections(tileToParse), ParseTileSpecialities(tileToParse));
+            }
+            else
+            {
+                result = new Tile(ParseTileDirections(tileToParse), ParseTileSpecialities(tileToParse));
+            }
+
             result.PropertiesAsString = tileToParse;
             return result;
         }
