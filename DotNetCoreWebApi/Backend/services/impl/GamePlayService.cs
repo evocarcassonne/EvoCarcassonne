@@ -34,7 +34,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
         public bool PlaceTileAndFigure(Guid gameId, Guid playerId, ITile tileToPlace, Coordinates coordinates, bool placeFigure, int side)
         {
             var currentGamePlay = Controller.GetGamePlayById(gameId);
-            if (currentGamePlay == null || currentGamePlay.CurrentPlayer.playerId != playerId) { return false; }
+            if (currentGamePlay == null || currentGamePlay.CurrentPlayer.playerId != playerId
+            || tileToPlace.PropertiesAsString != currentGamePlay.CurrentTile.PropertiesAsString)
+            {
+                return false;
+            }
             if (PlaceTile(tileToPlace, coordinates, currentGamePlay))
             {
                 if (placeFigure)
@@ -60,19 +64,15 @@ namespace DotNetCoreWebApi.Backend.services.impl
             gamePlay.TileIsDown = false;
             gamePlay.HasCurrentTile = true;
             gamePlay.AlreadyCalculated = false;
-
-            return gamePlay.TileStack.RemoveAndGet(gamePlay.RandomNumberGenerator.Next(gamePlay.TileStack.Count));
+            gamePlay.CurrentTile = gamePlay.TileStack.RemoveAndGet(gamePlay.RandomNumberGenerator.Next(gamePlay.TileStack.Count));
+            return gamePlay.CurrentTile;
         }
 
         public GamePlay EndTurn(Guid gameId, Guid playerId)
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
 
-            if (!(!gamePlay.HasCurrentTile && gamePlay.TileIsDown))
-            {
-                return gamePlay;
-            }
-            if (gamePlay.CurrentPlayer.playerId != playerId)
+            if (!(!gamePlay.HasCurrentTile && gamePlay.TileIsDown) || gamePlay.CurrentPlayer.playerId != playerId)
             {
                 return gamePlay;
             }

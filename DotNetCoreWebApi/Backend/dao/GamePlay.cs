@@ -21,6 +21,7 @@ namespace DotNetCoreWebApi.Backend.dao
         public bool CanPlaceFigureProperty { get; set; } = false;
         public int CurrentSideForFigure { get; set; } = -1;
         public bool FigureDown { get; set; } = false;
+        public ITile CurrentTile { get; set; }
 
         public GamePlay(List<ITile> tileStack)
         {

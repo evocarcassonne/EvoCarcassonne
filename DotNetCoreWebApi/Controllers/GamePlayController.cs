@@ -43,10 +43,23 @@ namespace DotNetCoreWebApi.Controllers
             return gamePlayService.GetCurrentRound(gameId);
         }
 
-        [HttpPut("PlaceTile")]
+        [HttpPost("PlaceTile")]
         public bool PlaceTileAndFigure([FromBody] PlaceTileDto tileDto)
         {
-            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, tileDto.playerId, TileParser.Parse(tileDto.tileProps),
+            var tile = TileParser.Parse(tileDto.tileProps);
+            if (Math.Abs(tileDto.RotateAngle) % 90 != 0) { return false; }
+            for (int i = 0; i < Math.Abs(tileDto.RotateAngle) / 90; i++)
+            {
+                if (tileDto.RotateAngle < 0)
+                {
+                    tile.Rotate(-90);
+                }
+                else if (tileDto.RotateAngle > 0)
+                {
+                    tile.Rotate(90);
+                }
+            }
+            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, tileDto.playerId, tile,
                 new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.placeFigure, tileDto.side);
         }
 
