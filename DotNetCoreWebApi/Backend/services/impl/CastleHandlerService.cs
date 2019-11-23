@@ -304,6 +304,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     _whereToGo = i;
                     _ITileList.Add(_currentITile);
                     _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
+                    if (_currentITile == null) break;
                     CalculateCastle(_currentITile, false);
                     _currentITile = currentTile;
                 }
