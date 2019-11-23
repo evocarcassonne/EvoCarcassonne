@@ -22,20 +22,20 @@ namespace DotNetCoreWebApi.Controllers
             playerService = new PlayerService();
         }
 
-        [HttpPost("{gameID}/Subscribe/{playerName}")]
-        public Guid Subscribe(string gameID, string playerName)
+        [HttpPost("Subscribe")]
+        public Guid Subscribe([FromHeader] string gameId, [FromHeader] string playerName)
         {
-            return playerService.Subscribe(Guid.Parse(gameID), playerName);
+            return playerService.Subscribe(Guid.Parse(gameId), playerName);
         }
 
-        [HttpDelete("{gameId}/Unsubscribe/{playerId}")]
-        public bool Unsubscribe(string gameId, string playerId)
+        [HttpDelete("Unsubscribe")]
+        public bool Unsubscribe([FromHeader] string gameId, [FromHeader] string playerId)
         {
             return playerService.Unsubscribe(Guid.Parse(gameId), Guid.Parse(playerId));
         }
 
-        [HttpGet("{gameId}/Players")]
-        public List<PlayerDto> Players(string gameId)
+        [HttpGet("Players")]
+        public List<PlayerDto> Players([FromHeader] string gameId)
         {
             var players = playerService.GetPlayers(Guid.Parse(gameId));
             var results = new List<PlayerDto>();

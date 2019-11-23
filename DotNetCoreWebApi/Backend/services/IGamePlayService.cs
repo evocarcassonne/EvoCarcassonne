@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DotNetCoreWebApi.Backend.dao;
 using DotNetCoreWebApi.Backend.Model;
+using DotNetCoreWebApi.Models;
 
 namespace DotNetCoreWebApi.Backend.services
 {
@@ -12,8 +13,9 @@ namespace DotNetCoreWebApi.Backend.services
     {
         Player GetCurrentPlayer(Guid gameId);
         int GetCurrentRound(Guid gameId);
-        bool PlaceTileAndFigure(Guid gameId, ITile tileToPlace, Coordinates coordinates, bool placeFigure, int side);
+        bool PlaceTileAndFigure(Guid gameId, Guid playerId, ITile tileToPlace, Coordinates coordinates, bool placeFigure, int side);
         ITile GetNewTile(Guid gameId);
-        GamePlay EndTurn(Guid gameId);
+        GamePlay EndTurn(Guid gameId, Guid playerId);
+        Dictionary<int, IFigure> GetFiguresOnTiles(Guid gameId, ITile tile);
     }
 }

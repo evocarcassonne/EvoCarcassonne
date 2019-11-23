@@ -18,17 +18,17 @@ namespace DotNetCoreWebApi.Controllers
             GameService = new GameService();
             _logger = logger;
         }
-        
+
         [HttpPost("Create")]
-        public Guid PostSession()
+        public Guid CreateSession([FromHeader] string playerName)
         {
-            return GameService.CreateGameSession();
+            return GameService.CreateGameSession(playerName);
         }
 
-        [HttpDelete("{id}/Delete")]
-        public void DeleteSession(string id)
+        [HttpDelete("Delete")]
+        public bool DeleteSession([FromHeader] string gameId, [FromHeader] Guid playerId)
         {
-            GameService.DeleteGameSession(Guid.Parse(id));
+            return GameService.DeleteGameSession(Guid.Parse(gameId), playerId);
         }
 
         [HttpGet("/")]
