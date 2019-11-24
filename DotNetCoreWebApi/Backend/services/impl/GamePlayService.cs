@@ -35,7 +35,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             var currentGamePlay = Controller.GetGamePlayById(gameId);
             if (currentGamePlay == null || currentGamePlay.CurrentPlayer.playerId != playerId
-            || tileToPlace.PropertiesAsString != currentGamePlay.CurrentTile.PropertiesAsString)
+            || tileToPlace.PropertiesAsString != currentGamePlay.CurrentTile.PropertiesAsString || currentGamePlay.GameState != GameState.Started)
             {
                 return false;
             }
@@ -52,11 +52,24 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return false;
         }
 
+        public bool StartGame(Guid gameId, Guid playerId)
+        {
+            var gamePlay = Controller.GetGamePlayById(gameId);
+            if (gamePlay != null && gamePlay.GameState != GameState.Started
+                && gamePlay.Players != null && gamePlay.Players.Count != 0
+                && gamePlay.Players[0].playerId == playerId)
+            {
+                gamePlay.GameState = GameState.Started;
+                return gamePlay.GameState == GameState.Started;
+            }
+            return false;
+        }
+
         public ITile GetNewTile(Guid gameId)
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
 
-            if (gamePlay.TileStack.Count == 0 || gamePlay.HasCurrentTile || gamePlay.TileIsDown)
+            if (gamePlay == null || gamePlay.TileStack.Count == 0 || gamePlay.HasCurrentTile || gamePlay.TileIsDown || gamePlay.GameState != GameState.Started)
             {
                 return new Tile(new List<IDirection>(), new List<Speciality>());
             }
@@ -72,7 +85,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
 
-            if (!(!gamePlay.HasCurrentTile && gamePlay.TileIsDown) || gamePlay.CurrentPlayer.playerId != playerId)
+            if (!(!gamePlay.HasCurrentTile && gamePlay.TileIsDown) || gamePlay.CurrentPlayer.playerId != playerId || gamePlay.GameState != GameState.Started)
             {
                 return gamePlay;
             }
@@ -104,7 +117,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     canPlaceTile = false;
                 }
             });
-            if (!canPlaceTile)
+            if (!canPlaceTile || gamePlay.GameState != GameState.Started)
             {
                 return false;
             }
@@ -312,5 +325,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
             }
             return result;
         }
+
     }
 }

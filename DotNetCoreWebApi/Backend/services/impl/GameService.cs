@@ -20,7 +20,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         public bool DeleteGameSession(Guid gameId, Guid playerId)
         {
             var gameplay = Controller.GetGamePlayById(gameId);
-            if (gameplay != null && gameplay.Players[0].playerId == playerId)
+            if (gameplay != null && gameplay?.Players[0]?.playerId == playerId)
             {
                 return Controller.DeleteGamePlay(gameId);
             }

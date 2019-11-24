@@ -22,12 +22,12 @@ namespace DotNetCoreWebApi.Controllers
             gamePlayService = new GamePlayService(calculateService);
         }
 
-        /*        [HttpPost]
-                [Route("{gameId}/Start")]
-                public void StartGame([FromUri] Guid gameId)
-                {
-                    gamePlayService.StartGame(gameId);
-                }*/
+        [HttpPost]
+        [Route("Start")]
+        public bool StartGame([FromHeader] Guid gameId, [FromHeader] Guid playerId)
+        {
+            return gamePlayService.StartGame(gameId, playerId);
+        }
 
 
         [HttpGet("CurrentPlayer")]

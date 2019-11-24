@@ -8,7 +8,7 @@ namespace DotNetCoreWebApi.Backend.dao
     public class GamePlay
     {
         public Guid Id { get; set; }
-        [JsonProperty]
+        public GameState GameState { get; set; } = GameState.WaitingForPlayers;
         public List<ITile> TileStack { get; set; }
         public List<ITile> PlacedTiles { get; set; } = new List<ITile>();
         public List<Player> Players = new List<Player>();
