@@ -22,15 +22,17 @@ namespace DotNetCoreWebApi.Backend.dao
             }
         }
 
-        internal void DeleteGamePlay(Guid gameId)
+        internal bool DeleteGamePlay(Guid gameId)
         {
             foreach (var i in GamePlays)
             {
                 if (i.Id == gameId)
                 {
                     GamePlays.Remove(GetGamePlayById(gameId));
+                    return true;
                 }
             }
+            return false;
         }
 
         public GamePlay GetGamePlayById(Guid gameplayID)

@@ -31,10 +31,14 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return -1;
         }
 
-        public bool PlaceTileAndFigure(Guid gameId, ITile tileToPlace, Coordinates coordinates, bool placeFigure, int side)
+        public bool PlaceTileAndFigure(Guid gameId, Guid playerId, ITile tileToPlace, Coordinates coordinates, bool placeFigure, int side)
         {
             var currentGamePlay = Controller.GetGamePlayById(gameId);
-            if (currentGamePlay == null) { return false; }
+            if (currentGamePlay == null || currentGamePlay.CurrentPlayer.playerId != playerId
+            || tileToPlace.PropertiesAsString != currentGamePlay.CurrentTile.PropertiesAsString || currentGamePlay.GameState != GameState.Started)
+            {
+                return false;
+            }
             if (PlaceTile(tileToPlace, coordinates, currentGamePlay))
             {
                 if (placeFigure)
@@ -48,32 +52,43 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return false;
         }
 
+        public bool StartGame(Guid gameId, Guid playerId)
+        {
+            var gamePlay = Controller.GetGamePlayById(gameId);
+            if (gamePlay != null && gamePlay.GameState != GameState.Started
+                && gamePlay.Players != null && gamePlay.Players.Count != 0
+                && gamePlay.Players[0].playerId == playerId)
+            {
+                gamePlay.GameState = GameState.Started;
+                return gamePlay.GameState == GameState.Started;
+            }
+            return false;
+        }
+
         public ITile GetNewTile(Guid gameId)
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
 
-            if (gamePlay.TileStack.Count == 0 || gamePlay.HasCurrentTile || gamePlay.TileIsDown)
+            if (gamePlay == null || gamePlay.TileStack.Count == 0 || gamePlay.HasCurrentTile || gamePlay.TileIsDown || gamePlay.GameState != GameState.Started)
             {
-                return null;
+                return new Tile(new List<IDirection>(), new List<Speciality>());
             }
 
             gamePlay.TileIsDown = false;
             gamePlay.HasCurrentTile = true;
             gamePlay.AlreadyCalculated = false;
-
-            return gamePlay.TileStack.RemoveAndGet(gamePlay.RandomNumberGenerator.Next(gamePlay.TileStack.Count));
+            gamePlay.CurrentTile = gamePlay.TileStack.RemoveAndGet(gamePlay.RandomNumberGenerator.Next(gamePlay.TileStack.Count));
+            return gamePlay.CurrentTile;
         }
 
-        public GamePlay EndTurn(Guid gameId)
+        public GamePlay EndTurn(Guid gameId, Guid playerId)
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
 
-            if (!(!gamePlay.HasCurrentTile && gamePlay.TileIsDown))
+            if (!(!gamePlay.HasCurrentTile && gamePlay.TileIsDown) || gamePlay.CurrentPlayer.playerId != playerId || gamePlay.GameState != GameState.Started)
             {
                 return gamePlay;
             }
-            gamePlay.TileIsDown = false;
-            gamePlay.CanPlaceFigureProperty = false;
 
             if (gamePlay.TileStack.Count == 0)
             {
@@ -83,6 +98,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             CallCalculate(gamePlay);
             gamePlay.FigureDown = false;
+            gamePlay.TileIsDown = false;
+            gamePlay.CanPlaceFigureProperty = false;
             gamePlay.CurrentRound++;
             gamePlay.CurrentPlayer = gamePlay.Players[(gamePlay.Players.IndexOf(gamePlay.CurrentPlayer) + 1) % gamePlay.Players.Count];
 
@@ -100,11 +117,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     canPlaceTile = false;
                 }
             });
-            if (!canPlaceTile)
+            if (!canPlaceTile || gamePlay.GameState != GameState.Started)
             {
                 return false;
             }
-            // CurrentPlayer = CurrentPlayer;
             tileToPlace.Position = coordinates;
             if (!Utils.CheckFitOfTile(tileToPlace, SurroundingTilesByCoordinates(tileToPlace, gamePlay)))
             {
@@ -287,5 +303,28 @@ namespace DotNetCoreWebApi.Backend.services.impl
             }
             gamePlay.AlreadyCalculated = true;
         }
+
+        public Dictionary<int, IFigure> GetFiguresOnTiles(Guid gameId, ITile tile)
+        {
+            Dictionary<int, IFigure> result = new Dictionary<int, IFigure>();
+            for (int i = 0; i < tile.Directions.Count; i++)
+            {
+                var direction = tile.Directions[i];
+                if (direction.Figure != null)
+                {
+                    result.Add(i, direction.Figure);
+                }
+            }
+            if (tile is Church)
+            {
+                var churchFigure = ((Church)tile).CenterFigure;
+                if (churchFigure != null)
+                {
+                    result.Add(4, churchFigure);
+                }
+            }
+            return result;
+        }
+
     }
 }

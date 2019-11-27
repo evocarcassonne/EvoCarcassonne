@@ -5,6 +5,7 @@ using DotNetCoreWebApi.Backend.services.impl;
 using DotNetCoreWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace DotNetCoreWebApi.Controllers
 {
@@ -21,46 +22,68 @@ namespace DotNetCoreWebApi.Controllers
             gamePlayService = new GamePlayService(calculateService);
         }
 
-        /*        [HttpPost]
-                [Route("{gameId}/Start")]
-                public void StartGame([FromUri] Guid gameId)
-                {
-                    gamePlayService.StartGame(gameId);
-                }*/
+        [HttpPost]
+        [Route("Start")]
+        public bool StartGame([FromHeader] Guid gameId, [FromHeader] Guid playerId)
+        {
+            return gamePlayService.StartGame(gameId, playerId);
+        }
 
 
-        [HttpGet("{gameId}/CurrentPlayer")]
-        public PlayerDto GetCurrentPlayer(Guid gameId)
+        [HttpGet("CurrentPlayer")]
+        public PlayerDto GetCurrentPlayer([FromHeader] Guid gameId)
         {
             var player = gamePlayService.GetCurrentPlayer(gameId);
             return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
         }
 
-        [HttpGet("{gameId}/CurrentRound")]
-        public int GetCurrentRound(Guid gameId)
+        [HttpGet("CurrentRound")]
+        public int GetCurrentRound([FromHeader] Guid gameId)
         {
             return gamePlayService.GetCurrentRound(gameId);
         }
 
-        [HttpPut("PlaceTile")]
+        [HttpPost("PlaceTile")]
         public bool PlaceTileAndFigure([FromBody] PlaceTileDto tileDto)
         {
-            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, TileParser.Parse(tileDto.tileProps),
+            var tile = TileParser.Parse(tileDto.tileProps);
+            if (Math.Abs(tileDto.RotateAngle) % 90 != 0) { return false; }
+            for (int i = 0; i < Math.Abs(tileDto.RotateAngle) / 90; i++)
+            {
+                if (tileDto.RotateAngle < 0)
+                {
+                    tile.Rotate(-90);
+                }
+                else if (tileDto.RotateAngle > 0)
+                {
+                    tile.Rotate(90);
+                }
+            }
+            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, tileDto.playerId, tile,
                 new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.placeFigure, tileDto.side);
         }
 
-        [HttpGet("{gameId}/GetNewTile")]
-        public string GetNewTile(Guid gameId)
+        [HttpGet("GetNewTile")]
+        public string GetNewTile([FromHeader] Guid gameId)
         {
             return gamePlayService.GetNewTile(gameId).PropertiesAsString;
         }
 
-        [HttpPost("{gameId}/EndTurn")]
-        public GameInfoDto EndTurn(Guid gameId)
+        [HttpPost("EndTurn")]
+        public GameInfoDto EndTurn([FromHeader] Guid gameId, [FromHeader] Guid playerId)
         {
-            var gamePlay = gamePlayService.EndTurn(gameId);
+            var gamePlay = gamePlayService.EndTurn(gameId, playerId);
             var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
-            gamePlay.PlacedTiles.ForEach(tile => gameInfoDto.AddTileInfoOneByOne(new TileInfoDto(tile.PropertiesAsString, tile.Position)));
+            foreach (var tile in gamePlay.PlacedTiles)
+            {
+                List<FigurePlacementDto> figuresOnTiles = new List<FigurePlacementDto>();
+                foreach (var i in gamePlayService.GetFiguresOnTiles(gameId, tile))
+                {
+                    figuresOnTiles.Add(new FigurePlacementDto(i.Value.Owner.Name, i.Key));
+                }
+                var tileInfo = new TileInfoDto(tile.PropertiesAsString, tile.Position, figuresOnTiles);
+                gameInfoDto.AddTileInfoOneByOne(tileInfo);
+            }
             gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
             return gameInfoDto;
         }

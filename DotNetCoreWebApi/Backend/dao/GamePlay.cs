@@ -8,7 +8,7 @@ namespace DotNetCoreWebApi.Backend.dao
     public class GamePlay
     {
         public Guid Id { get; set; }
-        [JsonProperty]
+        public GameState GameState { get; set; } = GameState.WaitingForPlayers;
         public List<ITile> TileStack { get; set; }
         public List<ITile> PlacedTiles { get; set; } = new List<ITile>();
         public List<Player> Players = new List<Player>();
@@ -16,13 +16,13 @@ namespace DotNetCoreWebApi.Backend.dao
         public Player CurrentPlayer { get; set; }
         public bool AlreadyCalculated { get; set; }
         public Random RandomNumberGenerator { get; set; }
-        public bool TileIsDown { get; set; }
-        public bool HasCurrentTile { get; set; }
-        public bool CanPlaceFigureProperty { get; set; }
+        public bool TileIsDown { get; set; } = false;
+        public bool HasCurrentTile { get; set; } = false;
+        public bool CanPlaceFigureProperty { get; set; } = false;
         public int CurrentSideForFigure { get; set; } = -1;
-        public bool FigureDown { get; set; }
+        public bool FigureDown { get; set; } = false;
+        public ITile CurrentTile { get; set; }
 
-        [JsonConstructor]
         public GamePlay(List<ITile> tileStack)
         {
             Id = Guid.NewGuid();
