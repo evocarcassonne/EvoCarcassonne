@@ -4,8 +4,8 @@ namespace DotNetCoreWebApi.Models
 {
     public class PlaceTileDto
     {
-        public Guid gameId { get; set; }
-        public Guid playerId { get; set; }
+        public string gameId { get; set; }
+        public string playerId { get; set; }
         public string tileProps { get; set; }
         public int RotateAngle { get; set; }
         public int coordinateX { get; set; }

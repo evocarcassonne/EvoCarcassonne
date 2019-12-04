@@ -8,6 +8,7 @@ namespace DotNetCoreWebApi.Backend.Model
         public List<IDirection> Directions { get; set; }
         public List<Speciality> Speciality { get; set; }
         public Coordinates Position { get; set; }
+        public int Rotation { get; set; } = 0;
         private IFigure _centerFigure;
         public IFigure CenterFigure
         {
@@ -42,6 +43,7 @@ namespace DotNetCoreWebApi.Backend.Model
                     }
 
                     Directions[Directions.Count - 1] = temp;
+                    this.Rotation += -90;
                     break;
                 case 90:
                     temp = Directions.Last();
@@ -51,6 +53,7 @@ namespace DotNetCoreWebApi.Backend.Model
                     }
 
                     Directions[0] = temp;
+                    this.Rotation += 90;
                     break;
             }
         }

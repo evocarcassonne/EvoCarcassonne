@@ -46,7 +46,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     bool placedFigure = PlaceFigure(tileToPlace, side, currentGamePlay);
                     return placedFigure;
                 }
-                return false;
+                return true;
+
             }
 
             return false;

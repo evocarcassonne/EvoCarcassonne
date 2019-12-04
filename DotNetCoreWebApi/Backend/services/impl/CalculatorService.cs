@@ -3,6 +3,7 @@ using DotNetCoreWebApi.Backend.Model;
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
+
     class CalculatorService : ICalculateService
     {
         public void Calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)

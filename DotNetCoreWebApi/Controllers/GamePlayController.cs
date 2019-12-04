@@ -3,6 +3,7 @@ using DotNetCoreWebApi.Backend.Model;
 using DotNetCoreWebApi.Backend.services;
 using DotNetCoreWebApi.Backend.services.impl;
 using DotNetCoreWebApi.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -24,23 +25,22 @@ namespace DotNetCoreWebApi.Controllers
 
         [HttpPost]
         [Route("Start")]
-        public bool StartGame([FromHeader] Guid gameId, [FromHeader] Guid playerId)
+        public bool StartGame([FromHeader] string gameId, [FromHeader] string playerId)
         {
-            return gamePlayService.StartGame(gameId, playerId);
+            return gamePlayService.StartGame(Guid.Parse(gameId), Guid.Parse(playerId));
         }
 
-
         [HttpGet("CurrentPlayer")]
-        public PlayerDto GetCurrentPlayer([FromHeader] Guid gameId)
+        public PlayerDto GetCurrentPlayer([FromHeader] string gameId)
         {
-            var player = gamePlayService.GetCurrentPlayer(gameId);
+            var player = gamePlayService.GetCurrentPlayer(Guid.Parse(gameId));
             return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
         }
 
         [HttpGet("CurrentRound")]
-        public int GetCurrentRound([FromHeader] Guid gameId)
+        public int GetCurrentRound([FromHeader] string gameId)
         {
-            return gamePlayService.GetCurrentRound(gameId);
+            return gamePlayService.GetCurrentRound(Guid.Parse(gameId));
         }
 
         [HttpPost("PlaceTile")]
@@ -59,29 +59,30 @@ namespace DotNetCoreWebApi.Controllers
                     tile.Rotate(90);
                 }
             }
-            return gamePlayService.PlaceTileAndFigure(tileDto.gameId, tileDto.playerId, tile,
+            return gamePlayService.PlaceTileAndFigure(Guid.Parse(tileDto.gameId), Guid.Parse(tileDto.playerId), tile,
                 new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.placeFigure, tileDto.side);
         }
 
         [HttpGet("GetNewTile")]
-        public string GetNewTile([FromHeader] Guid gameId)
+        public string GetNewTile([FromHeader] string gameId)
         {
-            return gamePlayService.GetNewTile(gameId).PropertiesAsString;
+            return gamePlayService.GetNewTile(Guid.Parse(gameId)).PropertiesAsString;
         }
 
         [HttpPost("EndTurn")]
-        public GameInfoDto EndTurn([FromHeader] Guid gameId, [FromHeader] Guid playerId)
+        public GameInfoDto EndTurn([FromHeader] string gameId, [FromHeader] string playerId)
         {
-            var gamePlay = gamePlayService.EndTurn(gameId, playerId);
+            var gamePlay = gamePlayService.EndTurn(Guid.Parse(gameId), Guid.Parse(playerId));
             var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
             foreach (var tile in gamePlay.PlacedTiles)
             {
-                List<FigurePlacementDto> figuresOnTiles = new List<FigurePlacementDto>();
-                foreach (var i in gamePlayService.GetFiguresOnTiles(gameId, tile))
+                FigurePlacementDto figureOnTile = null;
+                foreach (var i in gamePlayService.GetFiguresOnTiles(Guid.Parse(gameId), tile))
                 {
-                    figuresOnTiles.Add(new FigurePlacementDto(i.Value.Owner.Name, i.Key));
+                    figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
+                    break;
                 }
-                var tileInfo = new TileInfoDto(tile.PropertiesAsString, tile.Position, figuresOnTiles);
+                var tileInfo = new TileInfoDto(tile.PropertiesAsString, tile.Position, figureOnTile, tile.Rotation);
                 gameInfoDto.AddTileInfoOneByOne(tileInfo);
             }
             gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
