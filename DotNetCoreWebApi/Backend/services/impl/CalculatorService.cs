@@ -5,6 +5,17 @@ namespace DotNetCoreWebApi.Backend.services.impl
 {
     class CalculatorService : ICalculateService
     {
+        private ChurchCalculatorService churchCalculatorService;
+        private CastleCalculatorService castleCalculatorService;
+        private RoadCalculatorService roadCalculatorService;
+
+        public CalculatorService(ChurchCalculatorService churchCalculatorService, CastleCalculatorService castleCalculatorService, RoadCalculatorService roadCalculatorService)
+        {
+            this.churchCalculatorService = churchCalculatorService;
+            this.castleCalculatorService = castleCalculatorService;
+            this.roadCalculatorService = roadCalculatorService;
+        }
+
         public void Calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
         {
             var allSurrTiles = figuresToGiveBack = new List<IFigure>();
@@ -15,7 +26,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     var church = (Church)tile;
                     List<IFigure> figures;
-                    new ChurchCalculatorService().calculate(tile, gameover, out figures);
+                    churchCalculatorService.calculate(tile, gameover, out figures);
                     figuresToGiveBack.AddRange(figures);
                 }
             }
@@ -26,7 +37,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (i.Landscape == Landscape.Castle)
                 {
                     List<IFigure> figures;
-                    new CastleCalculatorService().calculate(currentTile, gameover, out figures);
+                    castleCalculatorService.calculate(currentTile, gameover, out figures);
                     figuresToGiveBack.AddRange(figures);
                     break;
                 }
@@ -38,7 +49,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (i.Landscape == Landscape.Road)
                 {
                     List<IFigure> figures;
-                    new RoadCalculatorService().calculate(currentTile, gameover, out figures);
+                    roadCalculatorService.calculate(currentTile, gameover, out figures);
                     figuresToGiveBack.AddRange(figures);
                     break;
                 }
@@ -49,9 +60,9 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             switch (currentTile.Directions[(int)whereToGo].Landscape)
             {
-                case Landscape.Castle: return new CastleCalculatorService().CanPlaceFigure(currentTile, whereToGo, firstCall);
+                case Landscape.Castle: return castleCalculatorService.CanPlaceFigure(currentTile, whereToGo, firstCall);
                 case Landscape.Field: return true;
-                case Landscape.Road: return new RoadCalculatorService().CanPlaceFigure(currentTile, whereToGo, firstCall);
+                case Landscape.Road: return roadCalculatorService.CanPlaceFigure(currentTile, whereToGo, firstCall);
                 default: return true;
             }
         }

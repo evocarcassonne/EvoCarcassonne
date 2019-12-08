@@ -23,7 +23,7 @@ namespace DotNetCoreWebApi.Backend.dao
         public bool FigureDown { get; set; } = false;
         public ITile CurrentTile { get; set; }
 
-        public GamePlay(List<ITile> tileStack)
+        public GamePlay(List<ITile> tileStack, Random randomNumberGenerator)
         {
             Id = Guid.NewGuid();
 
@@ -37,7 +37,7 @@ namespace DotNetCoreWebApi.Backend.dao
                 PlacedTiles.Add(starterTile);
             }
 
-            RandomNumberGenerator = new Random();
+            RandomNumberGenerator = randomNumberGenerator;
         }
     }
 }

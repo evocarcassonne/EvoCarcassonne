@@ -14,12 +14,11 @@ namespace DotNetCoreWebApi.Controllers
     [Route("api/Player")]
     public class PlayerController : ControllerBase
     {
-
         private readonly IPlayerService playerService;
 
-        public PlayerController()
+        public PlayerController(IPlayerService playerService)
         {
-            playerService = new PlayerService();
+            this.playerService = playerService;
         }
 
         [HttpPost("Subscribe")]

@@ -16,10 +16,9 @@ namespace DotNetCoreWebApi.Controllers
     {
         private readonly IGamePlayService gamePlayService;
 
-        public GamePlayController()
+        public GamePlayController(IGamePlayService gamePlayService)
         {
-            ICalculateService calculateService = new CalculatorService();
-            gamePlayService = new GamePlayService(calculateService);
+            this.gamePlayService = gamePlayService;
         }
 
         [HttpPost]
