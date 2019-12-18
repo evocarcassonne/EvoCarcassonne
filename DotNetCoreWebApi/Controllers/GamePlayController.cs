@@ -20,7 +20,8 @@ namespace DotNetCoreWebApi.Controllers
         public GamePlayController()
         {
             ICalculateService calculateService = new CalculatorService();
-            gamePlayService = new GamePlayService(calculateService);
+            IFigureService figureService = new FigureService();
+                gamePlayService = new GamePlayService(calculateService, figureService);
         }
 
         [HttpPost]

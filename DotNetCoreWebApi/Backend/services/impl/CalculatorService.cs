@@ -46,17 +46,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
             }
         }
 
-        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
-        {
-            switch (currentTile.Directions[(int)whereToGo].Landscape)
-            {
-                case Landscape.Castle: return new CastleCalculatorService().CanPlaceFigure(currentTile, whereToGo, firstCall);
-                case Landscape.Field: return true;
-                case Landscape.Road: return new RoadCalculatorService().CanPlaceFigure(currentTile, whereToGo, firstCall);
-                default: return true;
-            }
-        }
-
     }
 
 }

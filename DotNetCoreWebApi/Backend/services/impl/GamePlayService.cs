@@ -10,10 +10,12 @@ namespace DotNetCoreWebApi.Backend.services.impl
     {
         internal GameController Controller = GameController.Instance;
         private ICalculateService calculateService;
+        private IFigureService figureService;
 
-        public GamePlayService(ICalculateService calculateService)
+        public GamePlayService(ICalculateService calculateService, IFigureService figureService)
         {
             this.calculateService = calculateService;
+            this.figureService = figureService;
         }
 
         public Player GetCurrentPlayer(Guid gameId)
@@ -215,7 +217,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
                 if (directionIndex != 4)
                 {
-                    return tile.Directions[directionIndex].Figure == null && calculateService.CanPlaceFigure(tile, (CardinalDirection)directionIndex, true);
+                    return tile.Directions[directionIndex].Figure == null && figureService.CanPlaceFigure(tile, (CardinalDirection)directionIndex, true);
                 }
                 return tile.Directions[directionIndex].Figure == null;
             }
