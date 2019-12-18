@@ -10,7 +10,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
         private ITile _currentITile;
         private readonly List<IFigure> _figuresOnTiles = new List<IFigure>();
         private List<ITile> CheckedTiles { get; set; } = new List<ITile>();
-        private CardinalDirection _starterWhereToGo;
         private bool _canPlaceFigure { get; set; } = true;
         public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
@@ -36,7 +35,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 _currentITile = currentTile;
                 CheckedTiles.Clear();
                 _figuresOnTiles.Clear();
-                _starterWhereToGo = whereToGo;
                 _canPlaceFigure = true;
             }
 

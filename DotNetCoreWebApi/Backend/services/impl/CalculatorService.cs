@@ -8,8 +8,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
     {
         public void Calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
         {
-            var allSurrTiles = figuresToGiveBack = new List<IFigure>();
-            Utils.GetAllSurroundingTiles(currentTile);
+            figuresToGiveBack = new List<IFigure>();
+            var allSurrTiles = Utils.GetAllSurroundingTiles(currentTile);
             foreach (ITile tile in allSurrTiles)
             {
                 if (tile is Church)
