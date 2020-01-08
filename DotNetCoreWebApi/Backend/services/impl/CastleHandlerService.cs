@@ -76,7 +76,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             }
 
 
-            // Check if the castle is not finished         
+            // Check if the castle is not finished
             if (!_finishedCastle && !_gameOver)// || _currentITile == null)
                 return 0;
 
@@ -195,8 +195,9 @@ namespace DotNetCoreWebApi.Backend.services.impl
         // If the current tile doesn't have endofcastle speciality 
         private int CalculateCastle(ITile currentTile, bool gameover)
         {
-            // Check if the castle is not finished         
+            // Check if the castle is not finished
             if (!_finishedCastle && !_gameOver)// || _currentITile == null)
+
                 return 0;
 
             if (_outOfRange)
@@ -247,6 +248,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     _ITileList.Add(_currentITile);
                     _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
                     //if (_currentITile == null) break;
+
                     CalculateCastle(_currentITile, false);
                     _currentITile = currentTile;
                 }

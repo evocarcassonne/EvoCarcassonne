@@ -66,6 +66,7 @@ namespace DotNetCoreWebApi.Controllers
 
         [HttpGet("GetNewTile")]
         public string GetNewTile([FromHeader] string gameId)
+
         {
             return gamePlayService.GetNewTile(Guid.Parse(gameId)).PropertiesAsString;
         }
@@ -84,6 +85,7 @@ namespace DotNetCoreWebApi.Controllers
                     break;
                 }
                 var tileInfo = new TileInfoDto(tile.PropertiesAsString, tile.Position, figureOnTile, tile.Rotation);
+
                 gameInfoDto.AddTileInfoOneByOne(tileInfo);
             }
             gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
