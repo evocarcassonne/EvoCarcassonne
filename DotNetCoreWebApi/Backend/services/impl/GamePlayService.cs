@@ -109,6 +109,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return gamePlay;
         }
 
+        public GamePlay GetState(Guid gameId)
+        {
+            return Controller.GetGamePlayById(gameId);
+        }
+
         private bool PlaceTile(ITile tileToPlace, Coordinates coordinates, GamePlay gamePlay)
         {
             bool canPlaceTile = !(!gamePlay.HasCurrentTile || gamePlay.TileIsDown);
@@ -314,5 +319,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
             }
             return result;
         }
+
     }
 }
