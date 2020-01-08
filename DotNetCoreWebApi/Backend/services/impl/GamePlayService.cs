@@ -231,23 +231,14 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (tile is Church && tile.CenterFigure != null)
                 {
                     var churchTile = (Church)tile;
-                    List<IFigure> figures;
-                    calculateService.Calculate(tile, true, out figures);
-                    foreach (var figure in figures)
-                    {
-                        Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-                    }
+                    calculateService.Calculate(tile, true, ref gamePlay.Players);
+
                 }
                 for (int i = 0; i < 4; i++)
                 {
                     if (tile.Directions[i].Figure != null && !(tile.Directions[i].Landscape == Landscape.Field))
                     {
-                        List<IFigure> figures;
-                        calculateService.Calculate(tile, true, out figures);
-                        foreach (var figure in figures)
-                        {
-                            Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-                        }
+                        calculateService.Calculate(tile, true, ref gamePlay.Players);
                     }
                 }
             }
@@ -298,12 +289,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 return;
             }
 
-            List<IFigure> figures;
-            calculateService.Calculate(gamePlay.PlacedTiles.Last(), false, out figures);
-            foreach (var figure in figures)
-            {
-                Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-            }
+            calculateService.Calculate(gamePlay.PlacedTiles.Last(), false, ref gamePlay.Players);
             gamePlay.AlreadyCalculated = true;
         }
 

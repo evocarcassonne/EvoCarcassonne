@@ -7,8 +7,9 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
     class ChurchCalculatorService
     {
-        public void calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
+        public int calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
         {
+            int points = 0;
             List<ITile> surroundingTiles = new List<ITile>();
             figuresToGiveBack = new List<IFigure>();
             currentTile.Directions.ForEach(e => surroundingTiles.Add(e.Neighbor));
@@ -16,7 +17,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
             var churchTile = (Church)currentTile;
             if (gameover)
             {
-                churchTile.CenterFigure.Owner.Points += surroundingTiles.Count;
+                points = surroundingTiles.Count;
+                figuresToGiveBack.Add(churchTile.CenterFigure);
                 churchTile.CenterFigure = null;
             }
             else
@@ -25,12 +27,13 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     if (churchTile.CenterFigure != null)
                     {
-                        churchTile.CenterFigure.Owner.Points += 9;
+                        points = 9;
                         figuresToGiveBack.Add(churchTile.CenterFigure);
                         churchTile.CenterFigure = null;
                     }
                 }
             }
+            return points;
         }
 
         public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)

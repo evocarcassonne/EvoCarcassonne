@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using DotNetCoreWebApi.Backend.Model;
 
 namespace DotNetCoreWebApi.Backend.services.impl
@@ -13,6 +12,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
         private bool _canPlaceFigure { get; set; } = true;
         public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
+            _figuresOnTiles.Clear();
+            CheckedTiles.Clear();
+            _canPlaceFigure = true;
+
             switch (currentTile.Directions[(int)whereToGo].Landscape)
             {
                 case Landscape.Castle: return CanPlaceFigureOnCastle(currentTile, whereToGo, firstCall);
@@ -24,14 +27,30 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
         public List<IFigure> GetFiguresToGiveBack(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
-            return null;
+            _figuresOnTiles.Clear();
+            if (currentTile.Speciality.Contains(Speciality.Colostor) || currentTile is Church)
+            {
+                if (currentTile.CenterFigure != null)
+                {
+                    _figuresOnTiles.Add(currentTile.CenterFigure);
+                }
+
+            }
+            else
+            {
+                this.CanPlaceFigure(currentTile, whereToGo, true);
+            }
+
+            return _figuresOnTiles;
         }
+
 
         #region Castle Specific
         private bool CanPlaceFigureOnCastle(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             ITile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
-            if(firstCall){
+            if (firstCall)
+            {
                 _currentITile = currentTile;
                 CheckedTiles.Clear();
                 _figuresOnTiles.Clear();
@@ -41,34 +60,34 @@ namespace DotNetCoreWebApi.Backend.services.impl
             if (_currentITile == null)
             {
                 _canPlaceFigure = false;
-                return false;
             }
             if (IsChecked(_currentITile, CheckedTiles))
             {
                 return _canPlaceFigure;
             }
-            
+
             if (firstCall)
             {
                 if (CheckEndOfCastle(currentTile))
                 {
-                    return CanPlaceFigureOnCastle(currentTile, whereToGo, false);                    
+                    return CanPlaceFigureOnCastle(currentTile, whereToGo, false);
                 }
                 else
-                { 
+                {
                     List<bool> results = new List<bool>();
                     for (int i = 0; i < 4; i++)
                     {
                         if (currentTile.Directions[i].Landscape == Landscape.Castle && i != (int)whereToGo)
                         {
-                            results.Add(CanPlaceFigureOnCastle(currentTile, (CardinalDirection)i,false));
+                            results.Add(CanPlaceFigureOnCastle(currentTile, (CardinalDirection)i, false));
                         }
                     }
                     return results.All(e => e);
                 }
             }
-            
+
             CheckedTiles.Add(currentTile);
+            CheckFigureOnTile(currentTile, (int)whereToGo);
             if (neighborTile == null)
             {
                 return _canPlaceFigure;
@@ -76,15 +95,17 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             if (CheckEndOfCastle(neighborTile))
             {
-                return neighborTile.Directions[(int) Utils.GetOppositeDirection(whereToGo)].Figure == null;
+                CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
+                return (neighborTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure == null && _canPlaceFigure);
+
             }
 
             for (int i = 0; i < 4; i++)
             {
                 if (neighborTile.Directions[i].Figure != null && neighborTile.Directions[i].Landscape == Landscape.Castle)
                 {
+                    CheckFigureOnTile(currentTile, i);
                     _canPlaceFigure = false;
-                    return false;
                 }
             }
             var resultOfPlacementChecking = new List<bool>();
@@ -93,13 +114,13 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (neighborTile.Directions[i].Landscape == Landscape.Castle
                 && i != (int)Utils.GetOppositeDirection(whereToGo))
                 {
+                    CheckFigureOnTile(neighborTile, i);
                     resultOfPlacementChecking.Add(CanPlaceFigureOnCastle(neighborTile, neighborTile.GetCardinalDirectionByIndex(i),
                         false));
                 }
             }
 
             return resultOfPlacementChecking.All(e => e);
-            
         }
 
         private bool CheckEndOfCastle(ITile currentITile)
@@ -111,7 +132,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             return iTileList.Contains(currentITile);
         }
-        
+
         #endregion
 
         #region Road Specific
@@ -140,7 +161,9 @@ namespace DotNetCoreWebApi.Backend.services.impl
                            CanPlaceFigureOnRoad(currentTile, otherSide, false);
                 }
             }
-        
+
+            this.CheckFigureOnTile(currentTile, (int)whereToGo);
+
             if (neighborTile == null)
             {
                 return _canPlaceFigure;
@@ -148,41 +171,29 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             if (IsEndOfRoad(neighborTile))
             {
-                return neighborTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure == null;
+                CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
+                return (neighborTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure == null && _canPlaceFigure);
             }
 
             for (int i = 0; i < 4; i++)
             {
-                if(neighborTile.Directions[i].Figure != null &&
+                if (neighborTile.Directions[i].Figure != null &&
                     neighborTile.Directions[i].Landscape == Landscape.Road)
                 {
+                    this.CheckFigureOnTile(currentTile, i);
                     _canPlaceFigure = false;
-                    return false;
                 }
             }
 
-            if (IsEndOfRoad(currentTile))
+            for (var i = 0; i < 4; i++)
             {
-                for (var i = 0; i < 4; i++)
+                if (neighborTile.Directions[i].Landscape == Landscape.Road && i != (int)Utils.GetOppositeDirection(whereToGo))
                 {
-                    if (neighborTile.Directions[i].Landscape == Landscape.Road && i != (int)Utils.GetOppositeDirection(whereToGo))
-                    {
-                        return CanPlaceFigure(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), false);
-                    }
-                }
-            }
-            else
-            {
-                for (var i = 0; i < 4; i++)
-                {
-                    if (neighborTile.Directions[i].Landscape == Landscape.Road && i != (int)Utils.GetOppositeDirection(whereToGo))
-                    {
-                        return CanPlaceFigure(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), false);
-                    }
+                    return CanPlaceFigureOnRoad(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), false);
                 }
             }
 
-            return true;
+            return _canPlaceFigure;
         }
 
         /// <summary>
@@ -195,5 +206,14 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return currentTile.Speciality.Contains(Speciality.EndOfRoad);
         }
         #endregion
+
+        private void CheckFigureOnTile(ITile currentTile, int onlySideToCheck)
+        {
+            if (currentTile.Directions[onlySideToCheck].Figure != null)
+            {
+                _figuresOnTiles.Add(currentTile.Directions[onlySideToCheck].Figure);
+                currentTile.Directions[onlySideToCheck].Figure = null;
+            }
+        }
     }
 }
