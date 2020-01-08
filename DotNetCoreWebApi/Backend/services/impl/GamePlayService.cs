@@ -314,28 +314,5 @@ namespace DotNetCoreWebApi.Backend.services.impl
             }
             return result;
         }
-
-        public Dictionary<int, IFigure> GetFiguresOnTiles(Guid gameId, ITile tile)
-        {
-            Dictionary<int, IFigure> result = new Dictionary<int, IFigure>();
-            for (int i = 0; i < tile.Directions.Count; i++)
-            {
-                var direction = tile.Directions[i];
-                if (direction.Figure != null)
-                {
-                    result.Add(i, direction.Figure);
-                }
-            }
-            if (tile is Church)
-            {
-                var churchFigure = ((Church)tile).CenterFigure;
-                if (churchFigure != null)
-                {
-                    result.Add(4, churchFigure);
-                }
-            }
-            return result;
-        }
-
     }
 }
