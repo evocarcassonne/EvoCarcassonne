@@ -24,7 +24,7 @@ namespace DotNetCoreWebApi.Controllers
             gamePlayService = new GamePlayService(calculateService, figureService);
         }
 
-        [EnableCors]
+
         [HttpPost]
         [Route("Start")]
         public bool StartGame([FromHeader] string gameId, [FromHeader] string playerId)
@@ -32,7 +32,7 @@ namespace DotNetCoreWebApi.Controllers
             return gamePlayService.StartGame(Guid.Parse(gameId), Guid.Parse(playerId));
         }
 
-        [EnableCors]
+
         [HttpGet("CurrentPlayer")]
         public PlayerDto GetCurrentPlayer([FromHeader] string gameId)
         {
@@ -40,14 +40,14 @@ namespace DotNetCoreWebApi.Controllers
             return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
         }
 
-        [EnableCors]
+
         [HttpGet("CurrentRound")]
         public int GetCurrentRound([FromHeader] string gameId)
         {
             return gamePlayService.GetCurrentRound(Guid.Parse(gameId));
         }
 
-        [EnableCors]
+
         [HttpPost("PlaceTile")]
         public bool PlaceTileAndFigure([FromBody] PlaceTileDto tileDto)
         {
@@ -68,7 +68,6 @@ namespace DotNetCoreWebApi.Controllers
                 new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.placeFigure, tileDto.side);
         }
 
-        [EnableCors]
         [HttpGet("GetNewTile")]
         public string GetNewTile([FromHeader] string gameId)
 
@@ -76,7 +75,6 @@ namespace DotNetCoreWebApi.Controllers
             return gamePlayService.GetNewTile(Guid.Parse(gameId)).PropertiesAsString;
         }
 
-        [EnableCors]
         [HttpPost("EndTurn")]
         public GameInfoDto EndTurn([FromHeader] string gameId, [FromHeader] string playerId)
         {
@@ -98,7 +96,7 @@ namespace DotNetCoreWebApi.Controllers
             return gameInfoDto;
         }
 
-        [EnableCors]
+
         [HttpGet("State")]
         public GameInfoDto GetState([FromHeader] string gameId)
         {
