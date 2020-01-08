@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Mime;
-using DotNetCoreWebApi.Backend.Model;
 using DotNetCoreWebApi.Backend.services;
 using DotNetCoreWebApi.Backend.services.impl;
 using Microsoft.AspNetCore.Mvc;
 using DotNetCoreWebApi.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace DotNetCoreWebApi.Controllers
 {
@@ -22,18 +21,21 @@ namespace DotNetCoreWebApi.Controllers
             playerService = new PlayerService();
         }
 
+        [EnableCors]
         [HttpPost("Subscribe")]
         public Guid Subscribe([FromHeader] string gameId, [FromHeader] string playerName)
         {
             return playerService.Subscribe(Guid.Parse(gameId), playerName);
         }
 
+        [EnableCors]
         [HttpDelete("Unsubscribe")]
         public bool Unsubscribe([FromHeader] string gameId, [FromHeader] string playerId)
         {
             return playerService.Unsubscribe(Guid.Parse(gameId), Guid.Parse(playerId));
         }
 
+        [EnableCors]
         [HttpGet("Players")]
         public List<PlayerDto> Players([FromHeader] string gameId)
         {

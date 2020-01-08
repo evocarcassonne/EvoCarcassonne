@@ -3,6 +3,7 @@ using DotNetCoreWebApi.Backend.services.impl;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors;
 
 namespace DotNetCoreWebApi.Controllers
 {
@@ -19,18 +20,21 @@ namespace DotNetCoreWebApi.Controllers
             _logger = logger;
         }
 
+        [EnableCors]
         [HttpPost("Create")]
         public Guid CreateSession([FromHeader] string playerName)
         {
             return GameService.CreateGameSession(playerName);
         }
 
+        [EnableCors]
         [HttpDelete("Delete")]
         public bool DeleteSession([FromHeader] string gameId, [FromHeader] Guid playerId)
         {
             return GameService.DeleteGameSession(Guid.Parse(gameId), playerId);
         }
 
+        [EnableCors]
         [HttpGet("/")]
         public string Home()
         {
