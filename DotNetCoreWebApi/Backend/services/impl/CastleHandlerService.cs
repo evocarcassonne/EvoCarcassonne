@@ -14,15 +14,12 @@ namespace DotNetCoreWebApi.Backend.services.impl
         private ITile _currentITile { get; set; }
         private List<ITile> _ITileList { get; set; } = new List<ITile>();
         private bool _firstCall { get; set; } = true;
-        private List<IFigure> _figuresOnTiles { get; set; } = new List<IFigure>();
         private CardinalDirection _starterWhereToGo { get; set; }
-        private bool _deleteFigures { get; set; } = false;
         private List<ITile> _placedCastleTiles { get; set; } = new List<ITile>();
         private bool _gameOver { get; set; }
         private bool _outOfRange { get; set; } = false;
-        private List<IFigure> FiguresToGiveBacktoOwner = new List<IFigure>();
 
-        public void calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
+        public int calculate(ITile currentTile, bool gameover)
         {
             _gameOver = gameover;
             _placedCastleTiles.Clear();
@@ -30,18 +27,14 @@ namespace DotNetCoreWebApi.Backend.services.impl
             int result = 0;
             for (int i = 0; i < 4; i++)
             {
-                _deleteFigures = false;
                 if (CheckEndOfCastle(currentTile) && currentTile.Directions[i].Landscape == Landscape.Castle)
                 {
                     _firstCall = true;
                     result += CalculateWithDirections(currentTile, (CardinalDirection)i);
 
                     _firstCall = true;
-                    Utils.DistributePoints(result, _figuresOnTiles);
-                    _figuresOnTiles = new List<IFigure>();
                     if (result > 0)
                     {
-                        _deleteFigures = true;
                         CalculateWithDirections(currentTile, (CardinalDirection)i);
                     }
                     result = 0;
@@ -54,11 +47,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     result += CalculateCastle(currentTile, false);
 
                     _firstCall = true;
-                    Utils.DistributePoints(result, _figuresOnTiles);
-                    _figuresOnTiles = new List<IFigure>();
                     if (result > 0)
                     {
-                        _deleteFigures = true;
                         CalculateCastle(_firstTile, false);
                     }
                     result = 0;
@@ -67,7 +57,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 }
             }
 
-            figuresToGiveBack = FiguresToGiveBacktoOwner;
+            return _points;
         }
 
 
@@ -82,14 +72,12 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 _points = 0;
                 _finishedCastle = true;
                 _ITileList.Clear();
-                _figuresOnTiles.Clear();
-                FiguresToGiveBacktoOwner.Clear();
                 _starterWhereToGo = whereToGo;
             }
 
 
-            // Check if the castle is not finished         
-            if (!_finishedCastle && !_gameOver || _currentITile == null)
+            // Check if the castle is not finished
+            if (!_finishedCastle && !_gameOver)// || _currentITile == null)
                 return 0;
 
             if (_outOfRange)
@@ -103,7 +91,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 return 0;
 
 
-            if (_currentITile.Directions == null)
+            if (_currentITile == null || _currentITile.Directions == null)
             {
                 if (!_gameOver)
                     _finishedCastle = false;
@@ -113,16 +101,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
             // If it is an EndOfCastle tile and it isn't the first tile...
             if (CheckEndOfCastle(_currentITile) && _firstTile != _currentITile)
             {
-                if (_currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure != null)
-                    _figuresOnTiles.Add(_currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure);
-
-                if (_deleteFigures && _currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure != null)
-                {
-                    FiguresToGiveBacktoOwner.Add(_currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure);
-                    _currentITile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure = null;
-                }
-
-
                 _points += 2;
                 return 0;
             }
@@ -138,17 +116,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     {
                         if (_currentITile == _firstTile && (int)_starterWhereToGo == (int)Utils.GetOppositeDirection(whereToGo) && !_firstCall)
                             return 0;
-
-                        if (_currentITile.Directions[i].Figure != null)
-                        {
-                            _figuresOnTiles.Add(_currentITile.Directions[i].Figure);
-                        }
-
-                        if (_deleteFigures && _currentITile.Directions[i].Figure != null)
-                        {
-                            FiguresToGiveBacktoOwner.Add(_currentITile.Directions[i].Figure);
-                            _currentITile.Directions[i].Figure = null;
-                        }
 
                         whereToGo = (CardinalDirection)i;
 
@@ -185,9 +152,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     _points += 2;
             }
             else
-                _points = 0;
-
-            if (_deleteFigures)
                 _points = 0;
 
             if (_firstTile == _currentITile && _points == 1)
@@ -231,8 +195,9 @@ namespace DotNetCoreWebApi.Backend.services.impl
         // If the current tile doesn't have endofcastle speciality 
         private int CalculateCastle(ITile currentTile, bool gameover)
         {
-            // Check if the castle is not finished         
-            if (!_finishedCastle && !_gameOver || _currentITile == null)
+            // Check if the castle is not finished
+            if (!_finishedCastle && !_gameOver)// || _currentITile == null)
+
                 return 0;
 
             if (_outOfRange)
@@ -252,8 +217,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 _points = 0;
                 _finishedCastle = true;
                 _ITileList.Clear();
-                _figuresOnTiles.Clear();
-                FiguresToGiveBacktoOwner.Clear();
             }
 
 
@@ -261,7 +224,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 return 0;
 
 
-            if (_currentITile.Directions == null)
+            if (_currentITile == null || _currentITile.Directions == null)
             {
                 if (!_gameOver)
                     _finishedCastle = false;
@@ -273,15 +236,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
             // If it is an EndOfCastle tile and it isn't the first tile...
             if (CheckEndOfCastle(_currentITile) && _firstTile != _currentITile)
             {
-                if (_currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure != null)
-                    _figuresOnTiles.Add(_currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure);
-
-                if (_deleteFigures && _currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure != null)
-                {
-                    FiguresToGiveBacktoOwner.Add(_currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure);
-                    _currentITile.Directions[(int)Utils.GetOppositeDirection((CardinalDirection)_whereToGo)].Figure = null;
-                }
-
                 _points += 2;
                 return 0;
             }
@@ -290,21 +244,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
             {
                 if (_currentITile.Directions[i].Landscape == Landscape.Castle)
                 {
-                    if (_currentITile.Directions[i].Figure != null)
-                    {
-                        _figuresOnTiles.Add(_currentITile.Directions[i].Figure);
-                    }
-
-                    if (_deleteFigures && _currentITile.Directions[i].Figure != null)
-                    {
-                        FiguresToGiveBacktoOwner.Add(_currentITile.Directions[i].Figure);
-                        _currentITile.Directions[i].Figure = null;
-                    }
-
                     _whereToGo = i;
                     _ITileList.Add(_currentITile);
                     _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
-                    if (_currentITile == null) break;
+                    //if (_currentITile == null) break;
+
                     CalculateCastle(_currentITile, false);
                     _currentITile = currentTile;
                 }
@@ -312,45 +256,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             CheckForPoints();
             return _points;
-        }
-
-        public bool CanPlaceFigure(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
-        {
-            _placedCastleTiles.Clear();
-            _gameOver = true;
-
-            int result = 0;
-
-            if (CheckEndOfCastle(currentTile) && currentTile.Directions[(int)whereToGo].Landscape == Landscape.Castle)
-            {
-                _firstCall = true;
-                result += CalculateWithDirections(currentTile, whereToGo);
-
-                if (_figuresOnTiles.Count > 0)
-                    _canPlaceFigure = false;
-                else
-                    _canPlaceFigure = true;
-
-                result = 0;
-
-            }
-            else if (!CheckEndOfCastle(currentTile))
-            {
-
-                _firstCall = true;
-                result += CalculateCastle(currentTile, false);
-
-                if (_figuresOnTiles.Count > 0)
-                    _canPlaceFigure = false;
-                else
-                    _canPlaceFigure = true;
-
-                result = 0;
-
-            }
-
-
-            return _canPlaceFigure;
         }
 
         public override bool Equals(object obj)

@@ -12,15 +12,16 @@
   <ItemGroup>
     <Content Remove="Backend\Resources\tiles\TileDefinitions.json" />
     <Content Remove="Backend\TileDefinitions.json" />
+    <Content Update="TileDefinitions.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Backend\Resources\tiles\TileDefinitions.json" />
   </ItemGroup>
 
 </Project>

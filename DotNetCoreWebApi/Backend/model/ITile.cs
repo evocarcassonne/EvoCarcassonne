@@ -7,6 +7,7 @@ namespace DotNetCoreWebApi.Backend.Model
         List<IDirection> Directions { get; set; }
         List<Speciality> Speciality { get; set; }
         Coordinates Position { get; set; }
+        int Rotation { get; set; }
         void Rotate(int direction);
         IDirection GetTileSideByCardinalDirection(CardinalDirection side);
         CardinalDirection GetCardinalDirectionByIndex(int index);

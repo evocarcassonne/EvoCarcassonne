@@ -10,10 +10,12 @@ namespace DotNetCoreWebApi.Backend.services.impl
     {
         internal GameController Controller = GameController.Instance;
         private ICalculateService calculateService;
+        private IFigureService figureService;
 
-        public GamePlayService(ICalculateService calculateService)
+        public GamePlayService(ICalculateService calculateService, IFigureService figureService)
         {
             this.calculateService = calculateService;
+            this.figureService = figureService;
         }
 
         public Player GetCurrentPlayer(Guid gameId)
@@ -46,7 +48,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     bool placedFigure = PlaceFigure(tileToPlace, side, currentGamePlay);
                     return placedFigure;
                 }
-                return false;
+                return true;
+
             }
 
             return false;
@@ -104,6 +107,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
             gamePlay.CurrentPlayer = gamePlay.Players[(gamePlay.Players.IndexOf(gamePlay.CurrentPlayer) + 1) % gamePlay.Players.Count];
 
             return gamePlay;
+        }
+
+        public GamePlay GetState(Guid gameId)
+        {
+            return Controller.GetGamePlayById(gameId);
         }
 
         private bool PlaceTile(ITile tileToPlace, Coordinates coordinates, GamePlay gamePlay)
@@ -214,7 +222,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
                 if (directionIndex != 4)
                 {
-                    return tile.Directions[directionIndex].Figure == null && calculateService.CanPlaceFigure(tile, (CardinalDirection)directionIndex, true);
+                    return tile.Directions[directionIndex].Figure == null && figureService.CanPlaceFigure(tile, (CardinalDirection)directionIndex, true);
                 }
                 return tile.Directions[directionIndex].Figure == null;
             }
@@ -228,23 +236,14 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (tile is Church && tile.CenterFigure != null)
                 {
                     var churchTile = (Church)tile;
-                    List<IFigure> figures;
-                    calculateService.Calculate(tile, true, out figures);
-                    foreach (var figure in figures)
-                    {
-                        Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-                    }
+                    calculateService.Calculate(tile, true, ref gamePlay.Players);
+
                 }
                 for (int i = 0; i < 4; i++)
                 {
                     if (tile.Directions[i].Figure != null && !(tile.Directions[i].Landscape == Landscape.Field))
                     {
-                        List<IFigure> figures;
-                        calculateService.Calculate(tile, true, out figures);
-                        foreach (var figure in figures)
-                        {
-                            Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-                        }
+                        calculateService.Calculate(tile, true, ref gamePlay.Players);
                     }
                 }
             }
@@ -295,12 +294,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 return;
             }
 
-            List<IFigure> figures;
-            calculateService.Calculate(gamePlay.PlacedTiles.Last(), false, out figures);
-            foreach (var figure in figures)
-            {
-                Utils.GiveBackFigureToOwner(figure, ref gamePlay.Players);
-            }
+            calculateService.Calculate(gamePlay.PlacedTiles.Last(), false, ref gamePlay.Players);
             gamePlay.AlreadyCalculated = true;
         }
 

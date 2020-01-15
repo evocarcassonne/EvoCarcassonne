@@ -18,5 +18,6 @@ namespace DotNetCoreWebApi.Backend.services
         GamePlay EndTurn(Guid gameId, Guid playerId);
         Dictionary<int, IFigure> GetFiguresOnTiles(Guid gameId, ITile tile);
         bool StartGame(Guid gameId, Guid playerId);
+        GamePlay GetState(Guid gameId);
     }
 }
