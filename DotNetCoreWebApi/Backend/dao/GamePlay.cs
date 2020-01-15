@@ -1,5 +1,4 @@
 using DotNetCoreWebApi.Backend.Model;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -23,9 +22,11 @@ namespace DotNetCoreWebApi.Backend.dao
         public bool FigureDown { get; set; } = false;
         public ITile CurrentTile { get; set; }
 
-        public GamePlay(List<ITile> tileStack)
+        public GamePlay(List<ITile> tileStack, Random randomNumberGenerator)
         {
             Id = Guid.NewGuid();
+
+            RandomNumberGenerator = randomNumberGenerator;
 
             if (TileStack == null || TileStack.Count == 0)
             {
@@ -36,8 +37,6 @@ namespace DotNetCoreWebApi.Backend.dao
                 CanPlaceFigureProperty = false;
                 PlacedTiles.Add(starterTile);
             }
-
-            RandomNumberGenerator = new Random();
         }
     }
 }
