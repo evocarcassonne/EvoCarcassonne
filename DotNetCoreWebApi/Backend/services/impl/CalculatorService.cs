@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DotNetCoreWebApi.Backend.Model;
+using DotNetCoreWebApi.Backend.Utils;
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
@@ -9,7 +10,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         public void Calculate(ITile currentTile, bool gameover, ref List<Player> players)
         {
             int points = 0;
-            var allSurrTiles = Utils.GetAllSurroundingTiles(currentTile);
+            var allSurrTiles = TileUtils.GetAllSurroundingTiles(currentTile);
             foreach (ITile tile in allSurrTiles)
             {
                 if (tile is Church)
@@ -20,10 +21,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     if (points != 0)
                     {
                         figures = new FigureService().GetFiguresToGiveBack(currentTile, 0, true);
-                        Utils.DistributePoints(points, figures);
+                        CalculateUtils.DistributePoints(points, figures);
                         foreach (var figure in figures)
                         {
-                            Utils.GiveBackFigureToOwner(figure, ref players);
+                            CalculateUtils.GiveBackFigureToOwner(figure, ref players);
                         }
                     }
                 }
@@ -39,10 +40,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     if (points != 0)
                     {
                         figures = new FigureService().GetFiguresToGiveBack(currentTile, (CardinalDirection)i, true);
-                        Utils.DistributePoints(points, figures);
+                        CalculateUtils.DistributePoints(points, figures);
                         foreach (var figure in figures)
                         {
-                            Utils.GiveBackFigureToOwner(figure, ref players);
+                            CalculateUtils.GiveBackFigureToOwner(figure, ref players);
                         }
                     }
                     break;
@@ -59,10 +60,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     if (points != 0)
                     {
                         figures = new FigureService().GetFiguresToGiveBack(currentTile, (CardinalDirection)i, true);
-                        Utils.DistributePoints(points, figures);
+                        CalculateUtils.DistributePoints(points, figures);
                         foreach (var figure in figures)
                         {
-                            Utils.GiveBackFigureToOwner(figure, ref players);
+                            CalculateUtils.GiveBackFigureToOwner(figure, ref players);
                         }
                     }
                     break;

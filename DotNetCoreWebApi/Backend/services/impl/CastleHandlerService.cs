@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DotNetCoreWebApi.Backend.Model;
+using DotNetCoreWebApi.Backend.Utils;
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
@@ -114,7 +115,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     }
                     else
                     {
-                        if (_currentITile == _firstTile && (int)_starterWhereToGo == (int)Utils.GetOppositeDirection(whereToGo) && !_firstCall)
+                        if (_currentITile == _firstTile && (int)_starterWhereToGo == (int)TileUtils.GetOppositeDirection(whereToGo) && !_firstCall)
                             return 0;
 
                         whereToGo = (CardinalDirection)i;
