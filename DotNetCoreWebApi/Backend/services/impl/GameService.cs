@@ -6,12 +6,18 @@ namespace DotNetCoreWebApi.Backend.services.impl
     public class GameService : IGameService
     {
         internal GameController Controller = GameController.Instance;
-        private IPlayerService PlayerService = new PlayerService();
+        public IPlayerService PlayerService { get; set; }
+
+        public GameService(IPlayerService playerService)
+        {
+            PlayerService = playerService;
+        }
 
         public Guid CreateGameSession(string playerName)
         {
             var tileStack = new TileParser().TileStack;
-            var newGamePlay = new GamePlay(tileStack);
+            var randomNumberGenerator = new Random();
+            var newGamePlay = new GamePlay(tileStack, randomNumberGenerator);
             Controller.AddGamePlay(newGamePlay);
             PlayerService.Subscribe(newGamePlay.Id, playerName);
             return newGamePlay.Id;

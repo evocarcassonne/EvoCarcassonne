@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DotNetCoreWebApi.Backend.Model;
+using DotNetCoreWebApi.Backend.Utils;
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
@@ -94,8 +95,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
         private int CalculateWithDirections(ITile currentTile, CardinalDirection whereToGo)
         {
             int result = 1;
-            Dictionary<CardinalDirection, ITile> tilesNextToTheGivenTile = Utils.GetSurroundingTiles(currentTile);
-            ITile neighborTile = Utils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
+            Dictionary<CardinalDirection, ITile> tilesNextToTheGivenTile = TileUtils.GetSurroundingTiles(currentTile);
+            ITile neighborTile = TileUtils.GetNeighborTile(tilesNextToTheGivenTile, whereToGo);
 
             /*If the neighbor tile does not exist then return result and set current tile as the last tile and sets _isRoadFinished false*/
             if (neighborTile == null)
@@ -110,7 +111,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 _lastTile = neighborTile;
                 return result;
             }
-            return SearchInTilesSides(result, neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
+            return SearchInTilesSides(result, neighborTile, (int)TileUtils.GetOppositeDirection(whereToGo));
         }
 
         /// <summary>
@@ -121,16 +122,16 @@ namespace DotNetCoreWebApi.Backend.services.impl
         /// <returns>The end of road tile found in the given direction. Null if there is no end of road tile</returns>
         private ITile SearchEndOfRoadTileInGivenDirection(ITile currentTile, CardinalDirection whereToGo)
         {
-            ITile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
+            ITile neighborTile = TileUtils.GetNeighborTile(TileUtils.GetSurroundingTiles(currentTile), whereToGo);
             if (neighborTile == null || IsEndOfRoad(neighborTile) || _firstTile.Position.Equals(neighborTile.Position))
             {
-                _whereToGoAfterEndOfRoadFound = Utils.GetOppositeDirection(whereToGo);
+                _whereToGoAfterEndOfRoadFound = TileUtils.GetOppositeDirection(whereToGo);
                 return neighborTile;
             }
 
             for (var i = 0; i < 4; i++)
             {
-                if (neighborTile.Directions[i].Landscape == Landscape.Road && i != (int)Utils.GetOppositeDirection(whereToGo))
+                if (neighborTile.Directions[i].Landscape == Landscape.Road && i != (int)TileUtils.GetOppositeDirection(whereToGo))
                 {
                     return SearchEndOfRoadTileInGivenDirection(neighborTile, neighborTile.GetCardinalDirectionByIndex(i));
                 }

@@ -1,5 +1,6 @@
 ﻿using DotNetCoreWebApi.Backend.dao;
 using DotNetCoreWebApi.Backend.Model;
+using DotNetCoreWebApi.Backend.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,7 +131,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 return false;
             }
             tileToPlace.Position = coordinates;
-            if (!Utils.CheckFitOfTile(tileToPlace, SurroundingTilesByCoordinates(tileToPlace, gamePlay)))
+            if (!TileUtils.CheckFitOfTile(tileToPlace, SurroundingTilesByCoordinates(tileToPlace, gamePlay)))
             {
                 tileToPlace.Position = null;
                 return false;
@@ -175,7 +176,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
                 if (figureToGetDown != null)
                 {
-                    Utils.GiveBackFigureToOwner(figureToGetDown, ref gamePlay.Players);
+                    CalculateUtils.GiveBackFigureToOwner(figureToGetDown, ref gamePlay.Players);
                 }
             }
             else
@@ -282,7 +283,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             foreach (var placedTile in SurroundingTilesByCoordinates(justPlacedTile, gamePlay))
             {
-                placedTile.Value.Directions[(int)Utils.GetOppositeDirection(placedTile.Key)].Neighbor = justPlacedTile;
+                placedTile.Value.Directions[(int)TileUtils.GetOppositeDirection(placedTile.Key)].Neighbor = justPlacedTile;
                 justPlacedTile.Directions[(int)placedTile.Key].Neighbor = placedTile.Value;
             }
         }
