@@ -69,7 +69,7 @@ namespace DotNetCoreWebApi.Controllers
 
         [EnableCors]
         [HttpPost("PlaceTile")]
-        public bool PlaceTileAndFigure([FromBody] PlaceTileDto tileDto)
+        public bool PlaceTile([FromBody] PlaceTileDto tileDto)
         {
             Guid GameId = Guid.Empty;
             Guid PlayerId = Guid.Empty;
@@ -88,20 +88,34 @@ namespace DotNetCoreWebApi.Controllers
                         tile.Rotate(90);
                     }
                 }
-                return gamePlayService.PlaceTileAndFigure(GameId, PlayerId, tile,
-                    new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.placeFigure, tileDto.side);
+                return gamePlayService.PlaceTile(GameId, PlayerId, tile,
+                    new Coordinates(tileDto.coordinateX, tileDto.coordinateY));
+            }
+            return false;
+        }
+
+        [EnableCors]
+        [HttpPost("PlaceFigure")]
+        public bool PlaceFigure([FromBody] PlaceFigureDto figureDto)
+        {
+            Guid GameId = Guid.Empty;
+            Guid PlayerId = Guid.Empty;
+            if (Guid.TryParse(figureDto.gameId, out GameId) && Guid.TryParse(figureDto.playerId, out PlayerId))
+            {
+                return gamePlayService.PlaceFigure(GameId, PlayerId, figureDto.side);
             }
             return false;
         }
 
         [EnableCors]
         [HttpGet("GetNewTile")]
-        public string GetNewTile([FromHeader] string gameId)
+        public string GetNewTile([FromHeader] string gameId, [FromHeader] string playerId)
         {
             Guid GameId = Guid.Empty;
-            if (Guid.TryParse(gameId, out GameId))
+            Guid PlayerId = Guid.Empty;
+            if (Guid.TryParse(gameId, out GameId) && Guid.TryParse(playerId, out PlayerId))
             {
-                return gamePlayService.GetNewTile(GameId).PropertiesAsString;
+                return gamePlayService.GetNewTile(GameId, PlayerId).PropertiesAsString;
             }
             return "";
         }
@@ -128,6 +142,7 @@ namespace DotNetCoreWebApi.Controllers
 
                     gameInfoDto.AddTileInfoOneByOne(tileInfo);
                 }
+                gameInfoDto.GameState = gamePlay.GameState.ToString();
                 gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
                 return gameInfoDto;
             }
@@ -155,6 +170,7 @@ namespace DotNetCoreWebApi.Controllers
 
                     gameInfoDto.AddTileInfoOneByOne(tileInfo);
                 }
+                gameInfoDto.GameState = gamePlay.GameState.ToString();
                 gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
                 return gameInfoDto;
             }

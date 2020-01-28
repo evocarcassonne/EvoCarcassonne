@@ -10,7 +10,5 @@ namespace DotNetCoreWebApi.Models
         public int RotateAngle { get; set; }
         public int coordinateX { get; set; }
         public int coordinateY { get; set; }
-        public bool placeFigure { get; set; }
-        public int side { get; set; }
     }
 }
