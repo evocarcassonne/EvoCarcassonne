@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetCoreWebApi.Backend.Model;
+using DotNetCoreWebApi.Backend.Utils;
+
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
@@ -48,7 +50,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         #region Castle Specific
         private bool CanPlaceFigureOnCastle(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
-            ITile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
+            ITile neighborTile = TileUtils.GetNeighborTile(TileUtils.GetSurroundingTiles(currentTile), whereToGo);
             if (firstCall)
             {
                 _currentITile = currentTile;
@@ -95,9 +97,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             if (CheckEndOfCastle(neighborTile))
             {
-                CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
-                return (neighborTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure == null && _canPlaceFigure);
-
+                CheckFigureOnTile(neighborTile, (int)TileUtils.GetOppositeDirection(whereToGo));
+                return (neighborTile.Directions[(int)TileUtils.GetOppositeDirection(whereToGo)].Figure == null && _canPlaceFigure);
             }
 
             for (int i = 0; i < 4; i++)
@@ -112,7 +113,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             for (var i = 0; i < 4; i++)
             {
                 if (neighborTile.Directions[i].Landscape == Landscape.Castle
-                && i != (int)Utils.GetOppositeDirection(whereToGo))
+                && i != (int)TileUtils.GetOppositeDirection(whereToGo))
                 {
                     CheckFigureOnTile(neighborTile, i);
                     resultOfPlacementChecking.Add(CanPlaceFigureOnCastle(neighborTile, neighborTile.GetCardinalDirectionByIndex(i),
@@ -138,8 +139,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         #region Road Specific
         private bool CanPlaceFigureOnRoad(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
-            ITile neighborTile = Utils.GetNeighborTile(Utils.GetSurroundingTiles(currentTile), whereToGo);
-
+            ITile neighborTile = TileUtils.GetNeighborTile(TileUtils.GetSurroundingTiles(currentTile), whereToGo);
             if (firstCall)
             {
                 if (IsEndOfRoad(currentTile))
@@ -171,8 +171,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             if (IsEndOfRoad(neighborTile))
             {
-                CheckFigureOnTile(neighborTile, (int)Utils.GetOppositeDirection(whereToGo));
-                return (neighborTile.Directions[(int)Utils.GetOppositeDirection(whereToGo)].Figure == null && _canPlaceFigure);
+                CheckFigureOnTile(neighborTile, (int)TileUtils.GetOppositeDirection(whereToGo));
+                return (neighborTile.Directions[(int)TileUtils.GetOppositeDirection(whereToGo)].Figure == null && _canPlaceFigure);
             }
 
             for (int i = 0; i < 4; i++)
@@ -187,7 +187,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             for (var i = 0; i < 4; i++)
             {
-                if (neighborTile.Directions[i].Landscape == Landscape.Road && i != (int)Utils.GetOppositeDirection(whereToGo))
+                if (neighborTile.Directions[i].Landscape == Landscape.Road && i != (int)TileUtils.GetOppositeDirection(whereToGo))
                 {
                     return CanPlaceFigureOnRoad(neighborTile, neighborTile.GetCardinalDirectionByIndex(i), false);
                 }

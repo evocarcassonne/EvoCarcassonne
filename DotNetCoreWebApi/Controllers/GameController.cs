@@ -16,7 +16,8 @@ namespace DotNetCoreWebApi.Controllers
 
         public GameController(ILogger<GameController> logger)
         {
-            GameService = new GameService();
+            IPlayerService playerService = new PlayerService();
+            GameService = new GameService(playerService);
             _logger = logger;
         }
 
