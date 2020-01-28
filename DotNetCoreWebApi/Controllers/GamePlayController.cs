@@ -35,95 +35,131 @@ namespace DotNetCoreWebApi.Controllers
         [Route("Start")]
         public bool StartGame([FromHeader] string gameId, [FromHeader] string playerId)
         {
-            return gamePlayService.StartGame(Guid.Parse(gameId), Guid.Parse(playerId));
+            Guid startedGame = Guid.Empty;
+            if (Guid.TryParse(gameId, out startedGame))
+                return gamePlayService.StartGame(startedGame, Guid.Parse(playerId));
+
+            return false;
         }
 
         [EnableCors]
         [HttpGet("CurrentPlayer")]
         public PlayerDto GetCurrentPlayer([FromHeader] string gameId)
         {
-            var player = gamePlayService.GetCurrentPlayer(Guid.Parse(gameId));
-            return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
+            Guid GameId = Guid.Empty;
+            if (Guid.TryParse(gameId, out GameId))
+            {
+                var player = gamePlayService.GetCurrentPlayer(Guid.Parse(gameId));
+                return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
+            }
+            return new PlayerDto();
         }
 
         [EnableCors]
         [HttpGet("CurrentRound")]
         public int GetCurrentRound([FromHeader] string gameId)
         {
-            return gamePlayService.GetCurrentRound(Guid.Parse(gameId));
+            Guid GameId = Guid.Empty;
+            if (Guid.TryParse(gameId, out GameId))
+            {
+                return gamePlayService.GetCurrentRound(Guid.Parse(gameId));
+            }
+            return -1;
         }
 
         [EnableCors]
         [HttpPost("PlaceTile")]
         public bool PlaceTileAndFigure([FromBody] PlaceTileDto tileDto)
         {
-            var tile = TileParser.Parse(tileDto.tileProps);
-            if (Math.Abs(tileDto.RotateAngle) % 90 != 0) { return false; }
-            for (int i = 0; i < Math.Abs(tileDto.RotateAngle) / 90; i++)
+            Guid GameId = Guid.Empty;
+            Guid PlayerId = Guid.Empty;
+            if (Guid.TryParse(tileDto.gameId, out GameId) && Guid.TryParse(tileDto.playerId, out PlayerId))
             {
-                if (tileDto.RotateAngle < 0)
+                var tile = TileParser.Parse(tileDto.tileProps);
+                if (Math.Abs(tileDto.RotateAngle) % 90 != 0) { return false; }
+                for (int i = 0; i < Math.Abs(tileDto.RotateAngle) / 90; i++)
                 {
-                    tile.Rotate(-90);
+                    if (tileDto.RotateAngle < 0)
+                    {
+                        tile.Rotate(-90);
+                    }
+                    else if (tileDto.RotateAngle > 0)
+                    {
+                        tile.Rotate(90);
+                    }
                 }
-                else if (tileDto.RotateAngle > 0)
-                {
-                    tile.Rotate(90);
-                }
+                return gamePlayService.PlaceTileAndFigure(GameId, PlayerId, tile,
+                    new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.placeFigure, tileDto.side);
             }
-            return gamePlayService.PlaceTileAndFigure(Guid.Parse(tileDto.gameId), Guid.Parse(tileDto.playerId), tile,
-                new Coordinates(tileDto.coordinateX, tileDto.coordinateY), tileDto.placeFigure, tileDto.side);
+            return false;
         }
 
         [EnableCors]
         [HttpGet("GetNewTile")]
         public string GetNewTile([FromHeader] string gameId)
-
         {
-            return gamePlayService.GetNewTile(Guid.Parse(gameId)).PropertiesAsString;
+            Guid GameId = Guid.Empty;
+            if (Guid.TryParse(gameId, out GameId))
+            {
+                return gamePlayService.GetNewTile(GameId).PropertiesAsString;
+            }
+            return "";
         }
 
         [EnableCors]
         [HttpPost("EndTurn")]
         public GameInfoDto EndTurn([FromHeader] string gameId, [FromHeader] string playerId)
         {
-            var gamePlay = gamePlayService.EndTurn(Guid.Parse(gameId), Guid.Parse(playerId));
-            var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
-            foreach (var tile in gamePlay.PlacedTiles)
+            Guid GameId = Guid.Empty;
+            Guid PlayerId = Guid.Empty;
+            if (Guid.TryParse(gameId, out GameId) && Guid.TryParse(playerId, out PlayerId))
             {
-                FigurePlacementDto figureOnTile = null;
-                foreach (var i in gamePlayService.GetFiguresOnTiles(Guid.Parse(gameId), tile))
+                var gamePlay = gamePlayService.EndTurn(Guid.Parse(gameId), Guid.Parse(playerId));
+                var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
+                foreach (var tile in gamePlay.PlacedTiles)
                 {
-                    figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
-                    break;
-                }
-                var tileInfo = new TileInfoDto(tile.PropertiesAsString, tile.Position, figureOnTile, tile.Rotation);
+                    FigurePlacementDto figureOnTile = null;
+                    foreach (var i in gamePlayService.GetFiguresOnTiles(Guid.Parse(gameId), tile))
+                    {
+                        figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
+                        break;
+                    }
+                    var tileInfo = new TileInfoDto(tile.PropertiesAsString, tile.Position, figureOnTile, tile.Rotation);
 
-                gameInfoDto.AddTileInfoOneByOne(tileInfo);
+                    gameInfoDto.AddTileInfoOneByOne(tileInfo);
+                }
+                gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
+                return gameInfoDto;
             }
-            gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
-            return gameInfoDto;
+            return new GameInfoDto();
         }
 
         [EnableCors]
         [HttpGet("State")]
         public GameInfoDto GetState([FromHeader] string gameId)
         {
-            var gamePlay = gamePlayService.GetState(Guid.Parse(gameId));
-            var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
-            foreach (var tile in gamePlay.PlacedTiles)
+            Guid GameId = Guid.Empty;
+            if (Guid.TryParse(gameId, out GameId))
             {
-                FigurePlacementDto figureOnTile = null;
-                foreach (var i in gamePlayService.GetFiguresOnTiles(Guid.Parse(gameId), tile))
+                var gamePlay = gamePlayService.GetState(Guid.Parse(gameId));
+                var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
+                foreach (var tile in gamePlay.PlacedTiles)
                 {
-                    figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
-                    break;
-                }
-                var tileInfo = new TileInfoDto(tile.PropertiesAsString, tile.Position, figureOnTile, tile.Rotation);
+                    FigurePlacementDto figureOnTile = null;
+                    foreach (var i in gamePlayService.GetFiguresOnTiles(Guid.Parse(gameId), tile))
+                    {
+                        figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
+                        break;
+                    }
+                    var tileInfo = new TileInfoDto(tile.PropertiesAsString, tile.Position, figureOnTile, tile.Rotation);
 
-                gameInfoDto.AddTileInfoOneByOne(tileInfo);
+                    gameInfoDto.AddTileInfoOneByOne(tileInfo);
+                }
+                gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
+                return gameInfoDto;
             }
-            gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
-            return gameInfoDto;
+            return new GameInfoDto();
         }
+
     }
 }

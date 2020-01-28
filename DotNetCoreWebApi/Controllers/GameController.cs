@@ -32,14 +32,14 @@ namespace DotNetCoreWebApi.Controllers
         [HttpDelete("Delete")]
         public bool DeleteSession([FromHeader] string gameId, [FromHeader] Guid playerId)
         {
-            return GameService.DeleteGameSession(Guid.Parse(gameId), playerId);
+            Guid gameToBeDeletedId = Guid.Empty;
+            if (Guid.TryParse(gameId, out gameToBeDeletedId))
+            {
+                return GameService.DeleteGameSession(gameToBeDeletedId, playerId);
+            }
+            return false;
+
         }
 
-        [EnableCors]
-        [HttpGet("/")]
-        public string Home()
-        {
-            return "Welcome you here!";
-        }
     }
 }
