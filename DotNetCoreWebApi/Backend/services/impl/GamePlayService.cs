@@ -34,7 +34,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return -1;
         }
 
-        public bool PlaceTileAndFigure(Guid gameId, Guid playerId, ITile tileToPlace, Coordinates coordinates, bool placeFigure, int side)
+        public bool PlaceTile(Guid gameId, Guid playerId, ITile tileToPlace, Coordinates coordinates)
         {
             var currentGamePlay = Controller.GetGamePlayById(gameId);
             if (currentGamePlay == null || currentGamePlay.CurrentPlayer.playerId != playerId
@@ -42,20 +42,19 @@ namespace DotNetCoreWebApi.Backend.services.impl
             {
                 return false;
             }
-            if (PlaceTile(tileToPlace, coordinates, currentGamePlay))
-            {
-                if (placeFigure)
-                {
-                    bool placedFigure = PlaceFigure(tileToPlace, side, currentGamePlay);
-                    return placedFigure;
-                }
-                return true;
-
-            }
-
-            return false;
+            return PlaceATile(tileToPlace, coordinates, currentGamePlay);
         }
 
+        public bool PlaceFigure(Guid gameId, Guid playerId, int side)
+        {
+            var currentGamePlay = Controller.GetGamePlayById(gameId);
+            if (currentGamePlay == null || currentGamePlay.CurrentPlayer.playerId != playerId
+            || currentGamePlay.GameState != GameState.Started)
+            {
+                return false;
+            }
+            return PlaceFigure(currentGamePlay, side);
+        }
         public bool StartGame(Guid gameId, Guid playerId)
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
@@ -69,20 +68,25 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return false;
         }
 
-        public ITile GetNewTile(Guid gameId)
+        public ITile GetNewTile(Guid gameId, Guid PlayerId)
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
-
+            var tile = new Tile(new List<IDirection>(), new List<Speciality>());
+            tile.PropertiesAsString = "backtile";
             if (gamePlay == null || gamePlay.TileStack.Count == 0 || gamePlay.HasCurrentTile || gamePlay.TileIsDown || gamePlay.GameState != GameState.Started)
             {
-                return new Tile(new List<IDirection>(), new List<Speciality>());
+                return tile;
+            }
+            if (gamePlay.CurrentPlayer.playerId == PlayerId)
+            {
+                gamePlay.TileIsDown = false;
+                gamePlay.HasCurrentTile = true;
+                gamePlay.AlreadyCalculated = false;
+                gamePlay.CurrentTile = gamePlay.TileStack.RemoveAndGet(gamePlay.RandomNumberGenerator.Next(gamePlay.TileStack.Count));
+                return gamePlay.CurrentTile;
             }
 
-            gamePlay.TileIsDown = false;
-            gamePlay.HasCurrentTile = true;
-            gamePlay.AlreadyCalculated = false;
-            gamePlay.CurrentTile = gamePlay.TileStack.RemoveAndGet(gamePlay.RandomNumberGenerator.Next(gamePlay.TileStack.Count));
-            return gamePlay.CurrentTile;
+            return tile;
         }
 
         public GamePlay EndTurn(Guid gameId, Guid playerId)
@@ -115,7 +119,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return Controller.GetGamePlayById(gameId);
         }
 
-        private bool PlaceTile(ITile tileToPlace, Coordinates coordinates, GamePlay gamePlay)
+        private bool PlaceATile(ITile tileToPlace, Coordinates coordinates, GamePlay gamePlay)
         {
             bool canPlaceTile = !(!gamePlay.HasCurrentTile || gamePlay.TileIsDown);
 
@@ -150,8 +154,9 @@ namespace DotNetCoreWebApi.Backend.services.impl
         /// </summary>
         /// <param name="currentTile">The tile, to put figure on</param>
         /// <param name="side">Which side of tile should be the figure placed</param>
-        public bool PlaceFigure(ITile tileToPlace, int side, GamePlay gamePlay)
+        public bool PlaceFigure(GamePlay gamePlay, int side)
         {
+            var tileToPlace = gamePlay.CurrentTile;
             if (!CanPlaceFigure(tileToPlace, side, gamePlay))
             {
                 return false;

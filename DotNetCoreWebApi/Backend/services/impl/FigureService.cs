@@ -3,6 +3,7 @@ using System.Linq;
 using DotNetCoreWebApi.Backend.Model;
 using DotNetCoreWebApi.Backend.Utils;
 
+
 namespace DotNetCoreWebApi.Backend.services.impl
 {
     public class FigureService : IFigureService
@@ -98,7 +99,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
             {
                 CheckFigureOnTile(neighborTile, (int)TileUtils.GetOppositeDirection(whereToGo));
                 return (neighborTile.Directions[(int)TileUtils.GetOppositeDirection(whereToGo)].Figure == null && _canPlaceFigure);
-
             }
 
             for (int i = 0; i < 4; i++)
@@ -140,7 +140,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
         private bool CanPlaceFigureOnRoad(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             ITile neighborTile = TileUtils.GetNeighborTile(TileUtils.GetSurroundingTiles(currentTile), whereToGo);
-
             if (firstCall)
             {
                 if (IsEndOfRoad(currentTile))

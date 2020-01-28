@@ -4,8 +4,10 @@ using DotNetCoreWebApi.Backend.Utils;
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
+
     class CalculatorService : ICalculateService
     {
+
         public ChurchCalculatorService ChurchCalculatorService { get; set; }
         public CastleCalculatorService CastleCalculatorService { get; set; }
         public RoadCalculatorService RoadCalculatorService { get; set; }
@@ -29,6 +31,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     var church = (Church)tile;
                     List<IFigure> figures;
+
                     points += ChurchCalculatorService.calculate(tile, gameover, out figures);
                     if (points != 0)
                     {
@@ -37,6 +40,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         foreach (var figure in figures)
                         {
                             CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+
                         }
                     }
                 }
@@ -48,6 +52,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (currentTile.Directions[i].Landscape == Landscape.Castle)
                 {
                     List<IFigure> figures;
+
                     points += CastleCalculatorService.calculate(currentTile, gameover);
                     if (points != 0)
                     {
@@ -68,6 +73,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (currentTile.Directions[i].Landscape == Landscape.Road)
                 {
                     List<IFigure> figures;
+
                     points += RoadCalculatorService.calculate(currentTile, gameover);
                     if (points != 0)
                     {

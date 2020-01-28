@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DotNetCoreWebApi.Backend.Model;
 
-namespace DotNetCoreWebApi.Backend
+namespace DotNetCoreWebApi.Backend.Utils
 {
     public class CalculateUtils
     {

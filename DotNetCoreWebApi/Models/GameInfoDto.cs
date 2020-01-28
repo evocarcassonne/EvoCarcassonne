@@ -7,6 +7,7 @@ namespace DotNetCoreWebApi.Models
         public List<PlayerDto> PlayerInfo { get; set; } = new List<PlayerDto>();
         public int CurrentRound { get; set; }
         public PlayerDto CurrentPlayer { get; set; }
+        public string GameState { get; set; }
         public List<TileInfoDto> TableInfo { get; set; } = new List<TileInfoDto>();
 
         public GameInfoDto(List<PlayerDto> playerInfo, int currentRound, PlayerDto currentPlayer, List<TileInfoDto> tableInfo)
@@ -16,7 +17,7 @@ namespace DotNetCoreWebApi.Models
             CurrentPlayer = currentPlayer;
             TableInfo = tableInfo;
         }
-        
+
         public GameInfoDto(int currentRound, PlayerDto currentPlayer)
         {
             CurrentRound = currentRound;
@@ -31,7 +32,7 @@ namespace DotNetCoreWebApi.Models
         {
             if (playerDto != null)
             {
-                PlayerInfo.Add(playerDto);    
+                PlayerInfo.Add(playerDto);
             }
         }
         public void AddTileInfoOneByOne(TileInfoDto tileInfoDto)
@@ -41,6 +42,6 @@ namespace DotNetCoreWebApi.Models
                 TableInfo.Add(tileInfoDto);
             }
         }
-        
+
     }
 }
