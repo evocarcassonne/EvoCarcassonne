@@ -72,7 +72,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
             var tile = new Tile(new List<IDirection>(), new List<Speciality>());
-            tile.PropertiesAsString = "backtile";
+            tile.PropertiesAsString = gamePlay.CurrentTile.PropertiesAsString;
             if (gamePlay == null || gamePlay.TileStack.Count == 0 || gamePlay.HasCurrentTile || gamePlay.TileIsDown || gamePlay.GameState != GameState.Started)
             {
                 return tile;
