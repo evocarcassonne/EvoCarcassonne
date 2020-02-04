@@ -156,7 +156,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         /// <param name="side">Which side of tile should be the figure placed</param>
         public bool PlaceFigure(GamePlay gamePlay, int side)
         {
-            var tileToPlace = gamePlay.CurrentTile;
+            var tileToPlace = gamePlay.PlacedTiles.Last();
             if (!CanPlaceFigure(tileToPlace, side, gamePlay))
             {
                 return false;
@@ -326,5 +326,18 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return result;
         }
 
+        public bool CanPlaceFigureOnTile(GamePlay gameplay, ITile tile)
+        {
+            bool canPlaceFigure = false;
+            for (int i = 0; i < 4; i++)
+            {
+                if (figureService.CanPlaceFigure(tile, (CardinalDirection)i, true))
+                {
+                    canPlaceFigure = true;
+                }
+            }
+            return canPlaceFigure;
+
+        }
     }
 }

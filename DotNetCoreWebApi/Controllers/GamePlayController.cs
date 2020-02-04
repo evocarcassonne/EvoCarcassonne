@@ -133,7 +133,8 @@ namespace DotNetCoreWebApi.Controllers
                 foreach (var tile in gamePlay.PlacedTiles)
                 {
                     FigurePlacementDto figureOnTile = null;
-                    foreach (var i in gamePlayService.GetFiguresOnTiles(Guid.Parse(gameId), tile))
+                    var figures = gamePlayService.GetFiguresOnTiles(GameId, tile);
+                    foreach (var i in figures)
                     {
                         figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
                         break;
@@ -161,7 +162,8 @@ namespace DotNetCoreWebApi.Controllers
                 foreach (var tile in gamePlay.PlacedTiles)
                 {
                     FigurePlacementDto figureOnTile = null;
-                    foreach (var i in gamePlayService.GetFiguresOnTiles(Guid.Parse(gameId), tile))
+                    var figures = gamePlayService.GetFiguresOnTiles(GameId, tile);
+                    foreach (var i in figures)
                     {
                         figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
                         break;
