@@ -183,6 +183,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     CalculateUtils.GiveBackFigureToOwner(figureToGetDown, ref gamePlay.Players);
                 }
+                return false;
             }
             else
             {
@@ -198,9 +199,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
                 gamePlay.FigureDown = true;
                 gamePlay.CurrentSideForFigure = side;
+                return true;
             }
 
-            return true;
+
         }
 
         private bool CanPlaceFigure(ITile tile, int directionIndex, GamePlay gamePlay)
@@ -326,18 +328,16 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return result;
         }
 
-        public bool CanPlaceFigureOnTile(GamePlay gameplay, ITile tile)
+        public bool CanPlaceFigure(Guid gameId, Guid playerId, int side)
         {
-            bool canPlaceFigure = false;
-            for (int i = 0; i < 4; i++)
+            var currentGamePlay = Controller.GetGamePlayById(gameId);
+            var currentT = currentGamePlay.CurrentTile;
+            if (currentGamePlay == null || currentGamePlay.CurrentPlayer.playerId != playerId
+            || currentGamePlay.GameState != GameState.Started || !CanPlaceFigure(currentT, side, currentGamePlay))
             {
-                if (figureService.CanPlaceFigure(tile, (CardinalDirection)i, true))
-                {
-                    canPlaceFigure = true;
-                }
+                return false;
             }
-            return canPlaceFigure;
-
+            return this.CanPlaceFigure(currentT, side, currentGamePlay);
         }
     }
 }
