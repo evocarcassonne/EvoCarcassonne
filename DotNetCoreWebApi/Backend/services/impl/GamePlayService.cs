@@ -265,22 +265,18 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (placedTile.Position.X == justPlacedTile.Position.X + 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
                 {
                     result.Add(CardinalDirection.East, placedTile);
-                    break;
                 }
-                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y + 1)
+                else if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y + 1)
                 {
                     result.Add(CardinalDirection.South, placedTile);
-                    break;
                 }
-                if (placedTile.Position.X == justPlacedTile.Position.X - 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
+                else if (placedTile.Position.X == justPlacedTile.Position.X - 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
                 {
                     result.Add(CardinalDirection.West, placedTile);
-                    break;
                 }
-                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y - 1)
+                else if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y - 1)
                 {
                     result.Add(CardinalDirection.North, placedTile);
-                    break;
                 }
             }
             return result;

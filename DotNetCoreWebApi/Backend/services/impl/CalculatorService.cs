@@ -25,6 +25,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             int points = 0;
             var allSurrTiles = TileUtils.GetAllSurroundingTiles(currentTile);
+            allSurrTiles.Add(currentTile);
             foreach (ITile tile in allSurrTiles)
             {
                 if (tile is Church)
@@ -40,7 +41,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         foreach (var figure in figures)
                         {
                             CalculateUtils.GiveBackFigureToOwner(figure, ref players);
-
                         }
                     }
                 }
@@ -53,14 +53,18 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     List<IFigure> figures;
 
-                    points += CastleCalculatorService.calculate(currentTile, gameover);
-                    if (points != 0)
+                    var pointDirections = CastleCalculatorService.calculate(currentTile, gameover);
+                    foreach (var item in pointDirections)
                     {
-                        figures = FigureService.GetFiguresToGiveBack(currentTile, (CardinalDirection)i, true);
-                        CalculateUtils.DistributePoints(points, figures);
-                        foreach (var figure in figures)
+                        points = item.Value;
+                        if (points != 0)
                         {
-                            CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+                            figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, true);
+                            CalculateUtils.DistributePoints(points, figures);
+                            foreach (var figure in figures)
+                            {
+                                CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+                            }
                         }
                     }
                     break;
@@ -73,15 +77,18 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (currentTile.Directions[i].Landscape == Landscape.Road)
                 {
                     List<IFigure> figures;
-
-                    points += RoadCalculatorService.calculate(currentTile, gameover);
-                    if (points != 0)
+                    var pointDirections = RoadCalculatorService.calculate(currentTile, gameover);
+                    foreach (var item in pointDirections)
                     {
-                        figures = FigureService.GetFiguresToGiveBack(currentTile, (CardinalDirection)i, true);
-                        CalculateUtils.DistributePoints(points, figures);
-                        foreach (var figure in figures)
+                        points = item.Value;
+                        if (points != 0)
                         {
-                            CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+                            figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, true);
+                            CalculateUtils.DistributePoints(points, figures);
+                            foreach (var figure in figures)
+                            {
+                                CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+                            }
                         }
                     }
                     break;

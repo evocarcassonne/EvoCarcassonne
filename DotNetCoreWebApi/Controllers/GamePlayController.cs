@@ -49,7 +49,7 @@ namespace DotNetCoreWebApi.Controllers
             Guid GameId = Guid.Empty;
             if (Guid.TryParse(gameId, out GameId))
             {
-                var player = gamePlayService.GetCurrentPlayer(Guid.Parse(gameId));
+                var player = gamePlayService.GetCurrentPlayer(GameId);
                 return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
             }
             return new PlayerDto();
@@ -128,7 +128,7 @@ namespace DotNetCoreWebApi.Controllers
             Guid PlayerId = Guid.Empty;
             if (Guid.TryParse(gameId, out GameId) && Guid.TryParse(playerId, out PlayerId))
             {
-                var gamePlay = gamePlayService.EndTurn(Guid.Parse(gameId), Guid.Parse(playerId));
+                var gamePlay = gamePlayService.EndTurn(GameId, PlayerId);
                 var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
                 foreach (var tile in gamePlay.PlacedTiles)
                 {

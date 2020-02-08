@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetCoreWebApi.Backend.Model;
+using DotNetCoreWebApi.Backend.Utils;
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
@@ -9,11 +10,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
         public int calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
         {
             int points = 0;
-            List<ITile> surroundingTiles = new List<ITile>();
+            List<ITile> surroundingTiles = TileUtils.GetAllSurroundingTiles(currentTile);
             figuresToGiveBack = new List<IFigure>();
-            currentTile.Directions.ForEach(e => surroundingTiles.Add(e.Neighbor));
 
             var churchTile = (Church)currentTile;
+
             if (gameover)
             {
                 points = surroundingTiles.Count;

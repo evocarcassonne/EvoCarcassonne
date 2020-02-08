@@ -7,25 +7,22 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
     class RoadCalculatorService
     {
-
         private ITile _firstTile { get; set; }
         private ITile _lastTile { get; set; }
         private bool _gameover { get; set; }
         private bool _isRoadFinished { get; set; } = true;
+        private Dictionary<CardinalDirection, int> _result { get; set; } = new Dictionary<CardinalDirection, int>();
         private CardinalDirection _whereToGoAfterEndOfRoadFound;
-        public int calculate(ITile currentTile, bool gameover)
+        public Dictionary<CardinalDirection, int> calculate(ITile currentTile, bool gameover)
         {
             int result = 0;
             _gameover = gameover;
             _firstTile = currentTile;
+            _result = new Dictionary<CardinalDirection, int>();
             if (gameover)
             {
                 for (var i = 0; i < currentTile.Directions.Count; i++)
                 {
-                    if (currentTile.Directions[i].Landscape == Landscape.Road)
-                    {
-                        result += CalculateWithDirections(currentTile, (CardinalDirection)i);
-                    }
                     if (IsEndOfRoad(currentTile) && currentTile.Directions[i].Landscape == Landscape.Road)
                     {
                         if (!(_firstTile.Position.X == _lastTile.Position.X &&
@@ -33,8 +30,13 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         {
                             result++;
                         }
-
+                        _result.Add((CardinalDirection)i, result);
                         result = 0;
+                    }
+                    else if (currentTile.Directions[i].Landscape == Landscape.Road)
+                    {
+                        result += CalculateWithDirections(currentTile, (CardinalDirection)i);
+                        _result.Add((CardinalDirection)i, result);
                     }
                 }
                 if (_firstTile.Position.X != _lastTile.Position.X && _firstTile.Position.Y != _lastTile.Position.Y)
@@ -59,6 +61,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         {
                             result = 0;
                         }
+                        if (result != 0)
+                        {
+                            _result.Add((CardinalDirection)i, result);
+                        }
                         _isRoadFinished = true;
                         _lastTile = null;
                         result = 0;
@@ -79,6 +85,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         {
                             result = 0;
                         }
+                        _result.Add((CardinalDirection)i, result);
                         break;
                     }
                 }
@@ -86,7 +93,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             _firstTile = null;
             _lastTile = null;
             _isRoadFinished = true;
-            return result;
+            return _result;
         }
 
         /**
