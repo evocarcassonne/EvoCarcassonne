@@ -50,7 +50,7 @@ namespace DotNetCoreWebApi.Controllers
             if (Guid.TryParse(gameId, out GameId))
             {
                 var player = gamePlayService.GetCurrentPlayer(GameId);
-                return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points);
+                return new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points, player.Color);
             }
             return new PlayerDto();
         }
@@ -144,7 +144,7 @@ namespace DotNetCoreWebApi.Controllers
                     gameInfoDto.AddTileInfoOneByOne(tileInfo);
                 }
                 gameInfoDto.GameState = gamePlay.GameState.ToString();
-                gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
+                gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points, player.Color)));
                 return gameInfoDto;
             }
             return new GameInfoDto();
@@ -173,7 +173,7 @@ namespace DotNetCoreWebApi.Controllers
                     gameInfoDto.AddTileInfoOneByOne(tileInfo);
                 }
                 gameInfoDto.GameState = gamePlay.GameState.ToString();
-                gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
+                gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points, player.Color)));
                 return gameInfoDto;
             }
             return new GameInfoDto();
