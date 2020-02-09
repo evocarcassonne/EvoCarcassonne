@@ -11,7 +11,7 @@ namespace DotNetCoreWebApi.Models
         public int NumberOfFigures { get; set; }
         public string Name { get; set; }
         public int Points { get; set; }
-        public string Color { get; set; } = "#fff";
+        public string Color { get; set; } = "#000";
 
         public PlayerDto(Guid playerId, int numberOfFigures, string name, int points, string color)
         {

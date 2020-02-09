@@ -9,7 +9,7 @@ namespace DotNetCoreWebApi.Backend.Model
         private int _numberOfFigures = 7;
         public List<Figure> Figures = new List<Figure>();
         public IOwner Owner;
-        public string Color { get; set; } = "#fff";
+        public string Color { get; set; } = "#000";
         public Player(IOwner owner)
         {
             Owner = owner;
