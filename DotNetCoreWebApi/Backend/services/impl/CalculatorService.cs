@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DotNetCoreWebApi.Backend.Model;
 using DotNetCoreWebApi.Backend.Utils;
 
@@ -57,6 +59,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     foreach (var item in pointDirections)
                     {
                         points = item.Value;
+                        Console.WriteLine("");
+                        Console.WriteLine("");
+                        Console.WriteLine($"Erre megyek: {item.Key}, ennyi pontot találtam: {item.Value}, és CASTLE vagyok");
+                        Console.WriteLine("");
+                        Console.WriteLine("");
                         if (points != 0)
                         {
                             figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, true);
@@ -81,6 +88,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     foreach (var item in pointDirections)
                     {
                         points = item.Value;
+                        Console.WriteLine("");
+                        Console.WriteLine("");
+                        Console.WriteLine($"Erre megyek: {item.Key}, ennyi pontot találtam: {item.Value}, és ROAD vagyok");
+                        Console.WriteLine("");
+                        Console.WriteLine("");
                         if (points != 0)
                         {
                             figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, true);
