@@ -129,12 +129,14 @@ namespace DotNetCoreWebApi.Controllers
             if (Guid.TryParse(gameId, out GameId) && Guid.TryParse(playerId, out PlayerId))
             {
                 var gamePlay = gamePlayService.EndTurn(GameId, PlayerId);
+
                 var gameInfoDto = new GameInfoDto(gamePlay.CurrentRound, GetCurrentPlayer(gameId));
                 foreach (var tile in gamePlay.PlacedTiles)
                 {
                     FigurePlacementDto figureOnTile = null;
                     var figures = gamePlayService.GetFiguresOnTiles(GameId, tile);
                     foreach (var i in figures)
+
                     {
                         figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
                         break;
@@ -145,6 +147,7 @@ namespace DotNetCoreWebApi.Controllers
                 }
                 gameInfoDto.GameState = gamePlay.GameState.ToString();
                 gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points, player.Color)));
+
                 return gameInfoDto;
             }
             return new GameInfoDto();
@@ -164,6 +167,7 @@ namespace DotNetCoreWebApi.Controllers
                     FigurePlacementDto figureOnTile = null;
                     var figures = gamePlayService.GetFiguresOnTiles(GameId, tile);
                     foreach (var i in figures)
+
                     {
                         figureOnTile = new FigurePlacementDto(i.Value.Owner.Name, i.Key);
                         break;
@@ -174,6 +178,7 @@ namespace DotNetCoreWebApi.Controllers
                 }
                 gameInfoDto.GameState = gamePlay.GameState.ToString();
                 gamePlay.Players.ForEach(player => gameInfoDto.AddPlayerOneByOne(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points, player.Color)));
+
                 return gameInfoDto;
             }
             return new GameInfoDto();

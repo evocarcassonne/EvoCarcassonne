@@ -73,6 +73,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             var gamePlay = Controller.GetGamePlayById(gameId);
             var tile = new Tile(new List<IDirection>(), new List<Speciality>());
             tile.PropertiesAsString = gamePlay.CurrentTile.PropertiesAsString;
+
             if (gamePlay == null || gamePlay.TileStack.Count == 0 || gamePlay.HasCurrentTile || gamePlay.TileIsDown || gamePlay.GameState != GameState.Started)
             {
                 return tile;
@@ -157,6 +158,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         public bool PlaceFigure(GamePlay gamePlay, int side)
         {
             var tileToPlace = gamePlay.PlacedTiles.Last();
+
             if (!CanPlaceFigure(tileToPlace, side, gamePlay))
             {
                 return false;

@@ -73,6 +73,7 @@ namespace DotNetCoreWebApi.Controllers
                 return playerService.SetColor(Guid.Parse(gameId), PlayerId, color);
             }
             return "";
+
         }
     }
 }

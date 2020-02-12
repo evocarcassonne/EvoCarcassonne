@@ -45,6 +45,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     }
 
                     points += ChurchCalculatorService.calculate(tile, gameover);
+
                     if (points != 0)
                     {
                         figures = FigureService.GetFiguresToGiveBack(tile, 0, true);
@@ -52,6 +53,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         foreach (var figure in figures)
                         {
                             CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+
                         }
                     }
                 }
