@@ -29,17 +29,25 @@ namespace DotNetCoreWebApi.Backend.services.impl
             var allSurrTiles = TileUtils.GetAllSurroundingTiles(currentTile);
             bool isCalledChurch = false;
             allSurrTiles.Add(currentTile);
+
             foreach (ITile tile in allSurrTiles)
             {
                 if (tile is Church)
                 {
                     var church = (Church)tile;
                     List<IFigure> figures;
-                    isCalledChurch = true;
+                    foreach (var side in church.Directions)
+                    {
+                        if (side.Landscape == Landscape.Road)
+                        {
+                            isCalledChurch = true;
+                        }
+                    }
+
                     points += ChurchCalculatorService.calculate(tile, gameover);
                     if (points != 0)
                     {
-                        figures = FigureService.GetFiguresToGiveBack(currentTile, 0, true);
+                        figures = FigureService.GetFiguresToGiveBack(tile, 0, true);
                         CalculateUtils.DistributePoints(points, figures);
                         foreach (var figure in figures)
                         {

@@ -37,11 +37,48 @@ namespace DotNetCoreWebApi.Backend.services.impl
         public List<IFigure> GetFiguresToGiveBack(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             _figuresOnTiles.Clear();
-            if ((currentTile.Speciality.Contains(Speciality.Colostor) || currentTile is Church) && firstCall)
+            bool isChurchWithRoad = false;
+            foreach (var side in currentTile.Directions)
+            {
+                if (side.Landscape == Landscape.Road)
+                {
+                    isChurchWithRoad = true;
+                }
+            }
+
+            if ((currentTile.Speciality.Contains(Speciality.Colostor) || currentTile is Church) && isChurchWithRoad)
+            {
+                if (firstCall)
+                {
+                    if (currentTile.CenterFigure != null)
+                    {
+                        _figuresOnTiles.Add(currentTile.CenterFigure);
+                        currentTile.CenterFigure = null;
+                    }
+                }
+                else
+                {
+                    _firstTile = currentTile;
+                    if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Castle)
+                    {
+                        _currentITile = currentTile;
+                        CheckedTiles.Clear();
+                        _finishedCastle = true;
+                        _starterWhereToGo = whereToGo;
+                        SearchFiguresOnCastle(currentTile, whereToGo);
+                    }
+                    if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Road)
+                    {
+                        SearchFiguresOnRoad(currentTile, whereToGo, true);
+                    }
+                }
+            }
+            else if (currentTile.Speciality.Contains(Speciality.Colostor) || currentTile is Church)
             {
                 if (currentTile.CenterFigure != null)
                 {
                     _figuresOnTiles.Add(currentTile.CenterFigure);
+                    currentTile.CenterFigure = null;
                 }
             }
             else
