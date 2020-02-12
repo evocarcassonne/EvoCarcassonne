@@ -84,6 +84,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             else
             {
                 _firstTile = currentTile;
+
                 if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Castle)
                 {
                     _currentITile = currentTile;
@@ -250,8 +251,12 @@ namespace DotNetCoreWebApi.Backend.services.impl
         private void CalculateWithDirections(ITile currentTile, CardinalDirection whereToGo)
         {
             // Check if the castle is not finished
-            if (!_finishedCastle)// || _currentITile == null)
+            if (!_finishedCastle)
+            {
+                _figuresOnTiles.Clear();
                 return;
+            }
+
 
             if (IsChecked(_currentITile, CheckedTiles))
                 return;
@@ -259,9 +264,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             if (_currentITile == null || _currentITile.Directions == null)
             {
+                _figuresOnTiles.Clear();
                 return;
             }
-
+            CheckedTiles.Add(_currentITile);
             // If it is an EndOfCastle tile and it isn't the first tile...
             if (CheckEndOfCastle(_currentITile) && _firstTile != _currentITile)
             {
@@ -273,6 +279,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             {
                 if (_currentITile.Directions[i].Landscape == Landscape.Castle)
                 {
+                    CheckFigureOnTile(currentTile, i);
                     if (_firstCall && i != (int)_starterWhereToGo)
                     {
                     }
@@ -281,17 +288,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         if (_currentITile == _firstTile && (int)_starterWhereToGo == (int)TileUtils.GetOppositeDirection(whereToGo) && !_firstCall)
                             return;
 
-                        CheckFigureOnTile(currentTile, i);
-
                         whereToGo = (CardinalDirection)i;
 
-                        CheckedTiles.Add(_currentITile);
                         _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
                         CalculateWithDirections(_currentITile, (CardinalDirection)i);
                         _currentITile = currentTile;
-
-                        if (_currentITile == _firstTile)
-                            break;
                     }
                 }
             }
@@ -340,6 +341,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             ITile neighborTile = TileUtils.GetNeighborTile(TileUtils.GetSurroundingTiles(currentTile), whereToGo);
             if (firstCall)
             {
+                _firstTile = currentTile;
                 if (IsEndOfRoad(currentTile))
                 {
                     return CanPlaceFigureOnRoad(currentTile, whereToGo, false);
@@ -362,7 +364,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             this.CheckFigureOnTile(currentTile, (int)whereToGo);
 
-            if (neighborTile == null)
+            if (neighborTile == null || neighborTile.Position.Equals(_firstTile.Position))
             {
                 return _canPlaceFigure;
             }
@@ -487,7 +489,5 @@ namespace DotNetCoreWebApi.Backend.services.impl
         }
 
         #endregion
-
-
     }
 }
