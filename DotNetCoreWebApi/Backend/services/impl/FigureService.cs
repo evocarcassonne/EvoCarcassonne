@@ -37,7 +37,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         public List<IFigure> GetFiguresToGiveBack(ITile currentTile, CardinalDirection whereToGo, bool firstCall)
         {
             _figuresOnTiles.Clear();
-            if (currentTile.Speciality.Contains(Speciality.Colostor) || currentTile is Church)
+            if ((currentTile.Speciality.Contains(Speciality.Colostor) || currentTile is Church) && firstCall)
             {
                 if (currentTile.CenterFigure != null)
                 {

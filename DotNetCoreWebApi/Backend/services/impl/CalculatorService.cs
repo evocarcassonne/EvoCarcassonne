@@ -27,6 +27,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             int points = 0;
             var allSurrTiles = TileUtils.GetAllSurroundingTiles(currentTile);
+            bool isCalledChurch = false;
             allSurrTiles.Add(currentTile);
             foreach (ITile tile in allSurrTiles)
             {
@@ -34,8 +35,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     var church = (Church)tile;
                     List<IFigure> figures;
-
-                    points += ChurchCalculatorService.calculate(tile, gameover, out figures);
+                    isCalledChurch = true;
+                    points += ChurchCalculatorService.calculate(tile, gameover);
                     if (points != 0)
                     {
                         figures = FigureService.GetFiguresToGiveBack(currentTile, 0, true);
@@ -95,7 +96,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         Console.WriteLine("");
                         if (points != 0)
                         {
-                            figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, true);
+                            figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, !isCalledChurch);
                             CalculateUtils.DistributePoints(points, figures);
                             foreach (var figure in figures)
                             {
