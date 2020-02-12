@@ -72,7 +72,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             var gamePlay = Controller.GetGamePlayById(gameId);
             var tile = new Tile(new List<IDirection>(), new List<Speciality>());
-            tile.PropertiesAsString = "backtile";
+            tile.PropertiesAsString = gamePlay.CurrentTile.PropertiesAsString;
+
             if (gamePlay == null || gamePlay.TileStack.Count == 0 || gamePlay.HasCurrentTile || gamePlay.TileIsDown || gamePlay.GameState != GameState.Started)
             {
                 return tile;
@@ -156,7 +157,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
         /// <param name="side">Which side of tile should be the figure placed</param>
         public bool PlaceFigure(GamePlay gamePlay, int side)
         {
-            var tileToPlace = gamePlay.CurrentTile;
+            var tileToPlace = gamePlay.PlacedTiles.Last();
+
             if (!CanPlaceFigure(tileToPlace, side, gamePlay))
             {
                 return false;
@@ -183,6 +185,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     CalculateUtils.GiveBackFigureToOwner(figureToGetDown, ref gamePlay.Players);
                 }
+                return false;
             }
             else
             {
@@ -198,9 +201,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
                 gamePlay.FigureDown = true;
                 gamePlay.CurrentSideForFigure = side;
+                return true;
             }
 
-            return true;
+
         }
 
         private bool CanPlaceFigure(ITile tile, int directionIndex, GamePlay gamePlay)
@@ -263,22 +267,18 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (placedTile.Position.X == justPlacedTile.Position.X + 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
                 {
                     result.Add(CardinalDirection.East, placedTile);
-                    break;
                 }
-                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y + 1)
+                else if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y + 1)
                 {
                     result.Add(CardinalDirection.South, placedTile);
-                    break;
                 }
-                if (placedTile.Position.X == justPlacedTile.Position.X - 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
+                else if (placedTile.Position.X == justPlacedTile.Position.X - 1 && placedTile.Position.Y == justPlacedTile.Position.Y)
                 {
                     result.Add(CardinalDirection.West, placedTile);
-                    break;
                 }
-                if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y - 1)
+                else if (placedTile.Position.X == justPlacedTile.Position.X && placedTile.Position.Y == justPlacedTile.Position.Y - 1)
                 {
                     result.Add(CardinalDirection.North, placedTile);
-                    break;
                 }
             }
             return result;
@@ -326,5 +326,16 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return result;
         }
 
+        public bool CanPlaceFigure(Guid gameId, Guid playerId, int side)
+        {
+            var currentGamePlay = Controller.GetGamePlayById(gameId);
+            var currentT = currentGamePlay.CurrentTile;
+            if (currentGamePlay == null || currentGamePlay.CurrentPlayer.playerId != playerId
+            || currentGamePlay.GameState != GameState.Started || !CanPlaceFigure(currentT, side, currentGamePlay))
+            {
+                return false;
+            }
+            return this.CanPlaceFigure(currentT, side, currentGamePlay);
+        }
     }
 }

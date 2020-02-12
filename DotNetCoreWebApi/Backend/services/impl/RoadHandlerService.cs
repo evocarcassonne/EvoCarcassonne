@@ -7,24 +7,27 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
     class RoadCalculatorService
     {
-
         private ITile _firstTile { get; set; }
         private ITile _lastTile { get; set; }
         private bool _gameover { get; set; }
         private bool _isRoadFinished { get; set; } = true;
+        private Dictionary<CardinalDirection, int> _result { get; set; } = new Dictionary<CardinalDirection, int>();
         private CardinalDirection _whereToGoAfterEndOfRoadFound;
-        public int calculate(ITile currentTile, bool gameover)
+        public Dictionary<CardinalDirection, int> calculate(ITile currentTile, bool gameover)
         {
             int result = 0;
             _gameover = gameover;
             _firstTile = currentTile;
+            _result = new Dictionary<CardinalDirection, int>();
             if (gameover)
             {
+                _lastTile = new Tile(new List<IDirection>(), new List<Speciality>());
                 for (var i = 0; i < currentTile.Directions.Count; i++)
                 {
                     if (currentTile.Directions[i].Landscape == Landscape.Road)
                     {
                         result += CalculateWithDirections(currentTile, (CardinalDirection)i);
+                        _result.Add((CardinalDirection)i, result);
                     }
                     if (IsEndOfRoad(currentTile) && currentTile.Directions[i].Landscape == Landscape.Road)
                     {
@@ -33,7 +36,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         {
                             result++;
                         }
-
+                        if (_result.ContainsKey((CardinalDirection)i)) { _result.Remove((CardinalDirection)i); };
+                        _result.Add((CardinalDirection)i, result);
                         result = 0;
                     }
                 }
@@ -59,6 +63,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         {
                             result = 0;
                         }
+                        if (result != 0)
+                        {
+                            _result.Add((CardinalDirection)i, result);
+                        }
                         _isRoadFinished = true;
                         _lastTile = null;
                         result = 0;
@@ -67,7 +75,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                                                        && SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i) != null)
                     {
                         _firstTile = SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i);
-                        result += CalculateWithDirections(SearchEndOfRoadTileInGivenDirection(currentTile, (CardinalDirection)i), _whereToGoAfterEndOfRoadFound);
+                        result += CalculateWithDirections(_firstTile, _whereToGoAfterEndOfRoadFound);
                         /*If the road does not end with the same tile its started, then increase the result*/
                         if (_lastTile != null && !(_firstTile.Position.X == _lastTile.Position.X &&
                                                   _firstTile.Position.Y == _lastTile.Position.Y) && _isRoadFinished)
@@ -79,6 +87,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         {
                             result = 0;
                         }
+                        _result.Add((CardinalDirection)i, result);
                         break;
                     }
                 }
@@ -86,7 +95,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             _firstTile = null;
             _lastTile = null;
             _isRoadFinished = true;
-            return result;
+            return _result;
         }
 
         /**

@@ -18,12 +18,14 @@ namespace DotNetCoreWebApi.Backend.services.impl
         private CardinalDirection _starterWhereToGo { get; set; }
         private List<ITile> _placedCastleTiles { get; set; } = new List<ITile>();
         private bool _gameOver { get; set; }
-        private bool _outOfRange { get; set; } = false;
+        private Dictionary<CardinalDirection, int> _result { get; set; } = new Dictionary<CardinalDirection, int>();
 
-        public int calculate(ITile currentTile, bool gameover)
+        public Dictionary<CardinalDirection, int> calculate(ITile currentTile, bool gameover)
         {
             _gameOver = gameover;
             _placedCastleTiles.Clear();
+            _result.Clear();
+
 
             int result = 0;
             for (int i = 0; i < 4; i++)
@@ -32,33 +34,21 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     _firstCall = true;
                     result += CalculateWithDirections(currentTile, (CardinalDirection)i);
-
-                    _firstCall = true;
-                    if (result > 0)
-                    {
-                        CalculateWithDirections(currentTile, (CardinalDirection)i);
-                    }
+                    _result.Add((CardinalDirection)i, _points);
                     result = 0;
-
                 }
                 else if (!CheckEndOfCastle(currentTile))
                 {
-
                     _firstCall = true;
                     result += CalculateCastle(currentTile, false);
-
-                    _firstCall = true;
-                    if (result > 0)
-                    {
-                        CalculateCastle(_firstTile, false);
-                    }
+                    _result.Add((CardinalDirection)i, _points);
                     result = 0;
 
                     break;
                 }
             }
 
-            return _points;
+            return _result;
         }
 
 
@@ -80,13 +70,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
             // Check if the castle is not finished
             if (!_finishedCastle && !_gameOver)// || _currentITile == null)
                 return 0;
-
-            if (_outOfRange)
-            {
-                _finishedCastle = false;
-                _outOfRange = false;
-                return 0;
-            }
 
             if (IsChecked(_currentITile, _ITileList))
                 return 0;
@@ -198,15 +181,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             // Check if the castle is not finished
             if (!_finishedCastle && !_gameOver)// || _currentITile == null)
-
                 return 0;
-
-            if (_outOfRange)
-            {
-                _finishedCastle = false;
-                _outOfRange = false;
-                return 0;
-            }
 
             // If it is the first tile, reset the properties...
             if (_firstCall)
@@ -257,21 +232,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             CheckForPoints();
             return _points;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return (Landscape)obj == Landscape.Castle;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }

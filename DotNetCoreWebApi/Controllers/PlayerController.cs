@@ -56,10 +56,24 @@ namespace DotNetCoreWebApi.Controllers
             {
                 var players = playerService.GetPlayers(Guid.Parse(gameId));
                 var results = new List<PlayerDto>();
-                players.ForEach(player => results.Add(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points)));
+                players.ForEach(player => results.Add(new PlayerDto(player.playerId, player.Figures.Count, player.Owner.Name, player.Owner.Points, player.Color)));
                 return results;
             }
             return new List<PlayerDto> { new PlayerDto() };
+        }
+
+        [EnableCors]
+        [HttpGet("SetColor")]
+        public string SetColor([FromHeader] string gameId, [FromHeader] string playerId, [FromHeader] string color)
+        {
+            Guid GameId = Guid.Empty;
+            Guid PlayerId = Guid.Empty;
+            if (Guid.TryParse(gameId, out GameId) && Guid.TryParse(playerId, out PlayerId))
+            {
+                return playerService.SetColor(Guid.Parse(gameId), PlayerId, color);
+            }
+            return "";
+
         }
     }
 }

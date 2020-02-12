@@ -25,7 +25,8 @@ namespace DotNetCoreWebApi.Backend.dao
         public GamePlay(List<ITile> tileStack, Random randomNumberGenerator)
         {
             Id = Guid.NewGuid();
-
+            CurrentTile = new Tile(new List<IDirection>(), new List<Speciality>());
+            CurrentTile.PropertiesAsString = "backtile";
             RandomNumberGenerator = randomNumberGenerator;
 
             if (TileStack == null || TileStack.Count == 0)

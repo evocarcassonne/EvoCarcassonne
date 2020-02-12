@@ -1,24 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetCoreWebApi.Backend.Model;
+using DotNetCoreWebApi.Backend.Utils;
 
 namespace DotNetCoreWebApi.Backend.services.impl
 {
     class ChurchCalculatorService
     {
-        public int calculate(ITile currentTile, bool gameover, out List<IFigure> figuresToGiveBack)
+        public int calculate(ITile currentTile, bool gameover)
         {
             int points = 0;
-            List<ITile> surroundingTiles = new List<ITile>();
-            figuresToGiveBack = new List<IFigure>();
-            currentTile.Directions.ForEach(e => surroundingTiles.Add(e.Neighbor));
+            List<ITile> surroundingTiles = TileUtils.GetAllSurroundingTiles(currentTile);
 
             var churchTile = (Church)currentTile;
+
             if (gameover)
             {
                 points = surroundingTiles.Count;
-                figuresToGiveBack.Add(churchTile.CenterFigure);
-                churchTile.CenterFigure = null;
             }
             else
             {
@@ -27,8 +25,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     if (churchTile.CenterFigure != null)
                     {
                         points = 9;
-                        figuresToGiveBack.Add(churchTile.CenterFigure);
-                        churchTile.CenterFigure = null;
                     }
                 }
             }

@@ -12,5 +12,6 @@ namespace DotNetCoreWebApi.Backend.services
         Guid Subscribe(Guid gameId, string playerName);
         bool Unsubscribe(Guid gameId, Guid playerId);
         List<Player> GetPlayers(Guid gameId);
+        string SetColor(Guid gameId, Guid playerId, string color);
     }
 }

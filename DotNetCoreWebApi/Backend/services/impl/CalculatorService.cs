@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DotNetCoreWebApi.Backend.Model;
 using DotNetCoreWebApi.Backend.Utils;
 
@@ -25,17 +27,28 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             int points = 0;
             var allSurrTiles = TileUtils.GetAllSurroundingTiles(currentTile);
+            bool isCalledChurch = false;
+            allSurrTiles.Add(currentTile);
+
             foreach (ITile tile in allSurrTiles)
             {
                 if (tile is Church)
                 {
                     var church = (Church)tile;
                     List<IFigure> figures;
+                    foreach (var side in church.Directions)
+                    {
+                        if (side.Landscape == Landscape.Road)
+                        {
+                            isCalledChurch = true;
+                        }
+                    }
 
-                    points += ChurchCalculatorService.calculate(tile, gameover, out figures);
+                    points += ChurchCalculatorService.calculate(tile, gameover);
+
                     if (points != 0)
                     {
-                        figures = FigureService.GetFiguresToGiveBack(currentTile, 0, true);
+                        figures = FigureService.GetFiguresToGiveBack(tile, 0, true);
                         CalculateUtils.DistributePoints(points, figures);
                         foreach (var figure in figures)
                         {
@@ -53,14 +66,23 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     List<IFigure> figures;
 
-                    points += CastleCalculatorService.calculate(currentTile, gameover);
-                    if (points != 0)
+                    var pointDirections = CastleCalculatorService.calculate(currentTile, gameover);
+                    foreach (var item in pointDirections)
                     {
-                        figures = FigureService.GetFiguresToGiveBack(currentTile, (CardinalDirection)i, true);
-                        CalculateUtils.DistributePoints(points, figures);
-                        foreach (var figure in figures)
+                        points = item.Value;
+                        Console.WriteLine("");
+                        Console.WriteLine("");
+                        Console.WriteLine($"Erre megyek: {item.Key}, ennyi pontot találtam: {item.Value}, és CASTLE vagyok");
+                        Console.WriteLine("");
+                        Console.WriteLine("");
+                        if (points != 0)
                         {
-                            CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+                            figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, true);
+                            CalculateUtils.DistributePoints(points, figures);
+                            foreach (var figure in figures)
+                            {
+                                CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+                            }
                         }
                     }
                     break;
@@ -73,15 +95,23 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 if (currentTile.Directions[i].Landscape == Landscape.Road)
                 {
                     List<IFigure> figures;
-
-                    points += RoadCalculatorService.calculate(currentTile, gameover);
-                    if (points != 0)
+                    var pointDirections = RoadCalculatorService.calculate(currentTile, gameover);
+                    foreach (var item in pointDirections)
                     {
-                        figures = FigureService.GetFiguresToGiveBack(currentTile, (CardinalDirection)i, true);
-                        CalculateUtils.DistributePoints(points, figures);
-                        foreach (var figure in figures)
+                        points = item.Value;
+                        Console.WriteLine("");
+                        Console.WriteLine("");
+                        Console.WriteLine($"Erre megyek: {item.Key}, ennyi pontot találtam: {item.Value}, és ROAD vagyok");
+                        Console.WriteLine("");
+                        Console.WriteLine("");
+                        if (points != 0)
                         {
-                            CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+                            figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, !isCalledChurch);
+                            CalculateUtils.DistributePoints(points, figures);
+                            foreach (var figure in figures)
+                            {
+                                CalculateUtils.GiveBackFigureToOwner(figure, ref players);
+                            }
                         }
                     }
                     break;

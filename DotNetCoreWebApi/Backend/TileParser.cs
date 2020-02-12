@@ -71,7 +71,7 @@ namespace DotNetCoreWebApi.Backend
                 AddTile(tileStack, firstTile);
                 foreach (var tileName in defaultTiles)
                 {
-                    for (var i = 1; i < ParseTileCount(tileName); i++)
+                    for (var i = 0; i < ParseTileCount(tileName); i++)
                     {
                         AddTile(tileStack, tileName);
                     }

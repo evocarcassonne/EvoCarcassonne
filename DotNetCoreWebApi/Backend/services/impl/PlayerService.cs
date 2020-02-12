@@ -49,5 +49,20 @@ namespace DotNetCoreWebApi.Backend.services.impl
         {
             return Controller.GetGamePlayById(gameId)?.Players;
         }
+
+        public string SetColor(Guid gameId, Guid playerId, string color)
+        {
+            var players = GetPlayers(gameId);
+
+            foreach (var player in players)
+            {
+                if (player.playerId.Equals(playerId))
+                {
+                    player.Color = color;
+                    return color;
+                }
+            }
+            return "";
+        }
     }
 }
