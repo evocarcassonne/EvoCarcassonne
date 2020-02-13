@@ -56,11 +56,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 }
                 else
                 {
+                    /*
                     _firstTile = currentTile;
-                    if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Castle)
-                    {
-                        SearchFiguresOnCastle(currentTile, whereToGo);
-                    }
+                    SearchFiguresOnCastle(currentTile, whereToGo);
+                    */
                     if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Road)
                     {
                         SearchFiguresOnRoad(currentTile, whereToGo, true);
