@@ -48,14 +48,24 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
                     if (points != 0)
                     {
+                        Console.WriteLine("");
+                        Console.WriteLine("");
+                        Console.WriteLine($"Ennyi pontot találtam: {points}, és CHURCH vagyok");
+                        Console.WriteLine("");
+                        Console.WriteLine("");
                         figures = FigureService.GetFiguresToGiveBack(tile, 0, true);
+                        Console.WriteLine("");
+                        Console.WriteLine("");
+                        Console.WriteLine($"Ennyi figurat találtam: {figures.Count}, és CHURCH vagyok");
+                        Console.WriteLine("");
+                        Console.WriteLine("");
                         CalculateUtils.DistributePoints(points, figures);
                         foreach (var figure in figures)
                         {
                             CalculateUtils.GiveBackFigureToOwner(figure, ref players);
-
                         }
                     }
+                    points = 0;
                 }
             }
 
@@ -78,6 +88,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         if (points != 0)
                         {
                             figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, true);
+                            Console.WriteLine("");
+                            Console.WriteLine("");
+                            Console.WriteLine($"Ennyi figurat találtam: {figures.Count}, és CASTLE vagyok");
+                            Console.WriteLine("");
+                            Console.WriteLine("");
                             CalculateUtils.DistributePoints(points, figures);
                             foreach (var figure in figures)
                             {
@@ -107,6 +122,11 @@ namespace DotNetCoreWebApi.Backend.services.impl
                         if (points != 0)
                         {
                             figures = FigureService.GetFiguresToGiveBack(currentTile, item.Key, !isCalledChurch);
+                            Console.WriteLine("");
+                            Console.WriteLine("");
+                            Console.WriteLine($"Ennyi figurat találtam: {figures.Count}, és ROAD vagyok");
+                            Console.WriteLine("");
+                            Console.WriteLine("");
                             CalculateUtils.DistributePoints(points, figures);
                             foreach (var figure in figures)
                             {
