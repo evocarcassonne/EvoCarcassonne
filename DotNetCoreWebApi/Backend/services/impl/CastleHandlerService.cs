@@ -74,7 +74,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
             if (IsChecked(_currentITile, _ITileList))
                 return 0;
 
-
             if (_currentITile == null || _currentITile.Directions == null)
             {
                 if (!_gameOver)

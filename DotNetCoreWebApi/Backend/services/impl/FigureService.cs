@@ -10,12 +10,10 @@ namespace DotNetCoreWebApi.Backend.services.impl
     public class FigureService : IFigureService
     {
         private ITile _currentITile;
-        private CardinalDirection _whereToGoAfterEndOfRoadFound;
+        private CardinalDirection _whereToGoAfterEndFound;
         private ITile _firstTile;
-        private bool _finishedCastle;
         private CardinalDirection _starterWhereToGo;
-        private bool _firstCall = false;
-        private int _whereToGo;
+        private readonly List<ITile> _foundEndofRoad = new List<ITile>();
         private readonly List<IFigure> _figuresOnTiles = new List<IFigure>();
         private List<ITile> CheckedTiles { get; set; } = new List<ITile>();
         private bool _canPlaceFigure { get; set; } = true;
@@ -61,10 +59,6 @@ namespace DotNetCoreWebApi.Backend.services.impl
                     _firstTile = currentTile;
                     if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Castle)
                     {
-                        _currentITile = currentTile;
-                        CheckedTiles.Clear();
-                        _finishedCastle = true;
-                        _starterWhereToGo = whereToGo;
                         SearchFiguresOnCastle(currentTile, whereToGo);
                     }
                     if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Road)
@@ -85,14 +79,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
             {
                 _firstTile = currentTile;
 
-                if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Castle)
-                {
-                    _currentITile = currentTile;
-                    CheckedTiles.Clear();
-                    _finishedCastle = true;
-                    _starterWhereToGo = whereToGo;
-                    SearchFiguresOnCastle(currentTile, whereToGo);
-                }
+                SearchFiguresOnCastle(currentTile, whereToGo);
+
                 if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Road)
                 {
                     SearchFiguresOnRoad(currentTile, whereToGo, true);
@@ -108,6 +96,9 @@ namespace DotNetCoreWebApi.Backend.services.impl
             {
                 _figuresOnTiles.Add(currentTile.Directions[onlySideToCheck].Figure);
                 currentTile.Directions[onlySideToCheck].Figure = null;
+
+
+
             }
         }
 
@@ -134,7 +125,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
             if (firstCall)
             {
-                if (CheckEndOfCastle(currentTile))
+                if (IsEndOfCastle(currentTile))
                 {
                     return CanPlaceFigureOnCastle(currentTile, whereToGo, false);
                 }
@@ -159,7 +150,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 return _canPlaceFigure;
             }
 
-            if (CheckEndOfCastle(neighborTile))
+            if (IsEndOfCastle(neighborTile))
             {
                 CheckFigureOnTile(neighborTile, (int)TileUtils.GetOppositeDirection(whereToGo));
                 return (neighborTile.Directions[(int)TileUtils.GetOppositeDirection(whereToGo)].Figure == null && _canPlaceFigure);
@@ -188,7 +179,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             return resultOfPlacementChecking.All(e => e);
         }
 
-        private bool CheckEndOfCastle(ITile currentITile)
+        private bool IsEndOfCastle(ITile currentITile)
         {
             return currentITile.Speciality.Contains(Speciality.EndOfCastle);
         }
@@ -200,135 +191,102 @@ namespace DotNetCoreWebApi.Backend.services.impl
 
         private void SearchFiguresOnCastle(ITile currentTile, CardinalDirection whereToGo)
         {
-            if (CheckEndOfCastle(currentTile))
+            CheckedTiles.Clear();
+            _starterWhereToGo = whereToGo;
+            _firstTile = currentTile;
+            CheckedTiles.Add(currentTile);
+            if (IsEndOfCastle(currentTile))
             {
                 if (currentTile.GetTileSideByCardinalDirection(whereToGo).Landscape == Landscape.Castle)
                 {
-                    CalculateWithDirections(currentTile, whereToGo);
+                    CheckFigureOnTile(currentTile, (int)whereToGo);
+                    CalculateWithEndOfCastle(currentTile, whereToGo);
                 }
             }
             else
             {
-                CalculateCastle(currentTile);
-            }
-        }
-
-        private void CalculateCastle(ITile currentTile)
-        {
-            // Check if the castle is not finished
-            if (!_finishedCastle)// || _currentITile == null)
-                return;
-
-            if (IsChecked(_currentITile, CheckedTiles))
-                return;
-
-
-            if (_currentITile == null || _currentITile.Directions == null)
-            {
-                return;
-            }
-            CheckedTiles.Add(_currentITile);
-            // If it is an EndOfCastle tile and it isn't the first tile...
-            if (CheckEndOfCastle(_currentITile) && _firstTile != _currentITile)
-            {
-                CheckFigureOnTile(currentTile, (int)TileUtils.GetOppositeDirection((CardinalDirection)_whereToGo));
-                return;
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                if (_currentITile.Directions[i].Landscape == Landscape.Castle)
+                for (int i = 0; i < 4; i++)
                 {
-                    CheckFigureOnTile(_currentITile, i);
-                    _whereToGo = i;
-                    _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
-                    CalculateCastle(_currentITile);
-                    _currentITile = currentTile;
+                    if (currentTile.Directions[i].Landscape == Landscape.Castle)
+                    {
+                        _foundEndofRoad.Clear();
+                        _firstTile = GetEndOfCastle(currentTile, (CardinalDirection)i);
+                        if (_firstTile != null)
+                        {
+                            CheckedTiles.Clear();
+                            CheckedTiles.Add(_firstTile);
+                            CheckFigureOnTile(_firstTile, (int)_whereToGoAfterEndFound);
+                            CalculateWithEndOfCastle(_firstTile, _whereToGoAfterEndFound);
+                        }
+                        break;
+                    }
                 }
             }
         }
 
-        private void CalculateWithDirections(ITile currentTile, CardinalDirection whereToGo)
+        private ITile GetEndOfCastle(ITile currentTile, CardinalDirection whereToGo)
         {
+            ITile neighborTile = TileUtils.GetNeighborTile(TileUtils.GetSurroundingTiles(currentTile), whereToGo);
+            if (neighborTile == null || IsEndOfCastle(neighborTile) || _firstTile.Position.Equals(neighborTile.Position) || CheckedTiles.Contains(neighborTile))
+            {
+                _whereToGoAfterEndFound = TileUtils.GetOppositeDirection(whereToGo);
+                return neighborTile;
+            }
+
+            CheckedTiles.Add(neighborTile);
+
+            for (var i = 0; i < 4; i++)
+            {
+                if (neighborTile.Directions[i].Landscape == Landscape.Castle && i != (int)TileUtils.GetOppositeDirection(whereToGo))
+                {
+                    return GetEndOfCastle(neighborTile, neighborTile.GetCardinalDirectionByIndex(i));
+                }
+            }
+            return null;
+        }
+
+        private void CalculateWithEndOfCastle(ITile currentTile, CardinalDirection whereToGo)
+        {
+            var neighborTile = TileUtils.GetNeighborTile(TileUtils.GetSurroundingTiles(currentTile), whereToGo);
+
             // Check if the castle is not finished
-            if (!_finishedCastle)
+            if (neighborTile == null)
             {
                 _figuresOnTiles.Clear();
                 return;
             }
 
 
-            if (IsChecked(_currentITile, CheckedTiles))
+            if (IsChecked(neighborTile, CheckedTiles) && !neighborTile.Position.Equals(_firstTile.Position))
                 return;
 
+            CheckedTiles.Add(neighborTile);
 
-            if (_currentITile == null || _currentITile.Directions == null)
+            if (neighborTile.Position.Equals(_firstTile.Position))
             {
-                _figuresOnTiles.Clear();
-                return;
-            }
-            CheckedTiles.Add(_currentITile);
-            // If it is an EndOfCastle tile and it isn't the first tile...
-            if (CheckEndOfCastle(_currentITile) && _firstTile != _currentITile)
-            {
-                CheckFigureOnTile(currentTile, (int)TileUtils.GetOppositeDirection(whereToGo));
-                return;
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                if (_currentITile.Directions[i].Landscape == Landscape.Castle)
-                {
-                    CheckFigureOnTile(currentTile, i);
-                    if (_firstCall && i != (int)_starterWhereToGo)
-                    {
-                    }
-                    else
-                    {
-                        if (_currentITile == _firstTile && (int)_starterWhereToGo == (int)TileUtils.GetOppositeDirection(whereToGo) && !_firstCall)
-                            return;
-
-                        whereToGo = (CardinalDirection)i;
-
-                        _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
-                        CalculateWithDirections(_currentITile, (CardinalDirection)i);
-                        _currentITile = currentTile;
-                    }
-                }
-            }
-        }
-        private void CheckCastle(ITile currentTile)
-        {
-            if (IsChecked(_currentITile, CheckedTiles))
-                return;
-
-
-            if (_currentITile == null || _currentITile.Directions == null)
-            {
+                CheckFigureOnTile(neighborTile, (int)TileUtils.GetOppositeDirection(whereToGo));
                 return;
             }
 
             // If it is an EndOfCastle tile and it isn't the first tile...
-            if (CheckEndOfCastle(_currentITile) && _firstTile != _currentITile)
+            if (IsEndOfCastle(neighborTile) && _firstTile != neighborTile)
             {
+                CheckFigureOnTile(neighborTile, (int)TileUtils.GetOppositeDirection(whereToGo));
                 return;
             }
 
             for (int i = 0; i < 4; i++)
             {
-                if (_currentITile.Directions[i].Landscape == Landscape.Castle)
+                if (neighborTile.Directions[i].Landscape == Landscape.Castle)
                 {
-                    CheckFigureOnTile(_currentITile, i);
+                    CheckFigureOnTile(neighborTile, i);
                 }
             }
-            CheckedTiles.Add(_currentITile);
             for (int i = 0; i < 4; i++)
             {
-                if (_currentITile.Directions[i].Landscape == Landscape.Castle)
+                if (neighborTile.Directions[i].Landscape == Landscape.Castle && i != (int)TileUtils.GetOppositeDirection(whereToGo))
                 {
-                    _currentITile = _currentITile.GetTileSideByCardinalDirection((CardinalDirection)i).Neighbor;
-                    CheckCastle(_currentITile);
-                    _currentITile = currentTile;
+                    CalculateWithEndOfCastle(neighborTile, (CardinalDirection)i);
                 }
             }
         }
@@ -416,7 +374,7 @@ namespace DotNetCoreWebApi.Backend.services.impl
             ITile neighborTile = TileUtils.GetNeighborTile(TileUtils.GetSurroundingTiles(currentTile), whereToGo);
             if (neighborTile == null || IsEndOfRoad(neighborTile) || _firstTile.Position.Equals(neighborTile.Position))
             {
-                _whereToGoAfterEndOfRoadFound = TileUtils.GetOppositeDirection(whereToGo);
+                _whereToGoAfterEndFound = TileUtils.GetOppositeDirection(whereToGo);
                 return neighborTile;
             }
 
@@ -445,8 +403,8 @@ namespace DotNetCoreWebApi.Backend.services.impl
                 {
                     var firstTile = SearchEndOfRoadTileInGivenDirection(currentTile, whereToGo);
                     _firstTile = firstTile;
-                    CheckFigureOnTile(_firstTile, (int)_whereToGoAfterEndOfRoadFound);
-                    SearchFiguresOnRoad(firstTile, _whereToGoAfterEndOfRoadFound, false);
+                    CheckFigureOnTile(_firstTile, (int)_whereToGoAfterEndFound);
+                    SearchFiguresOnRoad(firstTile, _whereToGoAfterEndFound, false);
                 }
             }
             else
